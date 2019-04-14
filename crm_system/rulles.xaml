@@ -1,0 +1,32 @@
+﻿<Window x:Class="crm_system.rulles"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:crm_system"
+        mc:Ignorable="d"
+        Title="rulles" Height="450" Width="440" ResizeMode="NoResize" Loaded="Window_Loaded">
+    <Grid>
+        <Canvas>
+            <StackPanel>
+                <DataGrid FontSize ="12pt"  MaxHeight="350" Name="permis_grid" AutoGenerateColumns="False" Width="400" Margin="10,10,0,0" Style="{DynamicResource DataGridStyle}" >
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <CheckBox  Checked="CheckBox_Checked"  Unchecked="CheckBox_Unchecked"/>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox HorizontalAlignment="Center"  Width="50" IsChecked="{Binding Path = is_check, UpdateSourceTrigger=PropertyChanged}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Название" Width="350" Binding="{Binding Path = name}">
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button Name="save_ruls" Content="Сохранить" Width="100" Margin="0,10,0,0" Click="save_ruls_Click"  Style="{DynamicResource DefaultBtn}"/>
+            </StackPanel>
+        </Canvas>
+    </Grid>
+</Window>

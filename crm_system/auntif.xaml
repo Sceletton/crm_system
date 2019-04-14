@@ -1,0 +1,20 @@
+﻿<Window x:Class="crm_system.auntif"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:crm_system"
+        mc:Ignorable="d"
+        Title="auntif" Height="280" Width="220" ResizeMode="NoResize">
+    <Grid>
+        <Canvas>
+            <StackPanel Width="150" Margin="30">
+                <TextBlock Text="Логин" FontSize="16pt" Margin="40,0,0,0"/>
+                <TextBox Name="Login"  FontSize="16pt" Style="{DynamicResource TextBoxStyle}" KeyDown="Pass_KeyDown"/>
+                <TextBlock Text="Пароль" FontSize="16pt" Margin="30,10,0,0"/>
+                <PasswordBox Name="Pass"  FontSize="16pt" Margin="0,0,0,10" Style="{DynamicResource PasswordBoxStyle}" KeyDown="Pass_KeyDown"/>
+                <Button Content="Войти" FontSize="16pt" Click="Button_Click"  Margin="0,0,-0.4,0" Style="{DynamicResource DefaultBtn}"/>
+            </StackPanel>
+        </Canvas>
+    </Grid>
+</Window>

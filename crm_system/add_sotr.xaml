@@ -1,0 +1,35 @@
+﻿<Window x:Class="crm_system.add_sotr"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:crm_system"
+        mc:Ignorable="d"
+        Title="add_sotr" Height="320" Width="340" ResizeMode="NoResize" Loaded="Window_Loaded">
+    <Grid>
+        <Canvas>
+            <StackPanel Margin="20,20">
+                <StackPanel Orientation="Horizontal">
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="Организация" FontSize="14pt" Margin="0,0,0,15"/>
+                        <TextBlock Text="Имя" FontSize="14pt" Margin="0,0,0,13"/>
+                        <TextBlock Text="Фамилия" FontSize="14pt" Margin="0,0,0,13"/>
+                        <TextBlock Text="Отчество" FontSize="14pt" Margin="0,0,0,10"/>
+                        <TextBlock Text="Должность" FontSize="14pt" Margin="0,0,0,10"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <ComboBox Width="150" Name="orgs" FontSize="14pt" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                        <TextBox Width="150" Name="name" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}"/>
+                        <TextBox Width="150" Name="surname" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}"/>
+                        <TextBox Width="150" Name="lastname" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}"/>
+                        <ComboBox Width="150" Name="job_title" FontSize="14pt" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Name="add_or_upd" Width="120" Content="Добавить" Margin="10,0,20,0" FontSize="14pt"  Click="add_or_upd_Click" Style="{DynamicResource DefaultBtn}"/>
+                    <Button Name="cancel" Width="120" Content="Отмена" FontSize="14pt" Style="{DynamicResource DefaultBtn}" Click="cancel_Click" />
+                </StackPanel>
+            </StackPanel>
+        </Canvas>
+    </Grid>
+</Window>

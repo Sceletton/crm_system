@@ -1,0 +1,35 @@
+﻿<Window x:Class="crm_system.add_user"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:crm_system"
+        mc:Ignorable="d"
+        Title="add_user" Height="380" Width="330" ResizeMode="NoResize" Loaded="Window_Loaded">
+    <Grid>
+        <Canvas>
+            <StackPanel Orientation="Horizontal" Margin="10,10,10,0">
+                <StackPanel Margin="0,0,20,0">
+                    <TextBlock Text="Имя" FontSize="15pt" Margin="0,0,0,17"/>
+                    <TextBlock Text="Фамилия" FontSize="15pt" Margin="0,0,0,17"/>
+                    <TextBlock Text="Отчество" FontSize="15pt" Margin="0,0,0,17"/>
+                    <TextBlock Text="Логин" FontSize="15pt" Margin="0,0,0,17"/>
+                    <TextBlock Text="Пароль" FontSize="15pt" Margin="0,0,0,18"/>
+                    <TextBlock Text="Роль" FontSize="15pt" Margin="0,0,0,15"/>
+                </StackPanel>
+                <StackPanel>
+                    <TextBox Name="Name" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource TextBoxStyle}"/>
+                    <TextBox Name="Surname" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource TextBoxStyle}"/>
+                    <TextBox Name="second_name" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource TextBoxStyle}"/>
+                    <TextBox Name="Login" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource TextBoxStyle}"/>
+                    <PasswordBox Name="Pass" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource PasswordBoxStyle}"/>
+                    <ComboBox Name="rols" FontSize="15pt" Margin="0,0,0,15" Width="180" ItemsSource="{Binding comboitem}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Canvas.Left="15" Canvas.Top="280">
+                <Button Name="save" Content="Сохранить" Margin="0,0,10,0" FontSize="15pt" Width="140"  Click="save_Click"  Style="{DynamicResource DefaultBtn}"/>
+                <Button Name="cancel" Content="Отмена" Margin="0,0,10,0" FontSize="15pt" Width="140" Style="{DynamicResource DefaultBtn}" Click="cancel_Click"/>
+            </StackPanel>
+        </Canvas>
+    </Grid>
+</Window>

@@ -1,0 +1,37 @@
+﻿<Window x:Class="crm_system.addOrgn"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:crm_system"
+        mc:Ignorable="d"
+        Title="addOrgn" Height="360" Width="400" ResizeMode="NoResize" Loaded="Window_Loaded">
+    <Grid>
+        <Canvas>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="35,20">
+                    <StackPanel Margin="0,0,10,0">
+                        <TextBlock Text="Название" Margin="0,0,0,10" FontSize="14pt"/>
+                        <TextBlock Text="Код" Margin="0,0,0,12" FontSize="14pt"/>
+                        <TextBlock Text="Город" Margin="0,0,0,12" FontSize="14pt"/>
+                        <TextBlock Text="Телефон" Margin="0,0,0,12" FontSize="14pt"/>
+                        <TextBlock Text="Куратор" Margin="0,0,0,12" FontSize="14pt"/>
+                        <TextBlock Text="Приоритет" Margin="0,0,0,10" FontSize="14pt"/>
+                    </StackPanel>
+                    <StackPanel Width="200">
+                        <TextBox Name="name" Margin="0,0,0,10" FontSize="14pt"     Height="25" Style="{DynamicResource TextBoxStyle}"/>
+                        <TextBox Name="code" Margin="0,0,0,10" FontSize="14pt"     Height="25" Style="{DynamicResource TextBoxStyle}"/>
+                        <ComboBox Name="city" Margin="0,0,0,10" FontSize="14pt"    Height="29" ItemsSource="{Binding comboItems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                        <TextBox Name="phone" Margin="0,0,0,10" FontSize="14pt"    Height="25" Style="{DynamicResource TextBoxStyle}"/>
+                        <ComboBox Name="kyrator" Margin="0,0,0,10" FontSize="14pt" Height="29" ItemsSource="{Binding comboItems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                        <ComboBox Name="prioriry" Margin="0,0,0,10" FontSize="14pt" Height="29" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="90,0,0,0">
+                    <Button Name="add_or_upd" Margin="0,0,10,0" FontSize="13pt" Content="Добавить" Width="120" Click="add_or_upd_Click" Style="{DynamicResource DefaultBtn}"/>
+                    <Button Name="cancel" Margin="0,0,10,0" FontSize="13pt" Content="Отмена" Width="120" Click="cancel_Click" Style="{DynamicResource DefaultBtn}"/>
+                </StackPanel>
+            </StackPanel>
+        </Canvas>
+    </Grid>
+</Window>
