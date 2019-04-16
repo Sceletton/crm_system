@@ -1,0 +1,75 @@
+CREATE TABLE [dbo].[calls] (
+    [Id]          INT            IDENTITY (1, 1) NOT NULL,
+    [date_cal]    NVARCHAR (50)  NOT NULL,
+    [id_org]      INT            NOT NULL,
+    [call_target] NVARCHAR (100) NULL,
+    [status_call] INT            NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    FOREIGN KEY ([id_org]) REFERENCES [dbo].[org] ([id])
+);
+
+CREATE TABLE [dbo].[cities] (
+    [id]   INT           IDENTITY (1, 1) NOT NULL,
+    [name] NVARCHAR (50) NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC)
+);
+
+CREATE TABLE [dbo].[org] (
+    [id]       INT           IDENTITY (1, 1) NOT NULL,
+    [name]     NVARCHAR (50) NULL,
+    [city]     INT           NULL,
+    [phone]    NVARCHAR (12) NULL,
+    [status]   INT           NULL,
+    [kurator]  INT           NULL,
+    [code]     NVARCHAR (50) NULL,
+    [priority] INT           NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    UNIQUE NONCLUSTERED ([name] ASC),
+    FOREIGN KEY ([kurator]) REFERENCES [dbo].[users] ([id]),
+    FOREIGN KEY ([city]) REFERENCES [dbo].[cities] ([id])
+);
+
+CREATE TABLE [dbo].[permissions] (
+    [Id]   INT           IDENTITY (1, 1) NOT NULL,
+    [name] NVARCHAR (50) NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC),
+    UNIQUE NONCLUSTERED ([name] ASC)
+);
+
+CREATE TABLE [dbo].[posts] (
+    [id]   INT           IDENTITY (1, 1) NOT NULL,
+    [name] NVARCHAR (50) NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    UNIQUE NONCLUSTERED ([name] ASC)
+);
+
+CREATE TABLE [dbo].[rols] (
+    [Id]     INT             IDENTITY (1, 1) NOT NULL,
+    [rights] NVARCHAR (1000) NOT NULL,
+    [name]   NVARCHAR (50)   NOT NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+);
+
+CREATE TABLE [dbo].[users] (
+    [id]          INT           IDENTITY (1, 1) NOT NULL,
+    [name]        NVARCHAR (50) NULL,
+    [surname]     NVARCHAR (50) NULL,
+    [second_name] NVARCHAR (50) NULL,
+    [login]       NVARCHAR (50) NULL,
+    [password]    NVARCHAR (50) NULL,
+    [rol]         INT           NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    FOREIGN KEY ([rol]) REFERENCES [dbo].[rols] ([Id])
+);
+
+CREATE TABLE [dbo].[workers] (
+    [id]          INT           IDENTITY (1, 1) NOT NULL,
+    [name]        NVARCHAR (50) NULL,
+    [surname]     NVARCHAR (50) NULL,
+    [second_name] NVARCHAR (50) NULL,
+    [id_org]      INT           NULL,
+    [id_post]     INT           NULL,
+    PRIMARY KEY CLUSTERED ([id] ASC),
+    FOREIGN KEY ([id_org]) REFERENCES [dbo].[org] ([id]),
+    FOREIGN KEY ([id_post]) REFERENCES [dbo].[posts] ([id])
+);
