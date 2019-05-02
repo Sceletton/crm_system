@@ -10,8 +10,34 @@
         <TabControl TabStripPlacement="Left">
             <TabItem Header="Организации" Height="40" Style="{DynamicResource Tabit}">
                 <Canvas>
-                    <StackPanel Margin="0,0,0,0">
-                        <StackPanel Name="grid">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Наименование:" FontSize="12pt"/>
+                                <TextBox Name="org_name_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="190" Margin="0,0,10,0"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Город:" FontSize="12pt"/>
+                                <ComboBox Name="city_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="170" Margin="0,0,10,0" SelectionChanged="city_org_filt_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Приоритет:" FontSize="12pt"/>
+                                <ComboBox Name="prioryty_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="180" Margin="0,0,10,0" SelectionChanged="prioryty_org_filt_SelectionChanged"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Статус:" FontSize="12pt"/>
+                                <ComboBox Name="org_status_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="140" Margin="0,0,10,0" SelectionChanged="org_status_filt_SelectionChanged"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Куратор:" FontSize="12pt"/>
+                                <ComboBox Name="kurator_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="190" Margin="0,0,10,0" SelectionChanged="kurator_org_filt_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
+                            </StackPanel>
+                            <StackPanel>
+                                <TextBlock Text="Телефон:" FontSize="12pt"/>
+                                <TextBox Name="phone_org_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="180" TextChanged="phone_org_filt_TextChanged"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Name="grid" Margin="0,10,0,0">
                             <DataGrid FontSize ="12pt" MaxHeight="350" Name="org_grid" AutoGenerateColumns="False" Margin="0,0,0,0" Style="{DynamicResource DataGridStyle}">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu Name="org_grid_popup" Width="300">
@@ -21,11 +47,10 @@
                                         <MenuItem Name="add__sotr" Header="Добавить сотрудников" Click="add__sotr_Click" Height="20"/>
                                         <MenuItem Name="view__sotr" Header="Сотрудники организации" Click="view__sotr_Click" Height="20"/>
                                         <MenuItem Name="add__call" Header="Назначить звонок" Click="add__call_Click" Height="20"/>
-                                        <MenuItem Name="view__calls" Header="Звонки" Click="view__calls_Click" Height="20"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Организация" Width="200" Binding="{Binding Path = Name}"/>
+                                    <DataGridTextColumn Header="Наименование" Width="200" Binding="{Binding Path = Name}"/>
                                     <DataGridTextColumn Header="Город" Width="180" Binding="{Binding Path = City}"/>
                                     <DataGridTextColumn Header="Приоритет" Width="200" Binding="{Binding Path = Prioriry}"/>
                                     <DataGridTextColumn Header="Статус клиента" Width="150" Binding="{Binding Path = Status}"/>
@@ -45,15 +70,15 @@
                                 <TextBlock Text="Организация:" FontSize="12pt"/>
                                 <ComboBox Name="org_filt" FontSize="12pt" SelectionChanged="org_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                             </StackPanel>
-                            <StackPanel Width="150" Margin="70,0,0,0">
+                            <StackPanel  Margin="20,0,0,0">
                                 <TextBlock Text="Дата звонка:" FontSize="12pt"/>
-                                <DatePicker Name="dat_filt" FontSize="12pt" DataContextChanged="dat_filt_DataContextChanged"/>
+                                <DatePicker Name="dat_filt" FontSize="12pt" DataContextChanged="dat_filt_DataContextChanged" Width="180"/>
                             </StackPanel>
-                            <StackPanel Width="180" Margin="50,0,0,0">
+                            <StackPanel Width="180" Margin="70,0,0,0">
                                 <TextBlock Text="Статус:" FontSize="12pt"/>
                                 <ComboBox Name="stat_filt" FontSize="12pt" SelectionChanged="stat_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                             </StackPanel>
-                            <StackPanel Width="220" Margin="40,0,0,0">
+                            <StackPanel Width="220" Margin="70,0,0,0">
                                 <TextBlock Text="Оператор:" FontSize="12pt"/>
                                 <ComboBox Name="oper_filt" FontSize="12pt" SelectionChanged="oper_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                             </StackPanel>
@@ -102,7 +127,7 @@
                                 <TextBlock Text="Должность:" FontSize="12pt"/>
                                 <ComboBox Name="job_filt" FontSize="12pt" SelectionChanged="job_filt_SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                             </StackPanel>
-                            <Button Content="Отчистить" Margin="10,0,0,0" FontSize="12pt" Height="30" Click="Button_Click"/>
+                            <Button Content="Отчистить" Margin="10,0,0,0" FontSize="12pt" Height="30" Name="clear" Click="clear_Click"/>
                         </StackPanel>
                         <DataGrid FontSize ="12pt" MaxHeight="350" Name="sotr_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1052" HorizontalAlignment="Left">
                             <DataGrid.ContextMenu>

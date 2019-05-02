@@ -67,6 +67,7 @@
     <Compile Include="auntif.xaml.cs">
       <DependentUpon>auntif.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CheckFields.cs" />
     <Compile Include="rulles.xaml.cs">
       <DependentUpon>rulles.xaml</DependentUpon>
     </Compile>
@@ -147,5 +148,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

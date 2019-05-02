@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Data;
 using System.Data.SqlClient;
 
+
 namespace crm_system
 {
     /// <summary>
@@ -21,6 +22,7 @@ namespace crm_system
     /// </summary>
     public partial class addOrgn : Window
     {
+        CheckFields CheckFields = new CheckFields();
         SqlConnection connection;
         public static string id = null;
         public addOrgn()
@@ -97,7 +99,7 @@ namespace crm_system
         {
             try
             {
-
+                CheckFields.CheckNullFields(new[] { name,code,phone });
                 if (name.Text != "" && city.Text != "" && phone.Text != "" && kyrator.Text != "" && code.Text != "" && prioriry.Text != "")
                 {
                     if (id == null)
@@ -116,7 +118,8 @@ namespace crm_system
                     else
                     {
                         connection.Open();
-                        SqlCommand upd_org = new SqlCommand("update org set name = @name, city = @city, phone = @phone, status = @status, kurator = @kurator, code = @code, priority = @priority where id = @id", connection);
+                        SqlCommand upd_org = new SqlCommand("update org set name = @name, city = @city, phone = @phone, kurator = @kurator, code = @code, priority = @priority where id = @id", connection);
+                        upd_org.Parameters.AddWithValue("id", id);
                         upd_org.Parameters.AddWithValue("name", name.Text);
                         upd_org.Parameters.AddWithValue("city", city.SelectedValue);
                         upd_org.Parameters.AddWithValue("phone", phone.Text);
@@ -126,12 +129,15 @@ namespace crm_system
                         upd_org.ExecuteNonQuery();
                         connection.Close();
                     }
-                ((MainWindow)this.Owner).refresh();
+                    try
+                    {
+                        ((MainWindow)this.Owner).refresh();
+                    }
+                    catch
+                    {
+
+                    }
                     Close();
-                }
-                else
-                {
-                    MessageBox.Show("Заполните все поля!", "Предупреждение!");
                 }
             }
             catch (Exception ex)

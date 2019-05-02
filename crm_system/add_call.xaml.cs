@@ -44,7 +44,7 @@ namespace crm_system
         {
             try
             {
-                if (org.Text != "" && call_traget.Text != "" && org.Text != "")
+                if (org.Text != "" && call_traget.Text != "" && call_date.Text != "")
                 {
                     if (id_call == null)
                     {
@@ -77,6 +77,7 @@ namespace crm_system
             }
             catch (Exception ex)
             {
+                connection.Close();
                 MessageBox.Show(ex.Message.ToString());
             }
         }

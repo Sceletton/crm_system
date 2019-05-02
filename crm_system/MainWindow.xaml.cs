@@ -41,6 +41,7 @@ namespace crm_system
             no_visible();
             stat_filt.Items.Add("Назначен");
             stat_filt.Items.Add("Закончен");
+            connection = new SqlConnection(constr);
         }
 
         public void no_visible()
@@ -81,8 +82,6 @@ namespace crm_system
             view__sotr.Height = 0;
             add__call.Visibility = Visibility.Hidden;
             add__call.Height = 0;
-            view__calls.Visibility = Visibility.Hidden;
-            view__calls.Height = 0;
             org_grid_popup.Visibility = Visibility.Hidden;
             //
 
@@ -100,7 +99,6 @@ namespace crm_system
             if (auntif)
             {
                 org_grid_popup.Visibility = Visibility.Visible;
-                connection = new SqlConnection(constr);
                 connection.Open();
                 SqlCommand sel_rights = new SqlCommand("select rights, name from rols where id = @id", connection);
                 sel_rights.Parameters.AddWithValue("id", rol_id);
@@ -433,6 +431,32 @@ namespace crm_system
                 org_filt_.ItemsSource = Orgs;
                 oper_filt.ItemsSource = Opers;
                 job_filt.ItemsSource = jobs;
+                prioryty_org_filt.Items.Add("Низский");
+                prioryty_org_filt.Items.Add("Средний");
+                prioryty_org_filt.Items.Add("Высокий");
+                //
+                org_status_filt.Items.Add("Добавлен");
+                org_status_filt.Items.Add("Назначен звонок");
+                org_status_filt.Items.Add("Перезвон");
+                List<comboItems> comboItem = new List<comboItems>();
+                List<comboItems> comboItem_kur = new List<comboItems>();
+                SqlCommand citys = new SqlCommand("select name,id from cities", connection);
+                SqlDataReader read_citys = citys.ExecuteReader();
+                while (read_citys.Read())
+                {
+                    comboItem.Add(new comboItems(read_citys["id"].ToString(), read_citys["name"].ToString()));
+                }
+                city_org_filt.ItemsSource = comboItem;
+                read_citys.Close();
+
+                SqlCommand kurator = new SqlCommand("select id, name, surname, second_name from users", connection);
+                SqlDataReader kurator_read = kurator.ExecuteReader();
+                while (kurator_read.Read())
+                {
+                    comboItem_kur.Add(new comboItems(kurator_read["id"].ToString(), kurator_read["surname"].ToString() + " " + kurator_read["Name"].ToString() + " " + kurator_read["second_name"].ToString()));
+                }
+                kurator_org_filt.ItemsSource = comboItem_kur;
+                kurator_read.Close();
                 connection.Close();
             }
             catch (Exception ex)
@@ -493,6 +517,7 @@ namespace crm_system
                     org table = org_grid.SelectedItem as org;
                     addOrgn.id = table.Id;
                     addOrgn = new addOrgn();
+                    addOrgn.Owner = this;
                     addOrgn.Show();
                 }
                 catch
@@ -555,15 +580,23 @@ namespace crm_system
                 add_Call.Focus();
             }
         }
-
-        private void view__calls_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void del_call__Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                connection.Open();
+                calls calls = calls_grid.SelectedValue as calls;
+                SqlCommand command = new SqlCommand("delete from calls where id = @id", connection);
+                command.Parameters.AddWithValue("id", calls.id);
+                command.ExecuteNonQuery();
+                connection.Close();
+                refresh();
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void add_call__Click(object sender, RoutedEventArgs e)
@@ -821,6 +854,10 @@ namespace crm_system
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            org_filt.Text = "";
+            dat_filt.Text = "";
+            stat_filt.Text = "";
+            oper_filt.Text = "";
             string query = "select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t";
             connection.Open();
             List<calls> callses = new List<calls>();
@@ -833,7 +870,55 @@ namespace crm_system
             calls_grid.ItemsSource = callses;
             connection.Close();
         }
-
+        public void sel_change_org()
+        {
+            try
+            {
+                List<org> orgs = new List<org>();
+                string query = "select id, code, name, (select name from cities where id = city) as city, phone, (case status when 0 then 'Добавлен'  when 1 then 'Назначен звонок' when 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org";
+                string filt = "";
+                if (org_name_filt.Text != null)
+                {
+                    filt = filt + " and name like '%" + org_name_filt.Text + "%'";
+                }
+                if (city_org_filt.SelectedValue != null)
+                {
+                    filt = filt + " and city = " + city_org_filt.SelectedValue;
+                }
+                if (prioryty_org_filt.SelectedValue != null)
+                {
+                    filt = filt + " and priority ='" + prioryty_org_filt.SelectedIndex;
+                }
+                if (org_status_filt.SelectedValue != null)
+                {
+                    filt = filt + " and status = " + org_status_filt.SelectedIndex;
+                }
+                if (kurator_org_filt.SelectedValue != null)
+                {
+                    filt = filt + " and kurator = " + kurator_org_filt.SelectedValue;
+                }
+                if (phone_org_filt.Text != null)
+                {
+                    filt = filt + " and phone like '%" + phone_org_filt.Text + "%'";
+                }
+                filt = filt.Remove(1, 3);
+                query = query + " where " + filt;
+                MessageBox.Show(query);
+                connection.Open();
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    orgs.Add(new org(reader["id"].ToString(), reader["code"].ToString(), reader["name"].ToString(), reader["city"].ToString(), reader["status"].ToString(), reader["kurator"].ToString(), reader["phone"].ToString(), reader["priority"].ToString()));
+                }
+                org_grid.ItemsSource = orgs;
+                connection.Close();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
         public void sel_change_sot()
         {
             try
@@ -851,20 +936,20 @@ namespace crm_system
                 }
                 if (otch_filt.Text != null && otch_filt.Text != "")
                 {
-                    filt = filt + " and second_name = '" + otch_filt.Text + "'";
+                    filt = filt + " and second_name like '%" + otch_filt.Text + "%'";
                 }
                 if (name_filt.Text != null && name_filt.Text != "")
                 {
-                    filt = filt + " and surname = '" + name_filt.Text + "'";
+                    filt = filt + " and surname like '%" + name_filt.Text + "%'";
                 }
                 if (fam_filt.Text != null && fam_filt.Text != "")
                 {
-                    filt = filt + " and name = '" + fam_filt.Text + "'";
+                    filt = filt + " and name like '%" + fam_filt.Text + "%'";
                 }
                 filt = filt.Remove(1, 3);
                 query = query + " where " + filt;
                 connection.Open();
-                //MessageBox.Show(query);
+
                 SqlCommand sel_sotrs = new SqlCommand(query, connection);
                 SqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
                 while (read_sotrs.Read())
@@ -903,6 +988,56 @@ namespace crm_system
         private void job_filt_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             sel_change_sot();
+        }
+
+        private void clear_Click(object sender, RoutedEventArgs e)
+        {
+            name_filt.Text = "";
+            fam_filt.Text = "";
+            otch_filt.Text = "";
+            org_filt_.Text = "";
+            job_filt.Text = "";
+            connection.Open();
+            string query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers";
+            List<worker> workers = new List<worker>();
+            if (org_id != null)
+            {
+                query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers where id_org=" + org_id;
+            }
+            SqlCommand sel_sotrs = new SqlCommand(query, connection);
+            SqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
+            while (read_sotrs.Read())
+            {
+                workers.Add(new worker(read_sotrs["id"].ToString(), read_sotrs["name"].ToString(), read_sotrs["surname"].ToString(), read_sotrs["second_name"].ToString(), read_sotrs["org"].ToString(), read_sotrs["post"].ToString()));
+            }
+            sotr_grid.ItemsSource = workers;
+            connection.Close();
+
+        }
+
+        private void city_org_filt_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            sel_change_org();
+        }
+
+        private void prioryty_org_filt_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            sel_change_org();
+        }
+
+        private void org_status_filt_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            sel_change_org();
+        }
+
+        private void kurator_org_filt_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            sel_change_org();
+        }
+
+        private void phone_org_filt_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            sel_change_org();
         }
     }
 }
