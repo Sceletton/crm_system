@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:crm_system"
         mc:Ignorable="d"
-        Title="add_rolls" Height="400" Width="340" ResizeMode="NoResize" Loaded="Window_Loaded">
+        Title="add_rolls" Height="400" Width="340" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Canvas>
             <StackPanel Orientation="Horizontal" Margin="50,10,0,0">
@@ -25,7 +25,7 @@
                         </ContextMenu>
                     </DataGrid.ContextMenu>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Права" Width="300" Binding="{Binding Path = name}"/>
+                        <DataGridTextColumn Header="Права" Width="300" Binding="{Binding Path = caption}"/>
                     </DataGrid.Columns>
                 </DataGrid>
                 <Button Name="add_or_upd" Width="150" Margin="10" Content="Сохранить" FontSize="12pt" Click="add_or_upd_Click"  Style="{DynamicResource DefaultBtn}"/>

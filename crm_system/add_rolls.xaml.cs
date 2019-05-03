@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using System.Data.SqlClient;
+using crm_system.DB;
 
 namespace crm_system
 {
@@ -26,15 +27,6 @@ namespace crm_system
         public add_rolls()
         {
             InitializeComponent();
-        }
-
-        public class permision
-        {
-            public string name { get; set; }
-            public permision(string Name)
-            {
-                name = Name;
-            }
         }
         public static string id_rool = null, rights = null;
         public void load_permisions()

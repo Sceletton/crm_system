@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:crm_system"
         mc:Ignorable="d"
-        Title="rulles" Height="450" Width="440" ResizeMode="NoResize" Loaded="Window_Loaded">
+        Title="rulles" Height="450" Width="440" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Canvas>
             <StackPanel>

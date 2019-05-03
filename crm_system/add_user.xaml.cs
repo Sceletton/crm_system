@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using System.Data.SqlClient;
+using crm_system.DB;
 
 namespace crm_system
 {
@@ -26,17 +27,6 @@ namespace crm_system
         public add_user()
         {
             InitializeComponent();
-        }
-
-        class comboItem
-        {
-            public string value { get; set; }
-            public string name { get; set; }
-            public comboItem(string val, string nam)
-            {
-                value = val;
-                name = nam;
-            }
         }
 
         private void save_Click(object sender, RoutedEventArgs e)
@@ -95,14 +85,14 @@ namespace crm_system
         {
             try
             {
-                List<comboItem> comboItems = new List<comboItem>();
+                List<comboItems> comboItems = new List<comboItems>();
                 connection = new SqlConnection(MainWindow.constr);
                 connection.Open();
                 SqlCommand sel_rols = new SqlCommand("select t.* from rols t", connection);
                 SqlDataReader read_rols = sel_rols.ExecuteReader();
                 while (read_rols.Read())
                 {
-                    comboItems.Add(new comboItem(read_rols["id"].ToString(), read_rols["name"].ToString()));
+                    comboItems.Add(new comboItems(read_rols["id"].ToString(), read_rols["name"].ToString()));
                 }
                 read_rols.Close();
                 rols.ItemsSource = comboItems;

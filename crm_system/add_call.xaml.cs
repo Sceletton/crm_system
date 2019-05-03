@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
 using System.Data.SqlClient;
+using crm_system.DB;
 
 namespace crm_system
 {
@@ -27,17 +28,6 @@ namespace crm_system
         public add_call()
         {
             InitializeComponent();
-        }
-
-        class comboItems
-        {
-            public string value { get; set; }
-            public string name { get; set; }
-            public comboItems(string val, string nam)
-            {
-                value = val;
-                name = nam;
-            }
         }
 
         private void add_cal_Click(object sender, RoutedEventArgs e)

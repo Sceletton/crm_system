@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:crm_system"
         mc:Ignorable="d"
-        Title="add_sotr" Height="320" Width="340" ResizeMode="NoResize" Loaded="Window_Loaded">
+        Title="add_sotr" Height="320" Width="340" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Canvas>
             <StackPanel Margin="20,20">

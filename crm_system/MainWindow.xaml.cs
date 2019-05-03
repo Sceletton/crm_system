@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Data;
 using System.Data.SqlClient;
 using System.Text.RegularExpressions;
+using crm_system.DB;
 
 namespace crm_system
 {
@@ -32,6 +33,7 @@ namespace crm_system
         auntif auntt = new auntif();
         public static bool auntif = false;
         public static string rol_id = null;
+        int roll_grid_id = 0;
         //для фильтра по оргранизациям
         string org_id = null;
         public static string constr = @"Data Source=DESKTOP-BEHL3UV\SQLEXPRESS;Initial Catalog=crmSystem;Integrated Security=True;MultipleActiveResultSets=True";
@@ -173,110 +175,7 @@ namespace crm_system
             }
         }
 
-        class org
-        {
-            public string Id { get; set; }
-            public string Code { get; set; }
-            public string Name { get; set; }
-            public string City { get; set; }
-            public string Status { get; set; }
-            public string Kurator { get; set; }
-            public string Phone { get; set; }
-            public string Prioriry { get; set; }
-
-            public org(string id, string code, string name, string city, string status, string kurator, string phone, string prioriry)
-            {
-                Id = id;
-                Name = name;
-                Code = code;
-                City = city;
-                Status = status;
-                Kurator = kurator;
-                Phone = phone;
-                Prioriry = prioriry;
-            }
-        }
-        public class calls
-        {
-            public string id { get; set; }
-            public string date_cal { get; set; }
-            public string org { get; set; }
-            public string call_target { get; set; }
-            public string status_call { get; set; }
-            public calls(string Id, string Date_call, string Org, string Call_target, string Status_call)
-            {
-                id = Id;
-                date_cal = Date_call;
-                org = Org;
-                call_target = Call_target;
-                status_call = Status_call;
-            }
-        }
-        public class user
-        {
-            public string id { get; set; }
-            public string login { get; set; }
-            public string pass { get; set; }
-            public string roll { get; set; }
-            public user(string Id, string Login, string Pass, string Roll)
-            {
-                id = Id;
-                login = Login;
-                pass = Pass;
-                roll = Roll;
-            }
-        }
-        public class roll
-        {
-            public string id { get; set; }
-            public string name { get; set; }
-            public roll(string Id, string Name)
-            {
-                id = Id;
-                name = Name;
-            }
-        }
-        public class grid_items
-        {
-            public string id { get; set; }
-            public string name { get; set; }
-
-            public grid_items(string Id, string Name)
-            {
-                id = Id;
-                name = Name;
-            }
-        }
-        public class worker
-        {
-            public string id { get; set; }
-            public string Name { get; set; }
-            public string Surname { get; set; }
-            public string Second_name { get; set; }
-            public string Org { get; set; }
-            public string Job { get; set; }
-
-            public worker(string id, string name, string surname, string second_name, string org, string job)
-            {
-                Name = name;
-                Surname = surname;
-                Second_name = second_name;
-                Org = org;
-                Job = job;
-            }
-        }
-
-        class comboItems
-        {
-            public string value { get; set; }
-            public string name { get; set; }
-            public comboItems(string val, string nam)
-            {
-                value = val;
-                name = nam;
-
-            }
-        }
+        
 
         public void refresh()
         {
@@ -1038,6 +937,32 @@ namespace crm_system
         private void phone_org_filt_TextChanged(object sender, TextChangedEventArgs e)
         {
             sel_change_org();
+        }
+
+        private void roll_grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            List<permision> permisions = new List<permision>();
+            var roll = roll_grid.SelectedValue as roll;
+            connection.Open();
+            SqlCommand command = new SqlCommand("select t.rights from rols t where t.id = @id_rol", connection);
+            command.Parameters.AddWithValue("id_rol", roll.id);
+            SqlDataReader reader = command.ExecuteReader();
+            while(reader.Read())
+            {
+                string[] permis = reader["rights"].ToString().Split(';');
+                for(int i = 0; i< permis.Length; i++)
+                {
+                    SqlCommand sel_permis = new SqlCommand("select t.name from permissions t where t.id = @id_per", connection);
+                    sel_permis.Parameters.AddWithValue("id_per", permis[i]);
+                    SqlDataReader read_permis = sel_permis.ExecuteReader();
+                    while (read_permis.Read())
+                    {
+                        permisions.Add(new permision(read_permis["name"].ToString()));
+                    }
+                }
+            }
+            permis_grid.ItemsSource = permisions;
+            connection.Close();
         }
     }
 }

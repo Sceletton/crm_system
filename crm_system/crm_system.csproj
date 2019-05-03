@@ -68,6 +68,7 @@
       <DependentUpon>auntif.xaml</DependentUpon>
     </Compile>
     <Compile Include="CheckFields.cs" />
+    <Compile Include="DB\Tables.cs" />
     <Compile Include="rulles.xaml.cs">
       <DependentUpon>rulles.xaml</DependentUpon>
     </Compile>
