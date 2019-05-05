@@ -689,6 +689,7 @@ namespace crm_system
         private void exit_Click(object sender, RoutedEventArgs e)
         {
             auntif = false;
+            aunt.Height = 39;
             no_visible();
         }
 

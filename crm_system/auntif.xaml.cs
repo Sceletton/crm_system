@@ -49,6 +49,7 @@ namespace crm_system
                     ((MainWindow)this.Owner).exit.Height = 39;
                     ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
                     ((MainWindow)this.Owner).re_aunt.Height = 39;
+                    ((MainWindow)this.Owner).aunt.Height = 0;
                     Close();
                 }
                 else
