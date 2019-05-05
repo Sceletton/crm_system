@@ -662,7 +662,9 @@ namespace crm_system
         {
             if (!add_Sotr.IsLoaded)
             {
+                add_Sotr = new add_sotr();
                 add_Sotr.Show();
+                add_Sotr.Owner = this;
             }
             else
             {
@@ -963,6 +965,22 @@ namespace crm_system
             }
             permis_grid.ItemsSource = permisions;
             connection.Close();
+        }
+
+        private void upd_st_Click(object sender, RoutedEventArgs e)
+        {
+            if (!add_Sotr.IsLoaded)
+            {
+                var table = sotr_grid.SelectedValue as worker;
+                add_sotr.id_sotr = table.id;
+                add_Sotr = new add_sotr();
+                add_Sotr.Show();
+                add_Sotr.Owner = this;
+            }
+            else
+            {
+                add_Sotr.Focus();
+            }
         }
     }
 }

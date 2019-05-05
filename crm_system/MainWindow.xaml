@@ -134,7 +134,7 @@
                                 <ContextMenu>
                                     <MenuItem Name="del_st" Header="Удалить" Click="del_st_Click"/>
                                     <MenuItem Name="add_st" Header="Добавить" Click="add_st_Click"></MenuItem>
-                                    <MenuItem Name="upd_st" Header="Изменить"></MenuItem>
+                                    <MenuItem Name="upd_st" Header="Изменить" Click="upd_st_Click"></MenuItem>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Columns>

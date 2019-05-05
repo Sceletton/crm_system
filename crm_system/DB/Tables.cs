@@ -89,8 +89,9 @@ namespace crm_system.DB
         public string Org { get; set; }
         public string Job { get; set; }
 
-        public worker(string id, string name, string surname, string second_name, string org, string job)
+        public worker(string Id, string name, string surname, string second_name, string org, string job)
         {
+            id = Id;
             Name = name;
             Surname = surname;
             Second_name = second_name;

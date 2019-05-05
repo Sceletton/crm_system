@@ -52,26 +52,28 @@ namespace crm_system
                     if (id_sotr == null)
                     {
                         connection.Open();
-                        SqlCommand command = new SqlCommand("exec p_add_or_upd_workers @name = @name_sotr, @surname = @surname_w, @second_name = @lastname, @id_org = @id_organisat, @id_post = @id_job ", connection);
-                        command.Parameters.AddWithValue("name_sotr", name.Text);
-                        command.Parameters.AddWithValue("surname_w", surname.Text);
-                        command.Parameters.AddWithValue("lastname", lastname.Text);
-                        command.Parameters.AddWithValue("id_organisat", orgs.SelectedValue);
-                        command.Parameters.AddWithValue("id_job", job_title.SelectedValue);
+                        SqlCommand command = new SqlCommand("insert into workers (name, surname, second_name, id_org, id_post) values (@name, @surname, @second_name, @id_org, @id_post)", connection);
+                        command.Parameters.AddWithValue("name", name.Text);
+                        command.Parameters.AddWithValue("surname", surname.Text);
+                        command.Parameters.AddWithValue("second_name", lastname.Text);
+                        command.Parameters.AddWithValue("id_org", orgs.SelectedValue);
+                        command.Parameters.AddWithValue("id_post", job_title.SelectedValue);
                         command.ExecuteNonQuery();
-                        connection.Close();
-                        //} else {
-                        //    connection.Open();
-                        //    SqlCommand command = new SqlCommand("exec p_add_or_upd_workers @id = id_sotr, @name = @name_sotr, @surname = @surname_w, @second_name = @lastname, @id_org = @id_organisat, @id_post = @id_job ", connection);
-                        //    command.Parameters.AddWithValue("id_sotr", id);
-                        //    command.Parameters.AddWithValue("name_sotr", name.Text);
-                        //    command.Parameters.AddWithValue("surname_w", surname.Text);
-                        //    command.Parameters.AddWithValue("lastname", lastname.Text);
-                        //    command.Parameters.AddWithValue("id_organisat", orgs.SelectedIndex);
-                        //    command.Parameters.AddWithValue("id_job", job_title.SelectedIndex);
-                        //    command.ExecuteNonQuery();
-                        //    connection.Close();
                     }
+                    else
+                    {
+                        SqlCommand command = new SqlCommand("update workers set name = @name, surname = @surname, second_name = @second_name, id_org = @id_org, id_post = @id_post where id = @id_emp", connection);
+                        command.Parameters.AddWithValue("id_emp", id_sotr);
+                        command.Parameters.AddWithValue("name", name.Text);
+                        command.Parameters.AddWithValue("surname", surname.Text);
+                        command.Parameters.AddWithValue("second_name", lastname.Text);
+                        command.Parameters.AddWithValue("id_org", orgs.SelectedValue);
+                        command.Parameters.AddWithValue("id_post", job_title.SelectedValue);
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                    ((MainWindow)this.Owner).refresh();
+                    Close();
                 }
                 else
                 {
@@ -128,11 +130,11 @@ namespace crm_system
                     SqlDataReader read_workers = get_workers.ExecuteReader();
                     if (read_workers.Read())
                     {
-                        orgs.SelectedIndex = int.Parse(read_workers["id_org"].ToString());
+                        orgs.SelectedValue = int.Parse(read_workers["id_org"].ToString());
                         name.Text = read_workers["name"].ToString();
                         surname.Text = read_workers["surname"].ToString();
                         lastname.Text = read_workers["second_name"].ToString();
-                        job_title.SelectedIndex = int.Parse(read_workers["id_post"].ToString());
+                        job_title.SelectedValue = int.Parse(read_workers["id_post"].ToString());
                     }
                     read_workers.Close();
                 }
