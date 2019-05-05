@@ -13,7 +13,7 @@
                     <TextBlock Text="Имя роли" FontSize="13pt"/>
                 </StackPanel>
                 <StackPanel Margin="10,0,0,0">
-                    <TextBox Name="roll_name" Width="100" FontSize="13pt" Style="{DynamicResource TextBoxStyle}"/>
+                    <TextBox Name="roll_name" Width="100" FontSize="13pt" Style="{DynamicResource TextBoxStyle}" TextChanged="roll_name_TextChanged"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel>

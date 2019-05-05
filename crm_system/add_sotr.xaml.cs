@@ -22,6 +22,7 @@ namespace crm_system
     /// </summary>
     public partial class add_sotr : Window
     {
+        CheckFields check = new CheckFields();
         SqlConnection connection;
         public static string id_org = null;
         public static string id_sotr = null;
@@ -47,6 +48,7 @@ namespace crm_system
         {
             try
             {
+                check.CheckNullFields(new[] { name, surname, lastname });
                 if (name.Text != "" && surname.Text != "" && lastname.Text != "" && orgs.Text != "" && job_title.Text != "")
                 {
                     if (id_sotr == null)
@@ -74,10 +76,6 @@ namespace crm_system
                     connection.Close();
                     ((MainWindow)this.Owner).refresh();
                     Close();
-                }
-                else
-                {
-                    MessageBox.Show("Заполните все поля!", "Предупреждение!");
                 }
             }
             catch (Exception ex)
@@ -145,6 +143,24 @@ namespace crm_system
                 connection.Close();
                 MessageBox.Show(ex.Message.ToString());
             }
+        }
+
+        private void name_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            name.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(name, "alpha");
+        }
+
+        private void surname_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            surname.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(surname, "alpha");
+        }
+
+        private void lastname_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            lastname.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(lastname, "alpha");
         }
     }
 }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -28,8 +30,57 @@ namespace crm_system
             }
         }
 
-        public void CheckFieldsCaption(TextBox tb, string type)
+        public void CheckFieldsCaption(TextBox tb, string type = "alphanumber")
         {
+            Regex regex;
+            MatchCollection match;
+            int selStart = tb.SelectionStart; 
+            try
+            {
+                switch (type)
+                {
+                    case "alpha":
+                        regex = new Regex(@"\W");
+                        if (!char.IsDigit(tb.Text[tb.SelectionStart - 1]))
+                        {
+                            match = regex.Matches(tb.Text[tb.SelectionStart - 1].ToString());
+                            if (match.Count > 0)
+                            {
+                                tb.Text = tb.Text.Remove(tb.SelectionStart - 1, 1);
+                                tb.SelectionStart = selStart - 1;
+                            }
+                        }
+                        else
+                        {
+                            tb.Text = tb.Text.Remove(tb.SelectionStart - 1, 1);
+                            tb.SelectionStart = selStart - 1;
+                        }
+                        break;
+                    case "number":
+                        regex = new Regex(@"\D");
+                        match = regex.Matches(tb.Text[tb.SelectionStart - 1].ToString());
+                        if (match.Count > 0)
+                        {
+                            tb.Text = tb.Text.Remove(tb.SelectionStart - 1, 1);
+                            tb.SelectionStart = selStart - 1;
+                        }
+                        break;
+                    case "alphanumber":
+                        regex = new Regex(@"\W");
+                        match = regex.Matches(tb.Text[tb.SelectionStart - 1].ToString());
+                        if (match.Count > 0)
+                        {
+                            tb.Text = tb.Text.Remove(tb.SelectionStart - 1, 1);
+                            tb.SelectionStart = selStart - 1;
+                        }
+                        break;
+                }
+            }
+            catch
+            {
+
+            }
+
 
         }
     }

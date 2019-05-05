@@ -136,7 +136,7 @@
     </Style>
     <!-- textbox -->
     <Style x:Key="TextBoxStyle" TargetType="{x:Type TextBox}">
-
+        <Setter Property="MaxLength" Value="50"/>
         <Setter Property="VerticalContentAlignment" Value="Top" />
         <Setter Property="BorderBrush" Value="Black"></Setter>
         <Setter Property="FlowDirection" Value="LeftToRight"></Setter>

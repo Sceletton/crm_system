@@ -24,6 +24,7 @@ namespace crm_system
     {
         SqlConnection connection;
         rulles rulles = new rulles();
+        CheckFields check = new CheckFields();
         public add_rolls()
         {
             InitializeComponent();
@@ -94,6 +95,12 @@ namespace crm_system
         private void del_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void roll_name_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            roll_name.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(roll_name);
         }
 
         private void add_Click(object sender, RoutedEventArgs e)

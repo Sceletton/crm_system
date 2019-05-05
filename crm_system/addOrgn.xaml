@@ -19,10 +19,10 @@
                         <TextBlock Text="Приоритет" Margin="0,0,0,10" FontSize="14pt"/>
                     </StackPanel>
                     <StackPanel Width="200">
-                        <TextBox Name="name" Margin="0,0,0,10" FontSize="14pt"     Height="25" Style="{DynamicResource TextBoxStyle}" />
-                        <TextBox Name="code" Margin="0,0,0,10" FontSize="14pt"     Height="25" Style="{DynamicResource TextBoxStyle}"/>
+                        <TextBox Name="name" Margin="0,0,0,10" FontSize="14pt"     Height="25" Style="{DynamicResource TextBoxStyle}" TextChanged="name_TextChanged" />
+                        <TextBox Name="code" Margin="0,0,0,10" FontSize="14pt"     Height="25" Style="{DynamicResource TextBoxStyle}" TextChanged="code_TextChanged"/>
                         <ComboBox Name="city" Margin="0,0,0,10" FontSize="14pt"    Height="29" ItemsSource="{Binding comboItems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
-                        <TextBox Name="phone" Margin="0,0,0,10" FontSize="14pt"    Height="25" Style="{DynamicResource TextBoxStyle}"/>
+                        <TextBox Name="phone" Margin="0,0,0,10" FontSize="14pt"    Height="25" Style="{DynamicResource TextBoxStyle}" TextChanged="phone_TextChanged"/>
                         <ComboBox Name="kyrator" Margin="0,0,0,10" FontSize="14pt" Height="29" ItemsSource="{Binding comboItems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                         <ComboBox Name="prioriry" Margin="0,0,0,10" FontSize="14pt" Height="29" Style="{DynamicResource ComboBoxFlatStyle}"/>
                     </StackPanel>

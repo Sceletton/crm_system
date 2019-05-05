@@ -17,7 +17,7 @@
                 <StackPanel Width="200" Margin="20,0,0,0">
                     <ComboBox Name="org" FontSize="16pt" Margin="0,0,0,20" ItemsSource="{Binding comboItems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                     <DatePicker Name="call_date" FontSize="16pt" Margin="0,0,0,20"/>
-                    <TextBox Name="call_traget" FontSize="16pt" Width="200" Height="120" TextWrapping="Wrap" Style="{DynamicResource TextBoxStyle}"/>
+                    <TextBox Name="call_traget" FontSize="16pt" Width="200" Height="120" TextWrapping="Wrap" Style="{DynamicResource TextBoxStyle}" TextChanged="call_traget_TextChanged"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Name="call_buttons" Canvas.Top="280" Margin="20" Orientation="Horizontal">

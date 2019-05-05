@@ -804,7 +804,6 @@ namespace crm_system
                 }
                 filt = filt.Remove(1, 3);
                 query = query + " where " + filt;
-                MessageBox.Show(query);
                 connection.Open();
                 SqlCommand command = new SqlCommand(query, connection);
                 SqlDataReader reader = command.ExecuteReader();
@@ -868,16 +867,19 @@ namespace crm_system
 
         private void name_filt_TextChanged(object sender, TextChangedEventArgs e)
         {
+            new CheckFields().CheckFieldsCaption(name_filt);
             sel_change_sot();
         }
 
         private void fam_filt_TextChanged(object sender, TextChangedEventArgs e)
         {
+            new CheckFields().CheckFieldsCaption(fam_filt);
             sel_change_sot();
         }
 
         private void otch_filt_TextChanged(object sender, TextChangedEventArgs e)
         {
+            new CheckFields().CheckFieldsCaption(otch_filt);
             sel_change_sot();
         }
 
@@ -938,6 +940,7 @@ namespace crm_system
 
         private void phone_org_filt_TextChanged(object sender, TextChangedEventArgs e)
         {
+            new CheckFields().CheckFieldsCaption(phone_org_filt, "number");
             sel_change_org();
         }
 
@@ -981,6 +984,11 @@ namespace crm_system
             {
                 add_Sotr.Focus();
             }
+        }
+
+        private void org_name_filt_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            new CheckFields().CheckFieldsCaption(org_name_filt);
         }
     }
 }

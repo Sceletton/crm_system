@@ -25,6 +25,7 @@ namespace crm_system
         SqlConnection connection;
         public static string id_org = null;
         public static string id_call = null;
+        CheckFields check = new CheckFields();
         public add_call()
         {
             InitializeComponent();
@@ -59,10 +60,6 @@ namespace crm_system
                         connection.Close();
                         Close();
                     }
-                }
-                else
-                {
-                    MessageBox.Show("Заполните все поля!", "Предупреждение!");
                 }
             }
             catch (Exception ex)
@@ -109,6 +106,12 @@ namespace crm_system
                 add_cal.Content = "Сохранеть";
             }
             connection.Close();
+        }
+
+        private void call_traget_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            call_traget.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(call_traget);
         }
     }
 }

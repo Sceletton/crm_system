@@ -22,6 +22,7 @@ namespace crm_system
     /// </summary>
     public partial class add_user : Window
     {
+        CheckFields check = new CheckFields();
         SqlConnection connection;
         public static string id_user = null;
         public add_user()
@@ -33,11 +34,12 @@ namespace crm_system
         {
             try
             {
-                if (Name.Text != "" && Name.Text != "" && second_name.Text != "" && Login.Text != "" && Pass.Password != "" && rols.Text != "")
+                check.CheckNullFields(new[] { Name, Surname, second_name, Login });
+                if (Name.Text != "" && Surname.Text != "" && second_name.Text != "" && Login.Text != "" && Pass.Password != "" && rols.Text != "")
                 {
+                    connection.Open();
                     if (id_user == null)
                     {
-                        connection.Open();
                         SqlCommand add_user = new SqlCommand("insert into users (name, surname, second_name, login, password, rol) values (@name, @surname, @second_name, @login, @password, @rol)", connection);
                         add_user.Parameters.AddWithValue("name", Name.Text);
                         add_user.Parameters.AddWithValue("surname", Name.Text);
@@ -46,11 +48,9 @@ namespace crm_system
                         add_user.Parameters.AddWithValue("password", Pass.Password);
                         add_user.Parameters.AddWithValue("rol", rols.SelectedValue);
                         add_user.ExecuteNonQuery();
-                        connection.Close();
                     }
                     else
                     {
-                        connection.Open();
                         SqlCommand upd_user = new SqlCommand("update users set name = @name , surname = @surname , second_name = @second_name, login = @login, password = @password, rol = @rol where id = @id", connection);
                         upd_user.Parameters.AddWithValue("name", Name.Text);
                         upd_user.Parameters.AddWithValue("surname", Surname.Text);
@@ -60,18 +60,15 @@ namespace crm_system
                         upd_user.Parameters.AddWithValue("rol", rols.SelectedValue);
                         upd_user.Parameters.AddWithValue("id", id_user);
                         upd_user.ExecuteNonQuery();
-                        connection.Close();
                     }
                     Close();
+                    connection.Close();
                     ((MainWindow)this.Owner).refresh();
-                }
-                else
-                {
-                    MessageBox.Show("Заполните все поля!", "Предупреждение!");
                 }
             }
             catch (Exception ex)
             {
+                connection.Close();
                 MessageBox.Show(ex.Message.ToString());
             }
         }
@@ -118,6 +115,30 @@ namespace crm_system
                 connection.Close();
                 MessageBox.Show(ex.Message.ToString());
             }
+        }
+
+        private void Name_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Name.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(Name, "alpha");
+        }
+
+        private void Surname_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Surname.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(Surname, "alpha");
+        }
+
+        private void second_name_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            second_name.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(second_name, "alpha");
+        }
+
+        private void Login_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Login.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(Login);
         }
     }
 }

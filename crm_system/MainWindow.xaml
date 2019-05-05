@@ -14,7 +14,7 @@
                         <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                             <StackPanel>
                                 <TextBlock Text="Наименование:" FontSize="12pt"/>
-                                <TextBox Name="org_name_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="190" Margin="0,0,10,0"/>
+                                <TextBox Name="org_name_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="190" Margin="0,0,10,0" TextChanged="org_name_filt_TextChanged"/>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Город:" FontSize="12pt"/>

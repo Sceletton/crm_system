@@ -23,7 +23,7 @@ namespace crm_system
     /// </summary>
     public partial class addOrgn : Window
     {
-        CheckFields CheckFields = new CheckFields();
+        CheckFields check = new CheckFields();
         SqlConnection connection;
         public static string id = null;
         public addOrgn()
@@ -88,7 +88,7 @@ namespace crm_system
         {
             try
             {
-                CheckFields.CheckNullFields(new[] { name,code,phone });
+                check.CheckNullFields(new[] { name,code,phone });
                 if (name.Text != "" && city.Text != "" && phone.Text != "" && kyrator.Text != "" && code.Text != "" && prioriry.Text != "")
                 {
                     if (id == null)
@@ -139,6 +139,24 @@ namespace crm_system
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void name_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            name.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(name);
+        }
+
+        private void code_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            code.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(name);
+        }
+
+        private void phone_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            phone.BorderBrush = Brushes.Black;
+            check.CheckFieldsCaption(name, "number");
         }
     }
 }
