@@ -46,9 +46,9 @@ namespace crm_system
                     MainWindow.auntif = true;
                     ((MainWindow)this.Owner).aunt_result();
                     ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
-                    ((MainWindow)this.Owner).exit.Height = 30;
+                    ((MainWindow)this.Owner).exit.Height = 39;
                     ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
-                    ((MainWindow)this.Owner).re_aunt.Height = 30;
+                    ((MainWindow)this.Owner).re_aunt.Height = 39;
                     Close();
                 }
                 else
@@ -59,8 +59,8 @@ namespace crm_system
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString());
                 connection.Close();
+                MessageBox.Show(ex.Message.ToString());
             }
         }
 
