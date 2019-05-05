@@ -989,6 +989,7 @@ namespace crm_system
         private void org_name_filt_TextChanged(object sender, TextChangedEventArgs e)
         {
             new CheckFields().CheckFieldsCaption(org_name_filt);
+            sel_change_org();
         }
     }
 }
