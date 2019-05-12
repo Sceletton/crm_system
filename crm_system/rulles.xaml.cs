@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 namespace crm_system
 {
     /// <summary>
@@ -42,13 +42,13 @@ namespace crm_system
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             permisions = new List<permision>();
-            SqlConnection connection = new SqlConnection(MainWindow.constr);
+            MySqlConnection connection = new MySqlConnection(MainWindow.constr);
             try
             {
                 bool cell_check = false;
                 connection.Open();
-                SqlCommand sel_permissions = new SqlCommand("select t.* from permissions t", connection);
-                SqlDataReader read_permissions = sel_permissions.ExecuteReader();
+                MySqlCommand sel_permissions = new MySqlCommand("select t.* from permissions t", connection);
+                MySqlDataReader read_permissions = sel_permissions.ExecuteReader();
                 while (read_permissions.Read())
                 {
                     permisions.Add(new permision(read_permissions["id"].ToString(), read_permissions["name"].ToString(), cell_check));

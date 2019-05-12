@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:crm_system"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1250" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" Height="520" Width="1250" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid>
         <TabControl TabStripPlacement="Left">
             <TabItem Header="Организации" Height="40" Style="{DynamicResource Tabit}">
@@ -47,6 +47,7 @@
                                         <MenuItem Name="add__sotr" Header="Добавить сотрудников" Click="add__sotr_Click" Height="20"/>
                                         <MenuItem Name="view__sotr" Header="Сотрудники организации" Click="view__sotr_Click" Height="20"/>
                                         <MenuItem Name="add__call" Header="Назначить звонок" Click="add__call_Click" Height="20"/>
+                                        <MenuItem Name="to_excel" Header="Excel" Height="20" Click="to_excel_Click"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -90,6 +91,7 @@
                                     <MenuItem Name="del_call_" Header="Отменить звонок" Click="del_call__Click"/>
                                     <MenuItem Name="add_call_" Header="Добавить звонок" Click="add_call__Click"/>
                                     <MenuItem Name="upd_call_" Header="Изменить звонок" Click="upd_call__Click"/>
+                                    <MenuItem Name="create_report" Header="Сформировать отчёт" Click="create_report_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Columns>
@@ -133,8 +135,9 @@
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
                                     <MenuItem Name="del_st" Header="Удалить" Click="del_st_Click"/>
-                                    <MenuItem Name="add_st" Header="Добавить" Click="add_st_Click"></MenuItem>
-                                    <MenuItem Name="upd_st" Header="Изменить" Click="upd_st_Click"></MenuItem>
+                                    <MenuItem Name="add_st" Header="Добавить" Click="add_st_Click"/>
+                                    <MenuItem Name="upd_st" Header="Изменить" Click="upd_st_Click"/>
+                                    <MenuItem Name="to_excel_workers" Header="Excel" Click="to_excel_workers_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Columns>
@@ -259,9 +262,44 @@
                     </StackPanel>
                 </Canvas>
             </TabItem>
-            
+            <TabItem Name="analityc" Header="Аналитика" Height="40" Style="{DynamicResource Tabit}">
+                <StackPanel>
+                    
+                </StackPanel>
+            </TabItem>
+            <TabItem Name="reporting" Header="Отчётность" Height="40" Style="{DynamicResource Tabit}">
+                <StackPanel>
+                    <StackPanel>
+                        <StackPanel Margin="10,0,0,10">
+                            <TextBlock Text="Дата:" FontSize="12pt"/>
+                            <DatePicker Name="date_call" HorizontalAlignment="Left" Width="150" FontSize="12pt" SelectedDateChanged="date_call_SelectedDateChanged"/>
+                        </StackPanel>
+                        <DataGrid FontSize ="12pt" MaxHeight="350" Name="calls_report_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Организация" Width="250" Binding="{Binding Path = org}"/>
+                                <DataGridTextColumn Header="Дата звонка" Width="250" Binding="{Binding Path = date_cal}"/>
+                                <DataGridTextColumn Header="Статуст звонка" Width="250" Binding="{Binding Path = status_call}"/>
+                                <DataGridTextColumn Header="Оператор" Width="230" Binding="{Binding Path = oper}"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <Button Name="create_file" Content="Сформировать отчёт" Click="create_file_Click"  Style="{DynamicResource DefaultBtn}" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                </StackPanel>
+            </TabItem>
+            <TabItem  Name="settings" Header="Найстройки" Height="40" Style="{DynamicResource Tabit}">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Путь сохранения файлов: " FontSize="12pt" VerticalAlignment="Center"/>
+                        <TextBlock Name="dir_path" FontSize="12pt" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                        <Button Name="edit_path" Style="{DynamicResource DefaultBtn}" Content="Изменить путь" FontSize="12pt" Click="edit_path_Click" Margin="20,0,0,0"/>
+                    </StackPanel>
+                    <StackPanel HorizontalAlignment="Center" Margin="0,20,0,0">
+                        <Button Name="save" Style="{DynamicResource DefaultBtn}" Content="Сохранить" FontSize="12pt" Width="160" Click="save_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
         </TabControl>
-        <StackPanel Margin="-1126,270,0,0" Width="100" >
+        <StackPanel Margin="-1126,380,0,0" Width="100" >
             <Button Content="Сменить"  Width="100" Margin="0,0,0,10" Name="re_aunt" Click="aunt_Click" Style="{DynamicResource DefaultBtn}"/>
             <Button Content="Выйти"    Width="100" Name="exit" Click="exit_Click" Margin="0,0,0,10" Style="{DynamicResource DefaultBtn}"/>
             <Button Content="Войти"    Width="100" Name="aunt" Click="aunt_Click" Style="{DynamicResource DefaultBtn}"/>

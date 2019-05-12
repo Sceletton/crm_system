@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace crm_system
 {
@@ -28,14 +28,14 @@ namespace crm_system
 
         public void auntification()
         {
-            SqlConnection connection = new SqlConnection(MainWindow.constr);
+            MySqlConnection connection = new MySqlConnection(MainWindow.constr);
             try
             {
                 string pass = null;
                 connection.Open();
-                SqlCommand get_pass = new SqlCommand("select t.password, t.rol from users t where t.login = @login", connection);
+                MySqlCommand get_pass = new MySqlCommand("select t.password, t.rol from users t where t.login = @login", connection);
                 get_pass.Parameters.AddWithValue("login", Login.Text);
-                SqlDataReader reader_pass = get_pass.ExecuteReader();
+                MySqlDataReader reader_pass = get_pass.ExecuteReader();
                 if (reader_pass.Read())
                 {
                     pass = reader_pass["password"].ToString();

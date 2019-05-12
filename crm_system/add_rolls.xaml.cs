@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using crm_system.DB;
 
 namespace crm_system
@@ -22,7 +22,7 @@ namespace crm_system
     /// </summary>
     public partial class add_rolls : Window
     {
-        SqlConnection connection;
+        MySqlConnection connection;
         rulles rulles = new rulles();
         CheckFields check = new CheckFields();
         public add_rolls()
@@ -32,18 +32,19 @@ namespace crm_system
         public static string id_rool = null, rights = null;
         public void load_permisions()
         {
-            connection = new SqlConnection(MainWindow.constr);
+            connection = new MySqlConnection(MainWindow.constr);
             connection.Open();
             string rights_name = null;
             string[] permis_array = null;
             List<permision> permisions = new List<permision>();
-            SqlCommand sel_permissions = new SqlCommand("select string_agg(t.name,';') as permissions from permissions t where  ';" + rights + ";' like '%;'+ cast(t.id as varchar)+';%'", connection);
-            SqlDataReader read_permissions = sel_permissions.ExecuteReader();
+            MySqlCommand sel_permissions = new MySqlCommand("select REPLACE(GROUP_CONCAT(t.name,';'),',','') as permissions from permissions t where  ';" + rights + "' like CONCAT('%;',convert(t.id,char),';%')  ", connection);
+            MySqlDataReader read_permissions = sel_permissions.ExecuteReader();
             if (read_permissions.Read())
             {
                 rights_name = read_permissions["permissions"].ToString();
             }
             read_permissions.Close();
+            rights_name = rights_name.Remove(rights_name.Length-1,1);
             permis_array = rights_name.Split(';');
             for (int i = 0; i < permis_array.Length; i++)
             {
@@ -59,19 +60,19 @@ namespace crm_system
             {
                 if (id_rool != null)
                 {
-                    connection = new SqlConnection(MainWindow.constr);
+                    connection = new MySqlConnection(MainWindow.constr);
                     connection.Open();
-                    SqlCommand sel_rulls = new SqlCommand("select string_agg(rights,';') as rights from rols t where t.id = @id", connection);
+                    MySqlCommand sel_rulls = new MySqlCommand("select string_agg(rights,';') as rights from rols t where t.id = @id", connection);
                     sel_rulls.Parameters.AddWithValue("id", id_rool);
-                    SqlDataReader read_ruls = sel_rulls.ExecuteReader();
+                    MySqlDataReader read_ruls = sel_rulls.ExecuteReader();
                     if (read_ruls.Read())
                     {
                         rights = read_ruls["rights"].ToString();
                     }
                     read_ruls.Close();
-                    SqlCommand sel_roll_info = new SqlCommand("select t.name from rols t where t.id = @id", connection);
+                    MySqlCommand sel_roll_info = new MySqlCommand("select t.name from rols t where t.id = @id", connection);
                     sel_roll_info.Parameters.AddWithValue("id", id_rool);
-                    SqlDataReader read_roll_info = sel_roll_info.ExecuteReader();
+                    MySqlDataReader read_roll_info = sel_roll_info.ExecuteReader();
                     if (read_roll_info.Read())
                     {
                         roll_name.Text = read_roll_info["name"].ToString();
@@ -89,7 +90,38 @@ namespace crm_system
 
         private void add_or_upd_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                if (roll_name.Text != "")
+                {
+                    if (id_rool == null)
+                    {
+                        connection.Open();
+                        MySqlCommand ins_in_users = new MySqlCommand("insert into rols (rights, name) values (@rights, @name)", connection);
+                        ins_in_users.Parameters.AddWithValue("rights", rights);
+                        ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
+                        ins_in_users.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                    else
+                    {
+                        connection.Open();
+                        MySqlCommand ins_in_users = new MySqlCommand("update rols set rights = @rights, name = @name where id = @id", connection);
+                        ins_in_users.Parameters.AddWithValue("rights", rights);
+                        ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
+                        ins_in_users.Parameters.AddWithValue("id", id_rool);
+                        ins_in_users.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                    ((MainWindow)this.Owner).refresh();
+                    Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message.ToString());
+            }
         }
 
         private void del_Click(object sender, RoutedEventArgs e)

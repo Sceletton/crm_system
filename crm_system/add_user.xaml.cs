@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using crm_system.DB;
 
 namespace crm_system
@@ -23,7 +23,7 @@ namespace crm_system
     public partial class add_user : Window
     {
         CheckFields check = new CheckFields();
-        SqlConnection connection;
+        MySqlConnection connection;
         public static string id_user = null;
         public add_user()
         {
@@ -40,7 +40,7 @@ namespace crm_system
                     connection.Open();
                     if (id_user == null)
                     {
-                        SqlCommand add_user = new SqlCommand("insert into users (name, surname, second_name, login, password, rol) values (@name, @surname, @second_name, @login, @password, @rol)", connection);
+                        MySqlCommand add_user = new MySqlCommand("insert into users (name, surname, second_name, login, password, rol) values (@name, @surname, @second_name, @login, @password, @rol)", connection);
                         add_user.Parameters.AddWithValue("name", Name.Text);
                         add_user.Parameters.AddWithValue("surname", Name.Text);
                         add_user.Parameters.AddWithValue("second_name", second_name.Text);
@@ -51,7 +51,7 @@ namespace crm_system
                     }
                     else
                     {
-                        SqlCommand upd_user = new SqlCommand("update users set name = @name , surname = @surname , second_name = @second_name, login = @login, password = @password, rol = @rol where id = @id", connection);
+                        MySqlCommand upd_user = new MySqlCommand("update users set name = @name , surname = @surname , second_name = @second_name, login = @login, password = @password, rol = @rol where id = @id", connection);
                         upd_user.Parameters.AddWithValue("name", Name.Text);
                         upd_user.Parameters.AddWithValue("surname", Surname.Text);
                         upd_user.Parameters.AddWithValue("second_name", second_name.Text);
@@ -83,10 +83,10 @@ namespace crm_system
             try
             {
                 List<comboItems> comboItems = new List<comboItems>();
-                connection = new SqlConnection(MainWindow.constr);
+                connection = new MySqlConnection(MainWindow.constr);
                 connection.Open();
-                SqlCommand sel_rols = new SqlCommand("select t.* from rols t", connection);
-                SqlDataReader read_rols = sel_rols.ExecuteReader();
+                MySqlCommand sel_rols = new MySqlCommand("select t.* from rols t", connection);
+                MySqlDataReader read_rols = sel_rols.ExecuteReader();
                 while (read_rols.Read())
                 {
                     comboItems.Add(new comboItems(read_rols["id"].ToString(), read_rols["name"].ToString()));
@@ -95,9 +95,9 @@ namespace crm_system
                 rols.ItemsSource = comboItems;
                 if (id_user != null)
                 {
-                    SqlCommand sel_user_info = new SqlCommand("select t.* from users t where t.id = @id", connection);
+                    MySqlCommand sel_user_info = new MySqlCommand("select t.* from users t where t.id = @id", connection);
                     sel_user_info.Parameters.AddWithValue("id", id_user);
-                    SqlDataReader read_user_info = sel_user_info.ExecuteReader();
+                    MySqlDataReader read_user_info = sel_user_info.ExecuteReader();
                     if (read_user_info.Read())
                     {
                         Name.Text = read_user_info["name"].ToString();

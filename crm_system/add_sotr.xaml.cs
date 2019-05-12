@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using crm_system.DB;
 
 namespace crm_system
@@ -23,7 +23,7 @@ namespace crm_system
     public partial class add_sotr : Window
     {
         CheckFields check = new CheckFields();
-        SqlConnection connection;
+        MySqlConnection connection;
         public static string id_org = null;
         public static string id_sotr = null;
         public add_sotr()
@@ -54,7 +54,7 @@ namespace crm_system
                     if (id_sotr == null)
                     {
                         connection.Open();
-                        SqlCommand command = new SqlCommand("insert into workers (name, surname, second_name, id_org, id_post) values (@name, @surname, @second_name, @id_org, @id_post)", connection);
+                        MySqlCommand command = new MySqlCommand("insert into workers (name, surname, second_name, id_org, id_post) values (@name, @surname, @second_name, @id_org, @id_post)", connection);
                         command.Parameters.AddWithValue("name", name.Text);
                         command.Parameters.AddWithValue("surname", surname.Text);
                         command.Parameters.AddWithValue("second_name", lastname.Text);
@@ -64,7 +64,7 @@ namespace crm_system
                     }
                     else
                     {
-                        SqlCommand command = new SqlCommand("update workers set name = @name, surname = @surname, second_name = @second_name, id_org = @id_org, id_post = @id_post where id = @id_emp", connection);
+                        MySqlCommand command = new MySqlCommand("update workers set name = @name, surname = @surname, second_name = @second_name, id_org = @id_org, id_post = @id_post where id = @id_emp", connection);
                         command.Parameters.AddWithValue("id_emp", id_sotr);
                         command.Parameters.AddWithValue("name", name.Text);
                         command.Parameters.AddWithValue("surname", surname.Text);
@@ -96,10 +96,10 @@ namespace crm_system
             List<comboItems> Orgs = new List<comboItems>();
             try
             {
-                connection = new SqlConnection(MainWindow.constr);
+                connection = new MySqlConnection(MainWindow.constr);
                 connection.Open();
-                SqlCommand sel_orgs = new SqlCommand("select id, name from org order by name ", connection);
-                SqlDataReader orgs_read = sel_orgs.ExecuteReader();
+                MySqlCommand sel_orgs = new MySqlCommand("select id, name from org order by name ", connection);
+                MySqlDataReader orgs_read = sel_orgs.ExecuteReader();
                 while (orgs_read.Read())
                 {
                     Orgs.Add(new comboItems(orgs_read["id"].ToString(), orgs_read["name"].ToString()));
@@ -112,8 +112,8 @@ namespace crm_system
 
                 }
 
-                SqlCommand sel_jobs = new SqlCommand("select id, name from posts order by name ", connection);
-                SqlDataReader read_jobs = sel_jobs.ExecuteReader();
+                MySqlCommand sel_jobs = new MySqlCommand("select id, name from posts order by name ", connection);
+                MySqlDataReader read_jobs = sel_jobs.ExecuteReader();
                 while (read_jobs.Read())
                 {
                     jobs.Add(new comboItems(read_jobs["id"].ToString(), read_jobs["name"].ToString()));
@@ -123,9 +123,9 @@ namespace crm_system
 
                 if (id_sotr != null)
                 {
-                    SqlCommand get_workers = new SqlCommand("select name, surname, second_name, id_org, id_post from workers where id = @id", connection);
+                    MySqlCommand get_workers = new MySqlCommand("select name, surname, second_name, id_org, id_post from workers where id = @id", connection);
                     get_workers.Parameters.AddWithValue("id", id_sotr);
-                    SqlDataReader read_workers = get_workers.ExecuteReader();
+                    MySqlDataReader read_workers = get_workers.ExecuteReader();
                     if (read_workers.Read())
                     {
                         orgs.SelectedValue = int.Parse(read_workers["id_org"].ToString());

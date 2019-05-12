@@ -62,3 +62,6 @@ C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\add_user.baml
 C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\auntif.baml
 C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\MainWindow.baml
 C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\rulles.baml
+C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\crm_system.csproj.ResolveComReference.cache
+C:\Users\Рамиль\Desktop\crm\crm_system\bin\Debug\MySql.Data.dll
+C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\crm_system.csproj.CopyComplete

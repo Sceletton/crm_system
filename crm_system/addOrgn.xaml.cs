@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Data;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 using crm_system.DB;
 
 
@@ -24,7 +24,7 @@ namespace crm_system
     public partial class addOrgn : Window
     {
         CheckFields check = new CheckFields();
-        SqlConnection connection;
+        MySqlConnection connection;
         public static string id = null;
         public addOrgn()
         {
@@ -36,12 +36,12 @@ namespace crm_system
             prioriry.Items.Add("Низский");
             prioriry.Items.Add("Средний");
             prioriry.Items.Add("Высокий");
-            connection = new SqlConnection(MainWindow.constr);
+            connection = new MySqlConnection(MainWindow.constr);
             connection.Open();
             List<comboItems> comboItem = new List<comboItems>();
             List<comboItems> comboItem_kur = new List<comboItems>();
-            SqlCommand citys = new SqlCommand("select name,id from cities", connection);
-            SqlDataReader read_citys = citys.ExecuteReader();
+            MySqlCommand citys = new MySqlCommand("select name,id from cities", connection);
+            MySqlDataReader read_citys = citys.ExecuteReader();
             while (read_citys.Read())
             {
                 comboItem.Add(new comboItems(read_citys["id"].ToString(), read_citys["name"].ToString()));
@@ -49,8 +49,8 @@ namespace crm_system
             city.ItemsSource = comboItem;
             read_citys.Close();
 
-            SqlCommand kurator = new SqlCommand("select id, name, surname, second_name from users", connection);
-            SqlDataReader kurator_read = kurator.ExecuteReader();
+            MySqlCommand kurator = new MySqlCommand("select id, name, surname, second_name from users", connection);
+            MySqlDataReader kurator_read = kurator.ExecuteReader();
             while (kurator_read.Read())
             {
                 comboItem_kur.Add(new comboItems(kurator_read["id"].ToString(), kurator_read["surname"].ToString() + " " + kurator_read["Name"].ToString() + " " + kurator_read["second_name"].ToString()));
@@ -61,9 +61,9 @@ namespace crm_system
             {
                 try
                 {
-                    SqlCommand select_org = new SqlCommand("select name, city, phone, kurator, code, priority, status from org where id = @id", connection);
+                    MySqlCommand select_org = new MySqlCommand("select name, city, phone, kurator, code, priority, status from org where id = @id", connection);
                     select_org.Parameters.AddWithValue("id", id);
-                    SqlDataReader read_org = select_org.ExecuteReader();
+                    MySqlDataReader read_org = select_org.ExecuteReader();
                     if (read_org.Read())
                     {
                         name.Text = read_org["name"].ToString();
@@ -94,7 +94,7 @@ namespace crm_system
                     if (id == null)
                     {
                         connection.Open();
-                        SqlCommand add_org = new SqlCommand("insert into org (name,city,phone,status,kurator,code,priority) values (@name,@city,@phone,0,@kurator,@code,@priority)", connection);
+                        MySqlCommand add_org = new MySqlCommand("insert into org (name,city,phone,status,kurator,code,priority) values (@name,@city,@phone,0,@kurator,@code,@priority)", connection);
                         add_org.Parameters.AddWithValue("name", name.Text);
                         add_org.Parameters.AddWithValue("city", city.SelectedValue);
                         add_org.Parameters.AddWithValue("phone", phone.Text);
@@ -107,7 +107,7 @@ namespace crm_system
                     else
                     {
                         connection.Open();
-                        SqlCommand upd_org = new SqlCommand("update org set name = @name, city = @city, phone = @phone, kurator = @kurator, code = @code, priority = @priority where id = @id", connection);
+                        MySqlCommand upd_org = new MySqlCommand("update org set name = @name, city = @city, phone = @phone, kurator = @kurator, code = @code, priority = @priority where id = @id", connection);
                         upd_org.Parameters.AddWithValue("id", id);
                         upd_org.Parameters.AddWithValue("name", name.Text);
                         upd_org.Parameters.AddWithValue("city", city.SelectedValue);
