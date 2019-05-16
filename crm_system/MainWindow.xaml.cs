@@ -22,6 +22,9 @@ using Excel = Microsoft.Office.Interop.Excel;
 using MySql.Data.MySqlClient;
 using Microsoft.Win32;
 using MessageBox = System.Windows.MessageBox;
+using CheckBox = System.Windows.Controls.CheckBox;
+using LiveCharts;
+using LiveCharts.Configurations;
 
 namespace crm_system
 {
@@ -39,9 +42,41 @@ namespace crm_system
         auntif auntt = new auntif();
         public static bool auntif = false;
         public static string rol_id = null;
+        public static int user_id = -1;
         //для фильтра по оргранизациям
         string org_id = null;
-        public static string constr = "SERVER=remotemysql.com;DATABASE=bMjNqMlkRS;UID=bMjNqMlkRS;Pwd=yoaqLEF23P;";
+        public static string constr = null;
+        public MainWindow()
+        {
+            InitializeComponent();
+            no_visible();
+            stat_filt.Items.Add("Назначен");
+            stat_filt.Items.Add("Закончен");
+            try
+            {
+                var sr = Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory()), "conf.txt",SearchOption.AllDirectories);
+                string[] settings = File.ReadAllText(sr[0]).Split(';');
+                string server = settings[Find(settings, "SERVER")], db = settings[Find(settings, "DATABASE")], uid = settings[Find(settings, "UID")], pwd = settings[Find(settings, "Pwd")];
+                constr = server + ";" + db + ";" + uid + ";" + pwd + ";";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Крнфигурационный файл не найден");
+            }
+            connection = new MySqlConnection(constr);
+        }
+
+        public ChartValues<CustomerVm> Customers { get; set; }
+        public string[] Labels { get; set; }
+
+        public class CustomerVm
+        {
+            public string Name { get; set; }
+            public string LastName { get; set; }
+            public int Phone { get; set; }
+            public int PurchasedItems { get; set; }
+        }
+
         public int Find(string[] ar, string word)
         {
             for (int i = 0; i < ar.Length; i++)
@@ -53,51 +88,6 @@ namespace crm_system
             }
             return -1;
         }
-        public MainWindow()
-        {
-            InitializeComponent();
-            no_visible();
-            stat_filt.Items.Add("Назначен");
-            stat_filt.Items.Add("Закончен");
-            try
-            {
-                string[] settings = File.ReadAllText(Path.GetFullPath(@"C:\Users\Рамиль\Desktop\crm\crm_system\conf\conf.txt")).Split(';');
-                string server = settings[Find(settings, "SERVER")], db = settings[Find(settings, "DATABASE")], uid = settings[Find(settings, "UID")], pwd = settings[Find(settings, "Pwd")];
-                constr = server + ";" + db + ";" + uid + ";" + pwd + ";";
-                MessageBox.Show(constr);
-
-            }
-            catch (ArgumentNullException ex)
-            {
-                MessageBox.Show("Крнфигурационный файл не найден");
-            }
-            MySqlConnection conn = new MySqlConnection(constr);
-            conn.Open();
-            connection = new MySqlConnection(constr);
-            connection.Open();
-            try
-            {
-                MySqlCommand get_start_num = new MySqlCommand("select t.is_first_start from settings t", connection);
-                MySqlDataReader reader = get_start_num.ExecuteReader();
-                if (reader.Read())
-                {
-                    
-                    if (int.Parse(reader["is_first_start"].ToString()) == 1)
-                    {
-                        MySqlCommand settings_cmd = new MySqlCommand("update settings set save_path = @path, is_first_start = 0 where is_first_start = 1", connection);
-                        settings_cmd.Parameters.AddWithValue("path", Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
-                        settings_cmd.ExecuteNonQuery();
-                    }
-                }
-                reader.Close();
-                connection.Close();
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
         public void no_visible()
         {
             Thickness no_margin = new Thickness(0, 0, 0, 0);
@@ -229,146 +219,161 @@ namespace crm_system
 
         
 
-        public void refresh()
+        public void refresh(string tab = null)
         {
-            connection = new MySqlConnection(constr);
             connection.Open();
             //try
             //{
-                //orgs
-                List<org> orgs = new List<org>();
-                connection = new MySqlConnection(constr);
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("select id, code, name, (select name from cities where id = city) as city, phone, (case status when 0 then 'Добавлен'  when 1 then 'Назначен звонок' when 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org", connection);
-                MySqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
+                if (tab == "orgs" || tab == null)
                 {
-                    orgs.Add(new org(reader["id"].ToString(), reader["code"].ToString(), reader["name"].ToString(), reader["city"].ToString(), reader["status"].ToString(), reader["kurator"].ToString(), reader["phone"].ToString(), reader["priority"].ToString()));
-                }
-                org_grid.ItemsSource = orgs;
-                reader.Close();
-                //calls
-                List<calls> callses = new List<calls>();
-                if (org_id != null)
-                {
-                    MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t where t.id_org = @org_id", connection);
-                    sel_calls.Parameters.AddWithValue("org_id", org_id);
-                    MySqlDataReader reader_calls = sel_calls.ExecuteReader();
-                    while (reader_calls.Read())
+                    //orgs
+                    List<org> orgs = new List<org>();
+                    MySqlCommand command = new MySqlCommand("select id, code, name, (select name from cities where id = city) as city, phone, (case status when 0 then 'Добавлен'  when 1 then 'Назначен звонок' when 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org", connection);
+                    MySqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
                     {
-                        callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString()));
+                        orgs.Add(new org(reader["id"].ToString(), reader["code"].ToString(), reader["name"].ToString(), reader["city"].ToString(), reader["status"].ToString(), reader["kurator"].ToString(), reader["phone"].ToString(), reader["priority"].ToString()));
                     }
-                    reader_calls.Close();
+                    org_grid.ItemsSource = orgs;
+                    reader.Close();
                 }
-                else
+                if (tab == "calls" || tab == null)
                 {
-                    MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t", connection);
-                    MySqlDataReader reader_calls = sel_calls.ExecuteReader();
-                    while (reader_calls.Read())
+                    //calls
+                    List<calls> callses = new List<calls>();
+                    if (org_id != null)
                     {
-                        callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString()));
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t where t.id_org = @org_id", connection);
+                        sel_calls.Parameters.AddWithValue("org_id", org_id);
+                        MySqlDataReader reader_calls = sel_calls.ExecuteReader();
+                        while (reader_calls.Read())
+                        {
+                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString()));
+                        }
+                        reader_calls.Close();
                     }
-                    reader_calls.Close();
+                    else
+                    {
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t", connection);
+                        MySqlDataReader reader_calls = sel_calls.ExecuteReader();
+                        while (reader_calls.Read())
+                        {
+                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString()));
+                        }
+                        reader_calls.Close();
+                    }
+                    calls_grid.ItemsSource = callses;
                 }
-                calls_grid.ItemsSource = callses;
-                //users
-                List<user> users = new List<user>();
-                MySqlCommand sel_users = new MySqlCommand("select t.id, t.login, t.password, (select tt.name from rols tt where tt.id = t.rol) as roll from users t", connection);
-                MySqlDataReader read_users = sel_users.ExecuteReader();
-                while (read_users.Read())
+                if (tab == "users" || tab == null)
                 {
-                    users.Add(new user(read_users["id"].ToString(), read_users["login"].ToString(), read_users["password"].ToString(), read_users["roll"].ToString()));
+                    //users
+                    List<user> users = new List<user>();
+                    MySqlCommand sel_users = new MySqlCommand("select t.id, t.login, t.password, (select tt.name from rols tt where tt.id = t.rol) as roll from users t", connection);
+                    MySqlDataReader read_users = sel_users.ExecuteReader();
+                    while (read_users.Read())
+                    {
+                        users.Add(new user(read_users["id"].ToString(), read_users["login"].ToString(), read_users["password"].ToString(), read_users["roll"].ToString()));
+                    }
+                    read_users.Close();
+                    user_grid.ItemsSource = users;
                 }
-                read_users.Close();
-                user_grid.ItemsSource = users;
-                //rols
-                List<roll> rolls = new List<roll>();
-                MySqlCommand sel_ruls = new MySqlCommand("select t.id, t.name from rols t", connection);
-                MySqlDataReader read_ruls = sel_ruls.ExecuteReader();
-                while (read_ruls.Read())
+                if (tab == "rols" || tab == null)
                 {
-                    rolls.Add(new roll(read_ruls["id"].ToString(), read_ruls["name"].ToString()));
+                    //rols
+                    List<roll> rolls = new List<roll>();
+                    MySqlCommand sel_ruls = new MySqlCommand("select t.id, t.name from rols t", connection);
+                    MySqlDataReader read_ruls = sel_ruls.ExecuteReader();
+                    while (read_ruls.Read())
+                    {
+                        rolls.Add(new roll(read_ruls["id"].ToString(), read_ruls["name"].ToString()));
+                    }
+                    read_ruls.Close();
+                    roll_grid.ItemsSource = rolls;
                 }
-                read_ruls.Close();
-                roll_grid.ItemsSource = rolls;
                 //handbooks
-                List<grid_items> jobs = new List<grid_items>();
-                List<grid_items> cities = new List<grid_items>();
-                List<grid_items> rulls = new List<grid_items>();
-                //Должности
-                try
+                if (tab == "handbooks" || tab == null)
                 {
-                    MySqlCommand sel_jobs = new MySqlCommand("select t.* from posts t", connection);
-                    MySqlDataReader read_jobs = sel_jobs.ExecuteReader();
-                    while (read_jobs.Read())
+                    List<grid_items> jobs = new List<grid_items>();
+                    List<grid_items> cities = new List<grid_items>();
+                    List<grid_items> rulls = new List<grid_items>();
+                    //Должности
+                    try
                     {
-                        jobs.Add(new grid_items(read_jobs["id"].ToString(), read_jobs["name"].ToString()));
+                        MySqlCommand sel_jobs = new MySqlCommand("select t.* from posts t", connection);
+                        MySqlDataReader read_jobs = sel_jobs.ExecuteReader();
+                        while (read_jobs.Read())
+                        {
+                            jobs.Add(new grid_items(read_jobs["id"].ToString(), read_jobs["name"].ToString()));
+                        }
+                        read_jobs.Close();
+                        post_grid.ItemsSource = jobs;
                     }
-                    read_jobs.Close();
-                    post_grid.ItemsSource = jobs;
-                }
-                catch (SqlException sqlEx)
-                {
-                    MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
-                    connection.Close();
-                }
+                    catch (SqlException sqlEx)
+                    {
+                        MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
+                        connection.Close();
+                    }
 
-                //Города
-                try
-                {
-                    MySqlCommand sel_cities = new MySqlCommand("select t.* from cities t", connection);
-                    MySqlDataReader cities_jobs = sel_cities.ExecuteReader();
-                    while (cities_jobs.Read())
+                    //Города
+                    try
                     {
-                        cities.Add(new grid_items(cities_jobs["id"].ToString(), cities_jobs["name"].ToString()));
+                        MySqlCommand sel_cities = new MySqlCommand("select t.* from cities t", connection);
+                        MySqlDataReader cities_jobs = sel_cities.ExecuteReader();
+                        while (cities_jobs.Read())
+                        {
+                            cities.Add(new grid_items(cities_jobs["id"].ToString(), cities_jobs["name"].ToString()));
+                        }
+                        cities_jobs.Close();
+                        cities_grid.ItemsSource = cities;
                     }
-                    cities_jobs.Close();
-                    cities_grid.ItemsSource = cities;
-                }
-                catch (SqlException sqlEx)
-                {
-                    MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении Городов!");
-                    connection.Close();
-                }
+                    catch (SqlException sqlEx)
+                    {
+                        MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении Городов!");
+                        connection.Close();
+                    }
 
-                //"Права ролей"
-                try
-                {
-                    MySqlCommand sel_rols = new MySqlCommand("select t.* from permissions t", connection);
-                    MySqlDataReader read_rols = sel_rols.ExecuteReader();
-                    while (read_rols.Read())
+                    //"Права ролей"
+                    try
                     {
-                        rulls.Add(new grid_items(read_rols["id"].ToString(), read_rols["name"].ToString()));
+                        MySqlCommand sel_rols = new MySqlCommand("select t.* from permissions t", connection);
+                        MySqlDataReader read_rols = sel_rols.ExecuteReader();
+                        while (read_rols.Read())
+                        {
+                            rulls.Add(new grid_items(read_rols["id"].ToString(), read_rols["name"].ToString()));
+                        }
+                        rol_rulls_grid.ItemsSource = rulls;
+                        read_rols.Close();
                     }
-                    rol_rulls_grid.ItemsSource = rulls;
-                    read_rols.Close();
+                    catch (SqlException sqlEx)
+                    {
+                        MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении прав ролей!");
+                        connection.Close();
+                    }
                 }
-                catch (SqlException sqlEx)
+                if (tab == "emps" || tab == null)
                 {
-                    MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении прав ролей!");
-                    connection.Close();
+                    //sotrs
+                    string query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers";
+                    List<worker> workers = new List<worker>();
+                    if (org_id != null)
+                    {
+                        query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers where id_org=" + org_id;
+                    }
+                    MySqlCommand sel_sotrs = new MySqlCommand(query, connection);
+                    MySqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
+                    while (read_sotrs.Read())
+                    {
+                        workers.Add(new worker(read_sotrs["id"].ToString(), read_sotrs["name"].ToString(), read_sotrs["surname"].ToString(), read_sotrs["second_name"].ToString(), read_sotrs["org"].ToString(), read_sotrs["post"].ToString()));
+                    }
+                    read_sotrs.Close();
+                    sotr_grid.ItemsSource = workers;
                 }
-                //sotrs
-                string query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers";
-                List<worker> workers = new List<worker>();
-                if (org_id != null)
-                {
-                    query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers where id_org=" + org_id;
-                }
-                MySqlCommand sel_sotrs = new MySqlCommand(query, connection);
-                MySqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
-                while (read_sotrs.Read())
-                {
-                    workers.Add(new worker(read_sotrs["id"].ToString(), read_sotrs["name"].ToString(), read_sotrs["surname"].ToString(), read_sotrs["second_name"].ToString(), read_sotrs["org"].ToString(), read_sotrs["post"].ToString()));
-                }
-                read_sotrs.Close();
-                sotr_grid.ItemsSource = workers;
                 //
                 //
                 //
                 List<comboItems> Orgs = new List<comboItems>();
                 List<comboItems> Opers = new List<comboItems>();
-
+                List<grid_items> jobes = new List<grid_items>();
                 MySqlCommand sel_orgs = new MySqlCommand("select id, name from org order by name ", connection);
                 MySqlDataReader orgs_read = sel_orgs.ExecuteReader();
                 while (orgs_read.Read())
@@ -382,11 +387,28 @@ namespace crm_system
                 {
                     Opers.Add(new comboItems(opers_read["id"].ToString(), opers_read["surname"].ToString() + " " + opers_read["Name"].ToString() + " " + opers_read["second_name"].ToString()));
                 }
+                emploers.ItemsSource = Opers;
                 opers_read.Close();
+                try
+                {
+                    MySqlCommand sel_jobs = new MySqlCommand("select t.* from posts t", connection);
+                    MySqlDataReader read_jobs = sel_jobs.ExecuteReader();
+                    while (read_jobs.Read())
+                    {
+                        jobes.Add(new grid_items(read_jobs["id"].ToString(), read_jobs["name"].ToString()));
+                    }
+                    read_jobs.Close();
+                    post_grid.ItemsSource = jobes;
+                }
+                catch (SqlException sqlEx)
+                {
+                    connection.Close();
+                    MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
+                }
                 org_filt.ItemsSource = Orgs;
                 org_filt_.ItemsSource = Orgs;
                 oper_filt.ItemsSource = Opers;
-                job_filt.ItemsSource = jobs;
+                job_filt.ItemsSource = jobes;
                 prioryty_org_filt.Items.Add("Низский");
                 prioryty_org_filt.Items.Add("Средний");
                 prioryty_org_filt.Items.Add("Высокий");
@@ -413,14 +435,25 @@ namespace crm_system
                 }
                 kurator_org_filt.ItemsSource = comboItem_kur;
                 kurator_read.Close();
-                //настройки
-                MySqlCommand settings = new MySqlCommand("select t.* from settings t", connection);
-                MySqlDataReader set_reader = settings.ExecuteReader();
-                if (set_reader.Read())
+                if (tab == "settings" || tab == null)
                 {
-                    dir_path.Text = set_reader["save_path"].ToString();
+                    //настройки
+                    MySqlCommand settings = new MySqlCommand("select t.* from settings t where t.id_user = @id_user", connection);
+                    settings.Parameters.AddWithValue("id_user", user_id);
+                    MySqlDataReader set_reader = settings.ExecuteReader();
+                    if (set_reader.Read())
+                    {
+                        dir_path.Text = set_reader["save_path"].ToString();
+                        setChecBoxValue(orgs_fiter, int.Parse(set_reader["orgs_search"].ToString()));
+                        setChecBoxValue(calls_fiter, int.Parse(set_reader["emps_search"].ToString()));
+                        setChecBoxValue(emps_fiter, int.Parse(set_reader["call_search"].ToString()));
+                        setFiltersVisible(organiz_filter, int.Parse(set_reader["orgs_search"].ToString()));
+                        setFiltersVisible(emps_filter, int.Parse(set_reader["emps_search"].ToString()));
+                        setFiltersVisible(calls_filter, int.Parse(set_reader["call_search"].ToString()));
+
+                    }
+                    set_reader.Close();
                 }
-                set_reader.Close();
                 connection.Close();
             //}
             //catch (Exception ex)
@@ -620,12 +653,36 @@ namespace crm_system
 
         private void upd_us_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!add_User.IsLoaded)
+            {
+                add_User = new add_user();
+                add_User.Owner = this;
+                add_user.id_user = (user_grid.SelectedItem as user).id;
+                add_User.Show();
+            }
+            else
+            {
+                add_User.Focus();
+            }
         }
 
         private void del_roll_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                connection.Open();
+                MySqlCommand del_roll = new MySqlCommand("delete from rols where id = @rol_id", connection);
+                del_roll.Parameters.AddWithValue("rol_id", (roll_grid.SelectedItem as roll).id);
+                del_roll.ExecuteNonQuery();
+                connection.Close();
+                refresh("rols");
+                permis_grid.ItemsSource= "";
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void add_roll_Click(object sender, RoutedEventArgs e)
@@ -1012,32 +1069,46 @@ namespace crm_system
 
         private void roll_grid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            List<permision> permisions = new List<permision>();
-            var roll = roll_grid.SelectedValue as roll;
-            connection.Open();
-            MySqlCommand command = new MySqlCommand("select t.rights from rols t where t.id = @id_rol", connection);
-            command.Parameters.AddWithValue("id_rol", roll.id);
-            MySqlDataReader reader = command.ExecuteReader();
-            MySqlConnection conn = null;
-            while (reader.Read())
+            try
             {
-                string[] permis = reader["rights"].ToString().Split(';');
-                for(int i = 0; i< permis.Length; i++)
+                List<permision> permisions = new List<permision>();
+                var roll = roll_grid.SelectedValue as roll;
+                try
                 {
-                    conn = new MySqlConnection(constr);
-                    conn.Open();
-                    MySqlCommand sel_permis = new MySqlCommand("select t.name from permissions t where t.id = @id_per", conn);
-                    sel_permis.Parameters.AddWithValue("id_per", permis[i]);
-                    MySqlDataReader read_permis = sel_permis.ExecuteReader();
-                    while (read_permis.Read())
-                    {
-                        permisions.Add(new permision(read_permis["name"].ToString()));
-                    }
-                    conn.Close();
+                    connection.Open();
                 }
+                catch
+                {
+
+                }
+                MySqlCommand command = new MySqlCommand("select t.rights from rols t where t.id = @id_rol", connection);
+                command.Parameters.AddWithValue("id_rol", roll.id);
+                MySqlDataReader reader = command.ExecuteReader();
+                MySqlConnection conn = null;
+                while (reader.Read())
+                {
+                    string[] permis = reader["rights"].ToString().Split(';');
+                    for (int i = 0; i < permis.Length; i++)
+                    {
+                        conn = new MySqlConnection(constr);
+                        conn.Open();
+                        MySqlCommand sel_permis = new MySqlCommand("select t.name from permissions t where t.id = @id_per", conn);
+                        sel_permis.Parameters.AddWithValue("id_per", permis[i]);
+                        MySqlDataReader read_permis = sel_permis.ExecuteReader();
+                        while (read_permis.Read())
+                        {
+                            permisions.Add(new permision(read_permis["name"].ToString()));
+                        }
+                        conn.Close();
+                    }
+                }
+                permis_grid.ItemsSource = permisions;
+                connection.Close();
             }
-            permis_grid.ItemsSource = permisions;
-            connection.Close();
+            catch
+            {
+
+            }
         }
 
         private void upd_st_Click(object sender, RoutedEventArgs e)
@@ -1131,7 +1202,8 @@ namespace crm_system
             {
                 string path= null;
                 connection.Open();
-                MySqlCommand command = new MySqlCommand("select t.save_path from settings t where is_first_start = 0", connection);
+                MySqlCommand command = new MySqlCommand("select t.save_path from settings t where t.id_user = @id_user", connection);
+                command.Parameters.AddWithValue("id_user",user_id);
                 MySqlDataReader reader1 = command.ExecuteReader();
                 if (reader1.Read())
                 {
@@ -1169,6 +1241,7 @@ namespace crm_system
             }
             catch (Exception ex)
             {
+                connection.Close();
                 MessageBox.Show(ex.Message);
             }
         }
@@ -1179,7 +1252,8 @@ namespace crm_system
             {
                 string path = null;
                 connection.Open();
-                MySqlCommand command = new MySqlCommand("select t.save_path from settings t where is_first_start = 0", connection);
+                MySqlCommand command = new MySqlCommand("select t.save_path from settings t where id_user = @id_user", connection);
+                command.Parameters.AddWithValue("id_user", user_id);
                 MySqlDataReader reader1 = command.ExecuteReader();
                 if (reader1.Read())
                 {
@@ -1234,22 +1308,122 @@ namespace crm_system
             }
         }
 
+        public void setChecBoxValue (CheckBox cb, int val)
+        {
+            switch(val)
+            {
+                case 0:
+                    cb.IsChecked = false;
+                    break;
+                case 1:
+                    cb.IsChecked = true;
+                    break;
+            }
+        }
+
+        int org_filtt = 0, calls_filt = 0, emps_filt = 0;
+
+        private void orgs_fiter_Checked(object sender, RoutedEventArgs e)
+        {
+            org_filtt = 1;
+        }
+
+        private void orgs_fiter_Unchecked(object sender, RoutedEventArgs e)
+        {
+            org_filtt = 0;
+        }
+
+        private void calls_fiter_Checked(object sender, RoutedEventArgs e)
+        {
+            calls_filt = 1;
+        }
+
+        private void calls_fiter_Unchecked(object sender, RoutedEventArgs e)
+        {
+            calls_filt = 0;
+        }
+
+        private void emps_fiter_Checked(object sender, RoutedEventArgs e)
+        {
+            emps_filt = 1;
+        }
+
+        private void emps_fiter_Unchecked(object sender, RoutedEventArgs e)
+        {
+            emps_filt = 0;
+        }
+
         private void save_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 connection.Open();
-                MySqlCommand setting = new MySqlCommand("update settings set save_path = @save_path",connection);
+                MySqlCommand setting = new MySqlCommand("update settings set save_path = @save_path, orgs_search = @orgs_search, emps_search = @emps_search, call_search = @call_search where id_user = @id_user", connection);
+                setting.Parameters.AddWithValue("id_user", user_id);
                 setting.Parameters.AddWithValue("save_path", dir_path.Text);
+                setting.Parameters.AddWithValue("orgs_search", org_filtt);
+                setting.Parameters.AddWithValue("emps_search", emps_filt);
+                setting.Parameters.AddWithValue("call_search", calls_filt);
                 setting.ExecuteNonQuery();
                 connection.Close();
+                refresh("settings");
             }
-            catch
+            catch(Exception ex)
             {
-
+                connection.Close();
+                MessageBox.Show(ex.Message);
             }
         }
+        private void emploers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            connection.Open();
+            SqlCommand analyze = new SqlCommand("select count(1) as all_cals from calls t where t.id_oper = @id" +
+                                                "union" +
+                                                "select count(1) as callback from calls t where t.id_oper = @id");
+            connection.Close();
+            Customers = new ChartValues<CustomerVm>
+            {
+                new CustomerVm
+                {
+                    Name = "Irvin",
+                    LastName = "Hale",
+                    Phone = 123456789,
+                    PurchasedItems = 2
+                },
+                new CustomerVm
+                {
+                    Name = "Malcolm",
+                    LastName = "Revees",
+                    Phone = 098765432,
+                    PurchasedItems = 3
+                }
+            };
 
+            Labels = new[] { "Всего звонков", "Положительный ответ" };
+
+            //let create a mapper so LiveCharts know how to plot our CustomerViewModel class
+            var customerVmMapper = Mappers.Xy<CustomerVm>()
+                .X((value, index) => index) // lets use the position of the item as X
+                .Y(value => value.PurchasedItems); //and PurchasedItems property as Y
+
+            //lets save the mapper globally
+            Charting.For<CustomerVm>(customerVmMapper);
+
+            DataContext = this;
+        }
+
+        public void setFiltersVisible(StackPanel panel, int val)
+        {
+            switch (val)
+            {
+                case 1:
+                    panel.Height = 61;
+                    break;
+                case 0:
+                    panel.Height = 0;
+                    break;
+            }
+        }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             Environment.Exit(0);

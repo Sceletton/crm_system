@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Data;
 using MySql.Data.MySqlClient;
 using crm_system.DB;
+using System.IO;
 
 namespace crm_system
 {
@@ -48,6 +49,11 @@ namespace crm_system
                         add_user.Parameters.AddWithValue("password", Pass.Password);
                         add_user.Parameters.AddWithValue("rol", rols.SelectedValue);
                         add_user.ExecuteNonQuery();
+                        //добавим запись в таблицу настроек.
+                        MySqlCommand add_ini = new MySqlCommand("insert into settings (id_user, save_path) values (@id_user, @save_path)", connection);
+                        add_ini.Parameters.AddWithValue("id_user", add_user.LastInsertedId);
+                        add_ini.Parameters.AddWithValue("save_path", Environment.GetFolderPath(Environment.SpecialFolder.Desktop));
+                        add_ini.ExecuteNonQuery();
                     }
                     else
                     {

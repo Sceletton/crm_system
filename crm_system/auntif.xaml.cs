@@ -28,16 +28,18 @@ namespace crm_system
 
         public void auntification()
         {
+            
             MySqlConnection connection = new MySqlConnection(MainWindow.constr);
             try
             {
                 string pass = null;
                 connection.Open();
-                MySqlCommand get_pass = new MySqlCommand("select t.password, t.rol from users t where t.login = @login", connection);
+                MySqlCommand get_pass = new MySqlCommand("select t.id as user_id, t.password, t.rol from users t where t.login = @login", connection);
                 get_pass.Parameters.AddWithValue("login", Login.Text);
                 MySqlDataReader reader_pass = get_pass.ExecuteReader();
                 if (reader_pass.Read())
                 {
+                    MainWindow.user_id = int.Parse(reader_pass["user_id"].ToString());
                     pass = reader_pass["password"].ToString();
                     MainWindow.rol_id = reader_pass["rol"].ToString();
                 }
@@ -50,6 +52,7 @@ namespace crm_system
                     ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
                     ((MainWindow)this.Owner).re_aunt.Height = 39;
                     ((MainWindow)this.Owner).aunt.Height = 0;
+                    ((MainWindow)this.Owner).refresh();
                     Close();
                 }
                 else

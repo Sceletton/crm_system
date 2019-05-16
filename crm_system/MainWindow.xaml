@@ -3,15 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:crm_system"
+        xmlns:local ="clr-namespace:crm_system"
+        xmlns:lc ="http://oxyplot.org/wpf"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="520" Width="1250" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
+        Title="MainWindow" Height="520" Width="1250" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" d:DataContext="{d:DesignInstance local:MainWindow}">
     <Grid>
-        <TabControl TabStripPlacement="Left">
+        <TabControl TabStripPlacement="Left" >
             <TabItem Header="Организации" Height="40" Style="{DynamicResource Tabit}">
                 <Canvas>
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Height="61" Name="organiz_filter">
                             <StackPanel>
                                 <TextBlock Text="Наименование:" FontSize="12pt"/>
                                 <TextBox Name="org_name_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="190" Margin="0,0,10,0" TextChanged="org_name_filt_TextChanged"/>
@@ -66,7 +68,7 @@
             <TabItem Name="cals" Header="Звонки" Height="40" Style="{DynamicResource Tabit}">
                 <Canvas>
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Name="calls_filter">
                             <StackPanel Width="210" Margin="20,0,0,0">
                                 <TextBlock Text="Организация:" FontSize="12pt"/>
                                 <ComboBox Name="org_filt" FontSize="12pt" SelectionChanged="org_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
@@ -106,9 +108,9 @@
             </TabItem>
             <TabItem Name="sotrs" Header="Сотрудники" Height="40" Style="{DynamicResource Tabit}">
                 <Canvas>
-                    
+
                     <StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Height="61" Name="emps_filter">
                             <StackPanel Width="190" Margin="10,0,0,0">
                                 <TextBlock Text="Имя:" FontSize="12pt"/>
                                 <TextBox Name="name_filt" FontSize="12pt"   Margin="0,0,0,10" Height="30"  Style="{DynamicResource TextBoxStyle}" TextChanged="name_filt_TextChanged"/>
@@ -205,7 +207,15 @@
                     </StackPanel>
                 </Canvas>
             </TabItem>
-            <TabItem Name="handbooks" Header="Справочники" Height="40" Style="{DynamicResource Tabit}">
+            <TabItem Name="handbooks" Header="Справочники" Height="40" Style="{DynamicResource Tabit}" RenderTransformOrigin="0.5,0.5">
+                <TabItem.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform AngleX="4.086"/>
+                        <RotateTransform/>
+                        <TranslateTransform X="1.429"/>
+                    </TransformGroup>
+                </TabItem.RenderTransform>
                 <Canvas>
                     <StackPanel Orientation="Vertical" Margin="10,0">
                         <StackPanel Orientation="Horizontal"  Width="1920" HorizontalAlignment="Center">
@@ -263,9 +273,31 @@
                 </Canvas>
             </TabItem>
             <TabItem Name="analityc" Header="Аналитика" Height="40" Style="{DynamicResource Tabit}">
-                <StackPanel>
-                    
-                </StackPanel>
+                <TabControl>
+                    <TabItem Style="{DynamicResource Tabit}" Header="Эффективность сотрудника">
+                        <StackPanel>
+                            <ComboBox Name="emploers"  HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="emploers_SelectionChanged" Style="{DynamicResource ComboBoxFlatStyle}" DisplayMemberPath="name" SelectedValuePath="value" ItemsSource="{Binding comboitems}"/>
+                            <lvc:CartesianChart LegendLocation="Right" Height="180">
+                                <lvc:CartesianChart.Series>
+                                    <lvc:ColumnSeries Title="Работник" Values="{Binding Customers}"></lvc:ColumnSeries>
+                                </lvc:CartesianChart.Series>
+                                <lvc:CartesianChart.AxisX >
+                                    <lvc:Axis Labels="{Binding Labels}" LabelsRotation="-15">
+                                        <lvc:Axis.Separator>
+                                            <lvc:Separator Step="1"></lvc:Separator>
+                                        </lvc:Axis.Separator>
+                                    </lvc:Axis>
+                                </lvc:CartesianChart.AxisX>
+                                <lvc:CartesianChart.ChartLegend>
+                                    <lvc:DefaultLegend></lvc:DefaultLegend>
+                                </lvc:CartesianChart.ChartLegend>
+                            </lvc:CartesianChart>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Style="{DynamicResource Tabit}" Header="Эфектиность общения с организацией">
+
+                    </TabItem>
+                </TabControl>
             </TabItem>
             <TabItem Name="reporting" Header="Отчётность" Height="40" Style="{DynamicResource Tabit}">
                 <StackPanel>
@@ -287,11 +319,19 @@
                 </StackPanel>
             </TabItem>
             <TabItem  Name="settings" Header="Найстройки" Height="40" Style="{DynamicResource Tabit}">
-                <StackPanel>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <StackPanel  HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Путь сохранения файлов: " FontSize="12pt" VerticalAlignment="Center"/>
                         <TextBlock Name="dir_path" FontSize="12pt" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                        <Button Name="edit_path" Style="{DynamicResource DefaultBtn}" Content="Изменить путь" FontSize="12pt" Click="edit_path_Click" Margin="20,0,0,0"/>
+                        <Button Name="edit_path" Style="{DynamicResource DefaultBtn}" Content="Изменить путь" FontSize="12pt" Click="edit_path_Click" Margin="20,0,10,0"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Настройки фильтров" FontSize="12pt" HorizontalAlignment="Center"/>
+                        <StackPanel Width="370">
+                            <CheckBox Content="Фильтр Организаций " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" Name="orgs_fiter" Checked="orgs_fiter_Checked" Unchecked="orgs_fiter_Unchecked"/>
+                            <CheckBox Content="Фильтр Звонков         " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" Name="calls_fiter" Checked="calls_fiter_Checked" Unchecked="calls_fiter_Unchecked"/>
+                            <CheckBox Content="Фильтр Сотрудников " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" Name="emps_fiter" Checked="emps_fiter_Checked" Unchecked="emps_fiter_Unchecked"/>
+                        </StackPanel>
                     </StackPanel>
                     <StackPanel HorizontalAlignment="Center" Margin="0,20,0,0">
                         <Button Name="save" Style="{DynamicResource DefaultBtn}" Content="Сохранить" FontSize="12pt" Width="160" Click="save_Click"/>

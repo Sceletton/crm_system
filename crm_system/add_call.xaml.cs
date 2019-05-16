@@ -40,10 +40,11 @@ namespace crm_system
                     if (id_call == null)
                     {
                         connection.Open();
-                        MySqlCommand command = new MySqlCommand("insert into calls (date_cal, id_org, call_target,status_call) values (@date_cal, @id_org, @call_target, 0)", connection);
+                        MySqlCommand command = new MySqlCommand("insert into calls (date_cal, id_org, call_target,status_call, id_oper) values (@date_cal, @id_org, @call_target, 0, @user_id)", connection);
                         command.Parameters.AddWithValue("date_cal", Convert.ToDateTime(call_date.SelectedDate.ToString()).ToShortDateString());
                         command.Parameters.AddWithValue("id_org", org.SelectedValue);
                         command.Parameters.AddWithValue("call_target", call_traget.Text);
+                        command.Parameters.AddWithValue("user_id", MainWindow.user_id);
                         command.ExecuteNonQuery();
                         connection.Close();
                         Close();

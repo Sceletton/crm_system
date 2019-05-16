@@ -1,75 +1,90 @@
-CREATE TABLE [dbo].[calls] (
-    [Id]          INT            IDENTITY (1, 1) NOT NULL,
-    [date_cal]    NVARCHAR (50)  NOT NULL,
-    [id_org]      INT            NOT NULL,
-    [call_target] NVARCHAR (100) NULL,
-    [status_call] INT            NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC),
-    FOREIGN KEY ([id_org]) REFERENCES [dbo].[org] ([id])
+CREATE TABLE posts (
+    id   INT            NOT NULL AUTO_INCREMENT,
+    name varchar (50) NULL,
+    PRIMARY KEY CLUSTERED (id ASC),
+    UNIQUE NONCLUSTERED (name ASC)
 );
 
-CREATE TABLE [dbo].[cities] (
-    [id]   INT           IDENTITY (1, 1) NOT NULL,
-    [name] NVARCHAR (50) NULL,
-    PRIMARY KEY CLUSTERED ([id] ASC)
+CREATE TABLE rols (
+    Id     INT              NOT NULL AUTO_INCREMENT,
+    rights varchar (1000) NOT NULL,
+    name   varchar (50)   NOT NULL,
+    PRIMARY KEY CLUSTERED (Id ASC)
 );
 
-CREATE TABLE [dbo].[org] (
-    [id]       INT           IDENTITY (1, 1) NOT NULL,
-    [name]     NVARCHAR (50) NULL,
-    [city]     INT           NULL,
-    [phone]    NVARCHAR (12) NULL,
-    [status]   INT           NULL,
-    [kurator]  INT           NULL,
-    [code]     NVARCHAR (50) NULL,
-    [priority] INT           NULL,
-    PRIMARY KEY CLUSTERED ([id] ASC),
-    UNIQUE NONCLUSTERED ([name] ASC),
-    FOREIGN KEY ([kurator]) REFERENCES [dbo].[users] ([id]),
-    FOREIGN KEY ([city]) REFERENCES [dbo].[cities] ([id])
+CREATE TABLE users (
+    id          INT            NOT NULL AUTO_INCREMENT,
+    name        varchar (50) NULL,
+    surname     varchar (50) NULL,
+    second_name varchar (50) NULL,
+    login       varchar (50) NULL,
+    password    varchar (50) NULL,
+    rol         INT           NULL,
+    PRIMARY KEY CLUSTERED (id ASC),
+    FOREIGN KEY (rol) REFERENCES rols (Id)
 );
 
-CREATE TABLE [dbo].[permissions] (
-    [Id]   INT           IDENTITY (1, 1) NOT NULL,
-    [name] NVARCHAR (50) NOT NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC),
-    UNIQUE NONCLUSTERED ([name] ASC)
+CREATE TABLE cities (
+    id   INT            NOT NULL AUTO_INCREMENT,
+    name varchar (50) NULL,
+    PRIMARY KEY CLUSTERED (id ASC)
 );
 
-CREATE TABLE [dbo].[posts] (
-    [id]   INT           IDENTITY (1, 1) NOT NULL,
-    [name] NVARCHAR (50) NULL,
-    PRIMARY KEY CLUSTERED ([id] ASC),
-    UNIQUE NONCLUSTERED ([name] ASC)
+
+CREATE TABLE org (
+    id       INT            NOT NULL AUTO_INCREMENT,
+    name     varchar (50) NULL,
+    city     INT           NULL,
+    phone    varchar (12) NULL,
+    status   INT           NULL,
+    kurator  INT           NULL,
+    code     varchar (50) NULL,
+    priority INT           NULL,
+    PRIMARY KEY CLUSTERED (id ASC),
+    UNIQUE NONCLUSTERED (name ASC),
+    FOREIGN KEY (kurator) REFERENCES users (id),
+    FOREIGN KEY (city) REFERENCES cities (id)
 );
 
-CREATE TABLE [dbo].[rols] (
-    [Id]     INT             IDENTITY (1, 1) NOT NULL,
-    [rights] NVARCHAR (1000) NOT NULL,
-    [name]   NVARCHAR (50)   NOT NULL,
-    PRIMARY KEY CLUSTERED ([Id] ASC)
+CREATE TABLE calls (
+    Id          INT             NOT NULL AUTO_INCREMENT,
+    date_cal    varchar (50)  NOT NULL,
+    id_org      INT            NOT NULL,
+    call_target varchar (100) NULL,
+    status_call INT            NULL,
+    PRIMARY KEY CLUSTERED (Id ASC),
+    FOREIGN KEY (id_org) REFERENCES org (id)
 );
 
-CREATE TABLE [dbo].[users] (
-    [id]          INT           IDENTITY (1, 1) NOT NULL,
-    [name]        NVARCHAR (50) NULL,
-    [surname]     NVARCHAR (50) NULL,
-    [second_name] NVARCHAR (50) NULL,
-    [login]       NVARCHAR (50) NULL,
-    [password]    NVARCHAR (50) NULL,
-    [rol]         INT           NULL,
-    PRIMARY KEY CLUSTERED ([id] ASC),
-    FOREIGN KEY ([rol]) REFERENCES [dbo].[rols] ([Id])
+
+
+
+CREATE TABLE permissions (
+    Id   INT            NOT NULL AUTO_INCREMENT,
+    name varchar (50) NOT NULL,
+    PRIMARY KEY CLUSTERED (Id ASC),
+    UNIQUE NONCLUSTERED (name ASC)
 );
 
-CREATE TABLE [dbo].[workers] (
-    [id]          INT           IDENTITY (1, 1) NOT NULL,
-    [name]        NVARCHAR (50) NULL,
-    [surname]     NVARCHAR (50) NULL,
-    [second_name] NVARCHAR (50) NULL,
-    [id_org]      INT           NULL,
-    [id_post]     INT           NULL,
-    PRIMARY KEY CLUSTERED ([id] ASC),
-    FOREIGN KEY ([id_org]) REFERENCES [dbo].[org] ([id]),
-    FOREIGN KEY ([id_post]) REFERENCES [dbo].[posts] ([id])
+
+CREATE TABLE workers (
+    id          INT    NOT NULL AUTO_INCREMENT,
+    name        varchar (50) NULL,
+    surname     varchar (50) NULL,
+    second_name varchar (50) NULL,
+    id_org      INT           NULL,
+    id_post     INT           NULL,
+    PRIMARY KEY CLUSTERED (id ASC),
+    FOREIGN KEY (id_org) REFERENCES org (id),
+    FOREIGN KEY (id_post) REFERENCES posts (id)
 );
+
+create TABLE settings
+(
+    id int PRIMARY KEY AUTO_INCREMENT,
+    id_user int REFERENCES users(id),
+    save_path text,
+    orgs_search int DEFAULT 1,
+    emps_search int DEFAULT 1,
+    call_search int DEFAULT 1
+)
