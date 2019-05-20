@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="520" Width="1250" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" d:DataContext="{d:DesignInstance local:MainWindow}">
     <Grid>
-        <TabControl TabStripPlacement="Left" >
+        <TabControl TabStripPlacement="Left">
             <TabItem Header="Организации" Height="40" Style="{DynamicResource Tabit}">
                 <Canvas>
                     <StackPanel>
@@ -90,10 +90,11 @@
                         <DataGrid FontSize ="12pt" MaxHeight="350" Name="calls_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}">
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Name="del_call_" Header="Отменить звонок" Click="del_call__Click"/>
                                     <MenuItem Name="add_call_" Header="Добавить звонок" Click="add_call__Click"/>
                                     <MenuItem Name="upd_call_" Header="Изменить звонок" Click="upd_call__Click"/>
-                                    <MenuItem Name="create_report" Header="Сформировать отчёт" Click="create_report_Click"/>
+                                    <MenuItem Name="del_call_" Header="Отменить звонок" Click="del_call__Click"/>
+                                    <MenuItem Name="clouse_call" Header="Закрыть звонок" Click="clouse_call_Click"/>
+                                    <MenuItem Name="create_report" Header="Excel" Click="create_report_Click"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Columns>
@@ -275,11 +276,11 @@
             <TabItem Name="analityc" Header="Аналитика" Height="40" Style="{DynamicResource Tabit}">
                 <TabControl>
                     <TabItem Style="{DynamicResource Tabit}" Header="Эффективность сотрудника">
-                        <StackPanel>
-                            <ComboBox Name="emploers"  HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="emploers_SelectionChanged" Style="{DynamicResource ComboBoxFlatStyle}" DisplayMemberPath="name" SelectedValuePath="value" ItemsSource="{Binding comboitems}"/>
-                            <lvc:CartesianChart LegendLocation="Right" Height="180">
+                        <StackPanel HorizontalAlignment="Left">
+                            <ComboBox Name="emploers"  HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="emploers_SelectionChanged" Style="{DynamicResource ComboBoxFlatStyle}" DisplayMemberPath="name" SelectedValuePath="value" ItemsSource="{Binding comboitems}" Width="150"/>
+                            <lvc:CartesianChart LegendLocation="Right" Height="350" Width="800">
                                 <lvc:CartesianChart.Series>
-                                    <lvc:ColumnSeries Title="Работник" Values="{Binding Customers}"></lvc:ColumnSeries>
+                                    <lvc:ColumnSeries Name="legendTitle" Title="Работник" Values="{Binding analitycs}"></lvc:ColumnSeries>
                                 </lvc:CartesianChart.Series>
                                 <lvc:CartesianChart.AxisX >
                                     <lvc:Axis Labels="{Binding Labels}" LabelsRotation="-15">
@@ -295,7 +296,50 @@
                         </StackPanel>
                     </TabItem>
                     <TabItem Style="{DynamicResource Tabit}" Header="Эфектиность общения с организацией">
-
+                        <StackPanel>
+                            <ComboBox Name="org" Style="{DynamicResource ComboBoxFlatStyle}" Width="150" HorizontalAlignment="Left" SelectionChanged="org_SelectionChanged"/>
+                            <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,80,0,0">
+                                <StackPanel Margin="0,0,30,0">
+                                    <lvc:AngularGauge  Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" Name="callbacks"
+                                      LabelsStep="10" TicksStep="25" Wedge="300"
+                                      TicksForeground="White" Foreground="White" 
+                                      FontWeight="Bold" FontSize="16"
+                                      SectionsInnerRadius=".5" >
+                                        <lvc:AngularGauge.Sections>
+                                            <lvc:AngularSection FromValue="0" ToValue="100" Fill="#F8A725"/>
+                                            <lvc:AngularSection FromValue="50" ToValue="100" Fill="#FF3939"/>
+                                        </lvc:AngularGauge.Sections>
+                                    </lvc:AngularGauge>
+                                    <TextBlock Text="Коифицент ответов" FontSize="14pt" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel Margin="0,0,30,0">
+                                    <lvc:AngularGauge Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" Name="clouse_calls"
+                                      LabelsStep="10" TicksStep="25" Wedge="300"
+                                      TicksForeground="White" Foreground="White" 
+                                      FontWeight="Bold" FontSize="16"
+                                      SectionsInnerRadius=".5" >
+                                        <lvc:AngularGauge.Sections>
+                                            <lvc:AngularSection FromValue="0" ToValue="100" Fill="#F8A725"/>
+                                            <lvc:AngularSection FromValue="50" ToValue="100" Fill="#FF3939"/>
+                                        </lvc:AngularGauge.Sections>
+                                    </lvc:AngularGauge>
+                                    <TextBlock Text="Отменено звонов" FontSize="14pt" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                                <StackPanel>
+                                    <lvc:AngularGauge Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" Name="sucsesful_calls"
+                                      LabelsStep="10" TicksStep="25" Wedge="300"
+                                      TicksForeground="White" Foreground="White" 
+                                      FontWeight="Bold" FontSize="16"
+                                      SectionsInnerRadius=".5">
+                                        <lvc:AngularGauge.Sections>
+                                            <lvc:AngularSection FromValue="0" ToValue="100" Fill="#F8A725"/>
+                                            <lvc:AngularSection FromValue="50" ToValue="100" Fill="#FF3939"/>
+                                        </lvc:AngularGauge.Sections>
+                                    </lvc:AngularGauge>
+                                    <TextBlock Text="Удачных звонков" FontSize="14pt" HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
                     </TabItem>
                 </TabControl>
             </TabItem>

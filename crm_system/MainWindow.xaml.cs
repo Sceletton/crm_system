@@ -13,7 +13,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Data;
-using System.Data.SqlClient;
 using System.Text.RegularExpressions;
 using crm_system.DB;
 using Microsoft.Office.Interop.Excel;
@@ -66,17 +65,8 @@ namespace crm_system
             connection = new MySqlConnection(constr);
         }
 
-        public ChartValues<CustomerVm> Customers { get; set; }
+        public ChartValues<opertator> analitycs { get; set; }
         public string[] Labels { get; set; }
-
-        public class CustomerVm
-        {
-            public string Name { get; set; }
-            public string LastName { get; set; }
-            public int Phone { get; set; }
-            public int PurchasedItems { get; set; }
-        }
-
         public int Find(string[] ar, string word)
         {
             for (int i = 0; i < ar.Length; i++)
@@ -243,22 +233,22 @@ namespace crm_system
                     List<calls> callses = new List<calls>();
                     if (org_id != null)
                     {
-                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t where t.id_org = @org_id", connection);
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call from calls t where t.id_org = @org_id", connection);
                         sel_calls.Parameters.AddWithValue("org_id", org_id);
                         MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                         while (reader_calls.Read())
                         {
-                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString()));
+                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString()));
                         }
                         reader_calls.Close();
                     }
                     else
                     {
-                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t", connection);
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t", connection);
                         MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                         while (reader_calls.Read())
                         {
-                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString()));
+                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString()));
                         }
                         reader_calls.Close();
                     }
@@ -308,7 +298,7 @@ namespace crm_system
                         read_jobs.Close();
                         post_grid.ItemsSource = jobs;
                     }
-                    catch (SqlException sqlEx)
+                    catch (MySqlException sqlEx)
                     {
                         MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
                         connection.Close();
@@ -326,7 +316,7 @@ namespace crm_system
                         cities_jobs.Close();
                         cities_grid.ItemsSource = cities;
                     }
-                    catch (SqlException sqlEx)
+                    catch (MySqlException sqlEx)
                     {
                         MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении Городов!");
                         connection.Close();
@@ -344,7 +334,7 @@ namespace crm_system
                         rol_rulls_grid.ItemsSource = rulls;
                         read_rols.Close();
                     }
-                    catch (SqlException sqlEx)
+                    catch (MySqlException sqlEx)
                     {
                         MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении прав ролей!");
                         connection.Close();
@@ -400,7 +390,7 @@ namespace crm_system
                     read_jobs.Close();
                     post_grid.ItemsSource = jobes;
                 }
-                catch (SqlException sqlEx)
+                catch (MySqlException sqlEx)
                 {
                     connection.Close();
                     MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
@@ -454,6 +444,7 @@ namespace crm_system
                     }
                     set_reader.Close();
                 }
+
                 connection.Close();
             //}
             //catch (Exception ex)
@@ -577,7 +568,8 @@ namespace crm_system
                 add_Call.Focus();
             }
         }
-        private void del_call__Click(object sender, RoutedEventArgs e)
+
+        public void dell_call(int status)
         {
             try
             {
@@ -586,6 +578,11 @@ namespace crm_system
                 MySqlCommand command = new MySqlCommand("delete from calls where id = @id", connection);
                 command.Parameters.AddWithValue("id", calls.id);
                 command.ExecuteNonQuery();
+                MySqlCommand ancalytic = new MySqlCommand("insert into calls_analytics  (id_org, id_oper, call_status) values (@id_org, @user_id, @status)", connection);
+                ancalytic.Parameters.AddWithValue("id_org", calls.id_org);
+                ancalytic.Parameters.AddWithValue("status", status);
+                ancalytic.Parameters.AddWithValue("user_id", MainWindow.user_id);
+                connection.Close();
                 connection.Close();
                 refresh();
             }
@@ -594,6 +591,11 @@ namespace crm_system
                 connection.Close();
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void del_call__Click(object sender, RoutedEventArgs e)
+        {
+            dell_call(2);
         }
 
         private void add_call__Click(object sender, RoutedEventArgs e)
@@ -819,7 +821,7 @@ namespace crm_system
         {
             try
             {
-                string query = "select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t";
+                string query = "select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t";
                 string filt = "";
                 if (org_filt.SelectedValue != null)
                 {
@@ -845,7 +847,7 @@ namespace crm_system
                 MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                 while (reader_calls.Read())
                 {
-                    callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString()));
+                    callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString()));
                 }
                 calls_grid.ItemsSource = callses;
                 connection.Close();
@@ -882,14 +884,14 @@ namespace crm_system
             dat_filt.Text = "";
             stat_filt.Text = "";
             oper_filt.Text = "";
-            string query = "select t.id, t.date_cal, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t";
+            string query = "select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t";
             connection.Open();
             List<calls> callses = new List<calls>();
             MySqlCommand sel_calls = new MySqlCommand(query, connection);
             MySqlDataReader reader_calls = sel_calls.ExecuteReader();
             while (reader_calls.Read())
             {
-                callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString()));
+                callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString()));
             }
             calls_grid.ItemsSource = callses;
             connection.Close();
@@ -1376,40 +1378,79 @@ namespace crm_system
         }
         private void emploers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            int all_calls = 0, add_cals = 0, callback = 0;
             connection.Open();
-            SqlCommand analyze = new SqlCommand("select count(1) as all_cals from calls t where t.id_oper = @id" +
-                                                "union" +
-                                                "select count(1) as callback from calls t where t.id_oper = @id");
-            connection.Close();
-            Customers = new ChartValues<CustomerVm>
+            MySqlCommand analyze = new MySqlCommand("select count(1) as all_calls from calls_analytics t where t.id_oper = @id", connection); // положительный ответ
+            analyze.Parameters.AddWithValue("id", int.Parse(emploers.SelectedValue.ToString()));
+            MySqlDataReader reader = analyze.ExecuteReader();
+            while(reader.Read())
             {
-                new CustomerVm
-                {
-                    Name = "Irvin",
-                    LastName = "Hale",
-                    Phone = 123456789,
-                    PurchasedItems = 2
-                },
-                new CustomerVm
-                {
-                    Name = "Malcolm",
-                    LastName = "Revees",
-                    Phone = 098765432,
-                    PurchasedItems = 3
-                }
+                all_calls = int.Parse(reader["all_calls"].ToString());
+            }
+            reader.Close();
+            //
+            MySqlCommand analyze1 = new MySqlCommand("select count(1) as add_calls from calls_analytics t where t.id_oper = @id and status_call = 0", connection);
+            analyze1.Parameters.AddWithValue("id", emploers.SelectedValue);
+            MySqlDataReader reader1 = analyze1.ExecuteReader();
+            while (reader1.Read())
+            {
+                add_cals = int.Parse(reader1["add_calls"].ToString());
+            }
+            reader1.Close();
+            //
+            MySqlCommand analyze2 = new MySqlCommand("select count(1) as callback from calls_analytics t where t.id_oper = @id and status_call = 1", connection); // положительный ответ
+            analyze2.Parameters.AddWithValue("id", emploers.SelectedValue);
+            MySqlDataReader reader2 = analyze2.ExecuteReader();
+            while (reader2.Read())
+            {
+                callback = int.Parse(reader2["callback"].ToString());
+            }
+            reader2.Close();
+            //
+            connection.Close();
+            analitycs = new ChartValues<opertator>
+            {
+                new opertator(emploers.Text,all_calls),
+                new opertator(emploers.Text,add_cals),
+                new opertator(emploers.Text,callback)
             };
-
-            Labels = new[] { "Всего звонков", "Положительный ответ" };
-
+            Labels = new[] { "Всего звонков", "Добавлено звонков", "Положительный ответ" };
+            legendTitle.Title = emploers.Text;
             //let create a mapper so LiveCharts know how to plot our CustomerViewModel class
-            var customerVmMapper = Mappers.Xy<CustomerVm>()
+            var customerVmMapper = Mappers.Xy<opertator>()
                 .X((value, index) => index) // lets use the position of the item as X
-                .Y(value => value.PurchasedItems); //and PurchasedItems property as Y
+                .Y(value => value.value); //and PurchasedItems property as Y
 
             //lets save the mapper globally
-            Charting.For<CustomerVm>(customerVmMapper);
+            Charting.For<opertator>(customerVmMapper);
 
             DataContext = this;
+        }
+
+        private void clouse_call_Click(object sender, RoutedEventArgs e)
+        {
+            dell_call(1);
+        }
+
+        private void org_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                connection.Open();
+                MySqlCommand analytic = new MySqlCommand("select ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status != 0)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as answers, ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status = 2)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as cancel", connection);
+                analytic.Parameters.AddWithValue("org", org.SelectedValue);
+                MySqlDataReader reader = analytic.ExecuteReader();
+                if (reader.Read())
+                {
+                    callbacks.Value = int.Parse(reader["answers"].ToString());
+                }
+                connection.Close();
+            }
+            catch(Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message);
+            }
         }
 
         public void setFiltersVisible(StackPanel panel, int val)

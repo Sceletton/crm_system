@@ -46,6 +46,11 @@ namespace crm_system
                         command.Parameters.AddWithValue("call_target", call_traget.Text);
                         command.Parameters.AddWithValue("user_id", MainWindow.user_id);
                         command.ExecuteNonQuery();
+                        //
+                        MySqlCommand ancalytic = new MySqlCommand("insert into calls_analytics  (id_org,call_status, id_oper, id_call) values (@id_org, 0, @user_id)", connection);
+                        ancalytic.Parameters.AddWithValue("id_call", command.LastInsertedId);
+                        ancalytic.Parameters.AddWithValue("id_org", org.SelectedValue);
+                        ancalytic.Parameters.AddWithValue("user_id", MainWindow.user_id);
                         connection.Close();
                         Close();
                     }

@@ -33,10 +33,11 @@ namespace crm_system.DB
     {
         public string id { get; set; }
         public string date_cal { get; set; }
+        public string id_org { get; set; }
         public string org { get; set; }
         public string call_target { get; set; }
         public string status_call { get; set; }
-        public calls(string Id, string Date_call, string Org, string Call_target, string Status_call)
+        public calls(string Id, string Date_call, string Org, string Call_target, string Status_call, string id_org)
         {
             id = Id;
             date_cal = Date_call;
@@ -118,6 +119,16 @@ namespace crm_system.DB
         public permision(string Caption)
         {
             caption = Caption;
+        }
+    }
+    public class opertator
+    {
+        public string fio { get; set; }
+        public int value { get; set; }
+        public opertator(string Fio, int val)
+        {
+            fio = Fio;
+            value = val;
         }
     }
 }
