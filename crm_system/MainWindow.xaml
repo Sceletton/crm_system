@@ -208,15 +208,7 @@
                     </StackPanel>
                 </Canvas>
             </TabItem>
-            <TabItem Name="handbooks" Header="Справочники" Height="40" Style="{DynamicResource Tabit}" RenderTransformOrigin="0.5,0.5">
-                <TabItem.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform/>
-                        <SkewTransform AngleX="4.086"/>
-                        <RotateTransform/>
-                        <TranslateTransform X="1.429"/>
-                    </TransformGroup>
-                </TabItem.RenderTransform>
+            <TabItem Name="handbooks" Header="Справочники" Height="40" Style="{DynamicResource Tabit}">
                 <Canvas>
                     <StackPanel Orientation="Vertical" Margin="10,0">
                         <StackPanel Orientation="Horizontal"  Width="1920" HorizontalAlignment="Center">
@@ -226,9 +218,9 @@
                                     <DataGrid FontSize ="13pt" MaxHeight="350" Name="post_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" >
                                         <DataGrid.ContextMenu>
                                             <ContextMenu Width="300">
-                                                <MenuItem Name="add_post" Header="Удалить " Click="add_post_Click"  Height="20"/>
-                                                <MenuItem Name="upd_post" Header="Добавить " Click="upd_post_Click"  Height="20"/>
-                                                <MenuItem Name="del_post" Header="Изменить " Click="del_post_Click"  Height="20"/>
+                                                <MenuItem Name="add_post" Header="Добавить" Click="add_post_Click"  Height="20"/>
+                                                <MenuItem Name="upd_post" Header="Изменить" Click="upd_post_Click"  Height="20"/>
+                                                <MenuItem Name="del_post" Header="Удалить" Click="del_post_Click"  Height="20"/>
                                             </ContextMenu>
                                         </DataGrid.ContextMenu>
                                         <DataGrid.Columns>
@@ -243,9 +235,9 @@
                                     <DataGrid FontSize ="13pt" MaxHeight="350" Name="cities_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
                                         <DataGrid.ContextMenu>
                                             <ContextMenu Width="300">
-                                                <MenuItem Name="add_citi" Header="Удалить " Click="add_citi_Click"  Height="20"/>
-                                                <MenuItem Name="upd_citi" Header="Добавить " Click="upd_citi_Click"  Height="20"/>
-                                                <MenuItem Name="del_cities" Header="Изменить " Click="del_cities_Click"  Height="20"/>
+                                                <MenuItem Name="add_citi" Header="Добавить" Click="add_citi_Click"  Height="20"/>
+                                                <MenuItem Name="upd_citi" Header="Изменить" Click="upd_citi_Click"  Height="20"/>
+                                                <MenuItem Name="del_cities" Header="Удалить" Click="del_cities_Click"  Height="20"/>
                                             </ContextMenu>
                                         </DataGrid.ContextMenu>
                                         <DataGrid.Columns>

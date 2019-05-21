@@ -83,6 +83,9 @@
     <Compile Include="auntif.xaml.cs">
       <DependentUpon>auntif.xaml</DependentUpon>
     </Compile>
+    <Compile Include="a_or_u_hanboxes.xaml.cs">
+      <DependentUpon>a_or_u_hanboxes.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CheckFields.cs" />
     <Compile Include="DB\Tables.cs" />
     <Compile Include="rulles.xaml.cs">
@@ -109,6 +112,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="auntif.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="a_or_u_hanboxes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -39,6 +39,8 @@ namespace crm_system
         add_user add_User = new add_user();
         add_rolls add_rolles = new add_rolls();
         auntif auntt = new auntif();
+        a_or_u_hanboxes hanboxes_cities = new a_or_u_hanboxes();
+        a_or_u_hanboxes hanboxes_posts = new a_or_u_hanboxes();
         public static bool auntif = false;
         public static string rol_id = null;
         public static int user_id = -1;
@@ -101,7 +103,14 @@ namespace crm_system
             sotrs.Visibility = Visibility.Hidden;
             sotrs.Margin = no_margin;
             sotrs.Height = 0;
-
+            //
+            settings.Visibility = Visibility.Hidden;
+            settings.Margin = no_margin;
+            settings.Height = 0;
+            //
+            analityc.Visibility = Visibility.Hidden;
+            analityc.Margin = no_margin;
+            analityc.Height = 0;
             //
 
             del__org.Visibility = Visibility.Hidden;
@@ -196,6 +205,16 @@ namespace crm_system
                                 handbooks.Visibility = Visibility.Visible;
                                 handbooks.Height = 40;
                                 break;
+                            case "11":
+                                //Аналитика
+                                analityc.Visibility = Visibility.Visible;
+                                analityc.Height = 40;
+                                break;
+                            case "12":
+                                //Настройка
+                                settings.Visibility = Visibility.Visible;
+                                settings.Height = 40;
+                                break;
                         }
                     }
                 }
@@ -212,8 +231,8 @@ namespace crm_system
         public void refresh(string tab = null)
         {
             connection.Open();
-            //try
-            //{
+            try
+            {
                 if (tab == "orgs" || tab == null)
                 {
                     //orgs
@@ -399,6 +418,7 @@ namespace crm_system
                 org_filt_.ItemsSource = Orgs;
                 oper_filt.ItemsSource = Opers;
                 job_filt.ItemsSource = jobes;
+                org.ItemsSource = Orgs;
                 prioryty_org_filt.Items.Add("Низский");
                 prioryty_org_filt.Items.Add("Средний");
                 prioryty_org_filt.Items.Add("Высокий");
@@ -446,13 +466,13 @@ namespace crm_system
                 }
 
                 connection.Close();
-            //}
-            //catch (Exception ex)
-            //{
-            //    connection.Close();
-            //    MessageBox.Show(ex.Message.ToString());
-            //}
-        }
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message.ToString());
+            }
+}
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             refresh();
@@ -725,32 +745,120 @@ namespace crm_system
 
         private void add_post_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!hanboxes_posts.IsLoaded)
+            {
+                var table = post_grid.SelectedItem as grid_items;
+                a_or_u_hanboxes.type = "posts";
+                a_or_u_hanboxes.hanbox_id = -1;
+                hanboxes_posts = new a_or_u_hanboxes();
+                hanboxes_posts.Owner = this;
+                hanboxes_posts.Show();
+            }
+            else
+            {
+                add_rolles.Focus();
+            }
         }
 
         private void upd_post_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!hanboxes_posts.IsLoaded)
+            {
+                var table = post_grid.SelectedItem as grid_items;
+                a_or_u_hanboxes.hanbox_id = int.Parse(table.id);
+                a_or_u_hanboxes.type = "posts";
+                hanboxes_posts = new a_or_u_hanboxes();
+                hanboxes_posts.Owner = this;
+                hanboxes_posts.Show();
+            }
+            else
+            {
+                add_rolles.Focus();
+            }
         }
 
         private void del_post_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                var table = post_grid.SelectedItem as grid_items;
+                int result = (int)MessageBox.Show("Удалить должность " + table.name + " ?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
+                switch (result)
+                {
+                    case (int)MessageBoxResult.Yes:
+                        connection.Open();
+                        MySqlCommand command = new MySqlCommand("delete from posts where id=@id", connection);
+                        command.Parameters.AddWithValue("id", table.id);
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        refresh("handbooks");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void add_citi_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!hanboxes_cities.IsLoaded)
+            {
+                var table = cities_grid.SelectedItem as grid_items;
+                a_or_u_hanboxes.type = "cities";
+                a_or_u_hanboxes.hanbox_id = -1;
+                hanboxes_cities = new a_or_u_hanboxes();
+                hanboxes_cities.Owner = this;
+                hanboxes_cities.Show();
+            }
+            else
+            {
+                add_rolles.Focus();
+            }
         }
 
         private void upd_citi_Click(object sender, RoutedEventArgs e)
         {
-
+            if (!hanboxes_cities.IsLoaded)
+            {
+                var table = cities_grid.SelectedItem as grid_items;
+                a_or_u_hanboxes.hanbox_id = int.Parse(table.id);
+                a_or_u_hanboxes.type = "cities";
+                hanboxes_cities = new a_or_u_hanboxes();
+                hanboxes_cities.Owner = this;
+                hanboxes_cities.Show();
+            }
+            else
+            {
+                add_rolles.Focus();
+            }
         }
 
         private void del_cities_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                var table = cities_grid.SelectedItem as grid_items;
+                int result = (int)MessageBox.Show("Удалить город " + table.name + " ?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
+                switch (result)
+                {
+                    case (int)MessageBoxResult.Yes:
+                        connection.Open();
+                        MySqlCommand command = new MySqlCommand("delete from cities where id=@id", connection);
+                        command.Parameters.AddWithValue("id", table.id);
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        refresh("handbooks");
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void upd_rull_Click(object sender, RoutedEventArgs e)
@@ -776,9 +884,10 @@ namespace crm_system
                         break;
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 connection.Close();
+                MessageBox.Show(ex.Message);
             }
         }
 

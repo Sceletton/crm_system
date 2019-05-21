@@ -56,13 +56,13 @@ namespace crm_system
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
+           
+                
                 if (id_rool != null)
                 {
                     connection = new MySqlConnection(MainWindow.constr);
                     connection.Open();
-                    MySqlCommand sel_rulls = new MySqlCommand("select string_agg(rights,';') as rights from rols t where t.id = @id", connection);
+                    MySqlCommand sel_rulls = new MySqlCommand("select REPLACE(GROUP_CONCAT(rights,';'),',','') as rights from rols t where t.id = @id", connection);
                     sel_rulls.Parameters.AddWithValue("id", id_rool);
                     MySqlDataReader read_ruls = sel_rulls.ExecuteReader();
                     if (read_ruls.Read())
@@ -81,11 +81,7 @@ namespace crm_system
                     connection.Close();
                     load_permisions();
                 }
-            }
-            catch
-            {
-
-            }
+            
         }
 
         private void add_or_upd_Click(object sender, RoutedEventArgs e)

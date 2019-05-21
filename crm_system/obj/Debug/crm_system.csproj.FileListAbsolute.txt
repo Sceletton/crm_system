@@ -77,3 +77,5 @@ C:\Users\Рамиль\Desktop\crm\crm_system\bin\Debug\OxyPlot.pdb
 C:\Users\Рамиль\Desktop\crm\crm_system\bin\Debug\OxyPlot.xml
 C:\Users\Рамиль\Desktop\crm\crm_system\bin\Debug\OxyPlot.Wpf.pdb
 C:\Users\Рамиль\Desktop\crm\crm_system\bin\Debug\OxyPlot.Wpf.xml
+C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\a_or_u_hanboxes.g.cs
+C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\a_or_u_hanboxes.baml
