@@ -289,7 +289,7 @@
                     </TabItem>
                     <TabItem Style="{DynamicResource Tabit}" Header="Эфектиность общения с организацией">
                         <StackPanel>
-                            <ComboBox Name="org" Style="{DynamicResource ComboBoxFlatStyle}" Width="150" HorizontalAlignment="Left" SelectionChanged="org_SelectionChanged"/>
+                            <ComboBox Name="org" Style="{DynamicResource ComboBoxFlatStyle}" Width="150" HorizontalAlignment="Left" SelectionChanged="org_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
                             <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,80,0,0">
                                 <StackPanel Margin="0,0,30,0">
                                     <lvc:AngularGauge  Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" Name="callbacks"
@@ -334,25 +334,6 @@
                         </StackPanel>
                     </TabItem>
                 </TabControl>
-            </TabItem>
-            <TabItem Name="reporting" Header="Отчётность" Height="40" Style="{DynamicResource Tabit}">
-                <StackPanel>
-                    <StackPanel>
-                        <StackPanel Margin="10,0,0,10">
-                            <TextBlock Text="Дата:" FontSize="12pt"/>
-                            <DatePicker Name="date_call" HorizontalAlignment="Left" Width="150" FontSize="12pt" SelectedDateChanged="date_call_SelectedDateChanged"/>
-                        </StackPanel>
-                        <DataGrid FontSize ="12pt" MaxHeight="350" Name="calls_report_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Организация" Width="250" Binding="{Binding Path = org}"/>
-                                <DataGridTextColumn Header="Дата звонка" Width="250" Binding="{Binding Path = date_cal}"/>
-                                <DataGridTextColumn Header="Статуст звонка" Width="250" Binding="{Binding Path = status_call}"/>
-                                <DataGridTextColumn Header="Оператор" Width="230" Binding="{Binding Path = oper}"/>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </StackPanel>
-                    <Button Name="create_file" Content="Сформировать отчёт" Click="create_file_Click"  Style="{DynamicResource DefaultBtn}" HorizontalAlignment="Center" Margin="0,10,0,0"/>
-                </StackPanel>
             </TabItem>
             <TabItem  Name="settings" Header="Найстройки" Height="40" Style="{DynamicResource Tabit}">
                 <StackPanel  HorizontalAlignment="Center">

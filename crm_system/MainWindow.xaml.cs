@@ -1184,43 +1184,35 @@ namespace crm_system
             {
                 List<permision> permisions = new List<permision>();
                 var roll = roll_grid.SelectedValue as roll;
-                try
-                {
-                    connection.Open();
-                }
-                catch
-                {
-
-                }
+                connection.Open();
                 MySqlCommand command = new MySqlCommand("select t.rights from rols t where t.id = @id_rol", connection);
                 command.Parameters.AddWithValue("id_rol", roll.id);
                 MySqlDataReader reader = command.ExecuteReader();
-                MySqlConnection conn = null;
+                string[] permis = null;
                 while (reader.Read())
                 {
-                    string[] permis = reader["rights"].ToString().Split(';');
-                    for (int i = 0; i < permis.Length; i++)
+                    permis = reader["rights"].ToString().Split(';');
+                }
+                reader.Close();
+                for (int i = 0; i < permis.Length; i++)
+                {
+                    MySqlCommand sel_permis = new MySqlCommand("select t.id, t.name from permissions t where t.id = @id_per", connection);
+                    sel_permis.Parameters.AddWithValue("id_per", permis[i]);
+                    MySqlDataReader read_permis = sel_permis.ExecuteReader();
+                    while (read_permis.Read())
                     {
-                        conn = new MySqlConnection(constr);
-                        conn.Open();
-                        MySqlCommand sel_permis = new MySqlCommand("select t.name from permissions t where t.id = @id_per", conn);
-                        sel_permis.Parameters.AddWithValue("id_per", permis[i]);
-                        MySqlDataReader read_permis = sel_permis.ExecuteReader();
-                        while (read_permis.Read())
-                        {
-                            permisions.Add(new permision(read_permis["name"].ToString()));
-                        }
-                        conn.Close();
+                        permisions.Add(new permision(read_permis["name"].ToString()));
                     }
+                    read_permis.Close();
                 }
                 permis_grid.ItemsSource = permisions;
                 connection.Close();
             }
-            catch
+            catch(Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
-        }
+}
 
         private void upd_st_Click(object sender, RoutedEventArgs e)
         {
@@ -1546,16 +1538,18 @@ namespace crm_system
             try
             {
                 connection.Open();
-                MySqlCommand analytic = new MySqlCommand("select ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status != 0)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as answers, ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status = 2)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as cancel", connection);
+                MySqlCommand analytic = new MySqlCommand("select ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status != 0)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as answers, ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status = 2)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as cancel, ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status = 1)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as susesful", connection);
                 analytic.Parameters.AddWithValue("org", org.SelectedValue);
                 MySqlDataReader reader = analytic.ExecuteReader();
                 if (reader.Read())
                 {
-                    callbacks.Value = int.Parse(reader["answers"].ToString());
+                    callbacks.Value = double.Parse(reader["answers"].ToString());
+                    clouse_calls.Value = double.Parse(reader["cancel"].ToString());
+                    sucsesful_calls.Value = double.Parse(reader["susesful"].ToString());
                 }
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 connection.Close();
                 MessageBox.Show(ex.Message);

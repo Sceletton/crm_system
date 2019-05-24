@@ -25,6 +25,7 @@ namespace crm_system
         MySqlConnection connection;
         rulles rulles = new rulles();
         CheckFields check = new CheckFields();
+        List<permision> permisions;
         public add_rolls()
         {
             InitializeComponent();
@@ -36,7 +37,7 @@ namespace crm_system
             connection.Open();
             string rights_name = null;
             string[] permis_array = null;
-            List<permision> permisions = new List<permision>();
+            permisions = new List<permision>();
             MySqlCommand sel_permissions = new MySqlCommand("select REPLACE(GROUP_CONCAT(t.name,';'),',','') as permissions from permissions t where  ';" + rights + "' like CONCAT('%;',convert(t.id,char),';%')  ", connection);
             MySqlDataReader read_permissions = sel_permissions.ExecuteReader();
             if (read_permissions.Read())
@@ -55,9 +56,7 @@ namespace crm_system
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-           
-                
+        {     
                 if (id_rool != null)
                 {
                     connection = new MySqlConnection(MainWindow.constr);
@@ -86,6 +85,12 @@ namespace crm_system
 
         private void add_or_upd_Click(object sender, RoutedEventArgs e)
         {
+            string rightss = null;
+            for (int i = 0; i< permis_grid.Items.Count; i++)
+            {
+                var col = permis_grid.Items[i] as permision;
+                rightss = rightss + col.caption.ToString() + ";";
+            }
             try
             {
                 if (roll_name.Text != "")
@@ -122,7 +127,9 @@ namespace crm_system
 
         private void del_Click(object sender, RoutedEventArgs e)
         {
-
+            permisions.Remove(permis_grid.SelectedItem as permision);
+            permis_grid.Items.Refresh();
+            permis_grid.ItemsSource = permisions;
         }
 
         private void roll_name_TextChanged(object sender, TextChangedEventArgs e)
