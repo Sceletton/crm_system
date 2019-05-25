@@ -51,8 +51,6 @@ namespace crm_system
         {
             InitializeComponent();
             no_visible();
-            stat_filt.Items.Add("Назначен");
-            stat_filt.Items.Add("Закончен");
             try
             {
                 var sr = Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory()), "conf.txt",SearchOption.AllDirectories);
@@ -148,6 +146,7 @@ namespace crm_system
                 MySqlDataReader read_rights = sel_rights.ExecuteReader();
                 if (read_rights.Read())
                 {
+                    roll_name.Text = "Вы вошли под  ролью "+read_rights["name"];
                     org_grid_popup.Visibility = Visibility.Visible;
                     ruls = read_rights["rights"].ToString().Split(';');
                     for (int i = 0; i < ruls.Length; i++)
@@ -252,7 +251,9 @@ namespace crm_system
                     List<calls> callses = new List<calls>();
                     if (org_id != null)
                     {
-                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call from calls t where t.id_org = @org_id", connection);
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name from calls t " +
+                            "join users tt on tt.id = t.id_oper " +
+                            "where t.id_org = @org_id", connection);
                         sel_calls.Parameters.AddWithValue("org_id", org_id);
                         MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                         while (reader_calls.Read())
@@ -419,10 +420,17 @@ namespace crm_system
                 oper_filt.ItemsSource = Opers;
                 job_filt.ItemsSource = jobes;
                 org.ItemsSource = Orgs;
+
+                stat_filt.Items.Clear();
+                stat_filt.Items.Add("Назначен");
+                stat_filt.Items.Add("Закончен");
+
+                prioryty_org_filt.Items.Clear();
                 prioryty_org_filt.Items.Add("Низский");
                 prioryty_org_filt.Items.Add("Средний");
                 prioryty_org_filt.Items.Add("Высокий");
-                //
+
+                org_status_filt.Items.Clear();
                 org_status_filt.Items.Add("Добавлен");
                 org_status_filt.Items.Add("Назначен звонок");
                 org_status_filt.Items.Add("Перезвон");
@@ -523,7 +531,7 @@ namespace crm_system
                 try
                 {
                     org table = org_grid.SelectedItem as org;
-                    addOrgn.id = table.Id;
+                    addOrgn.id = table.Id.ToString();
                     addOrgn = new addOrgn();
                     addOrgn.Owner = this;
                     addOrgn.Show();
@@ -546,7 +554,7 @@ namespace crm_system
                 if (!add_Sotr.IsLoaded)
                 {
                     org table = org_grid.SelectedItem as org;
-                    add_sotr.id_org = table.Id;
+                    add_sotr.id_org = table.Id.ToString();
                     add_Sotr = new add_sotr();
                     add_Sotr.Show();
                 }
@@ -574,7 +582,7 @@ namespace crm_system
                 add_Call = new add_call();
                 try
                 {
-                    add_call.id_org = table.Id;
+                    add_call.id_org = table.Id.ToString();
                     add_call.id_call = null;
                 }
                 catch
@@ -640,7 +648,7 @@ namespace crm_system
                 add_Call = new add_call();
                 try
                 {
-                    add_call.id_call = table.id;
+                    add_call.id_call = table.id.ToString();
                 }
                 catch
                 {
@@ -679,7 +687,7 @@ namespace crm_system
             {
                 add_User = new add_user();
                 add_User.Owner = this;
-                add_user.id_user = (user_grid.SelectedItem as user).id;
+                add_user.id_user = (user_grid.SelectedItem as user).id.ToString();
                 add_User.Show();
             }
             else
@@ -727,7 +735,7 @@ namespace crm_system
             if (!add_rolles.IsLoaded)
             {
                 roll table = roll_grid.SelectedItem as roll;
-                add_rolls.id_rool = table.id;
+                add_rolls.id_rool = table.id.ToString();
                 add_rolles = new add_rolls();
                 add_rolles.Owner = this;
                 add_rolles.Show();
@@ -765,7 +773,7 @@ namespace crm_system
             if (!hanboxes_posts.IsLoaded)
             {
                 var table = post_grid.SelectedItem as grid_items;
-                a_or_u_hanboxes.hanbox_id = int.Parse(table.id);
+                a_or_u_hanboxes.hanbox_id = int.Parse(table.id.ToString());
                 a_or_u_hanboxes.type = "posts";
                 hanboxes_posts = new a_or_u_hanboxes();
                 hanboxes_posts.Owner = this;
@@ -824,7 +832,7 @@ namespace crm_system
             if (!hanboxes_cities.IsLoaded)
             {
                 var table = cities_grid.SelectedItem as grid_items;
-                a_or_u_hanboxes.hanbox_id = int.Parse(table.id);
+                a_or_u_hanboxes.hanbox_id = int.Parse(table.id.ToString());
                 a_or_u_hanboxes.type = "cities";
                 hanboxes_cities = new a_or_u_hanboxes();
                 hanboxes_cities.Owner = this;
@@ -940,9 +948,9 @@ namespace crm_system
                 {
                     filt = filt + " and date_cal like '%" + dat_filt.Text + "%'";
                 }
-                if (stat_filt.SelectedValue != null)
+                if (stat_filt.SelectedIndex != -1)
                 {
-                    filt = filt + " and status_call = " + stat_filt.SelectedValue;
+                    filt = filt + " and status_call = " + stat_filt.SelectedIndex;
                 }
                 if (oper_filt.SelectedValue != null)
                 {
@@ -961,9 +969,10 @@ namespace crm_system
                 calls_grid.ItemsSource = callses;
                 connection.Close();
             }
-            catch
+            catch(Exception ex)
             {
-
+                connection.Close();
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -1022,7 +1031,7 @@ namespace crm_system
                 }
                 if (prioryty_org_filt.SelectedValue != null)
                 {
-                    filt = filt + " and priority ='" + prioryty_org_filt.SelectedIndex;
+                    filt = filt + " and priority = " + prioryty_org_filt.SelectedIndex;
                 }
                 if (org_status_filt.SelectedValue != null)
                 {
@@ -1050,7 +1059,7 @@ namespace crm_system
             }
             catch(Exception ex)
             {
-                MessageBox.Show(ex.Message.ToString());
+                connection.Close();
             }
         }
         public void sel_change_sot()
@@ -1219,7 +1228,7 @@ namespace crm_system
             if (!add_Sotr.IsLoaded)
             {
                 var table = sotr_grid.SelectedValue as worker;
-                add_sotr.id_sotr = table.id;
+                add_sotr.id_sotr = table.id.ToString();
                 add_Sotr = new add_sotr();
                 add_Sotr.Show();
                 add_Sotr.Owner = this;
@@ -1490,7 +1499,7 @@ namespace crm_system
             }
             reader.Close();
             //
-            MySqlCommand analyze1 = new MySqlCommand("select count(1) as add_calls from calls_analytics t where t.id_oper = @id and status_call = 0", connection);
+            MySqlCommand analyze1 = new MySqlCommand("select count(1) as add_calls from calls_analytics t where t.id_oper = @id and call_status = 0", connection);
             analyze1.Parameters.AddWithValue("id", emploers.SelectedValue);
             MySqlDataReader reader1 = analyze1.ExecuteReader();
             while (reader1.Read())
@@ -1499,7 +1508,7 @@ namespace crm_system
             }
             reader1.Close();
             //
-            MySqlCommand analyze2 = new MySqlCommand("select count(1) as callback from calls_analytics t where t.id_oper = @id and status_call = 1", connection); // положительный ответ
+            MySqlCommand analyze2 = new MySqlCommand("select count(1) as callback from calls_analytics t where t.id_oper = @id and call_status = 1", connection); // положительный ответ
             analyze2.Parameters.AddWithValue("id", emploers.SelectedValue);
             MySqlDataReader reader2 = analyze2.ExecuteReader();
             while (reader2.Read())
@@ -1524,7 +1533,6 @@ namespace crm_system
 
             //lets save the mapper globally
             Charting.For<opertator>(customerVmMapper);
-
             DataContext = this;
         }
 

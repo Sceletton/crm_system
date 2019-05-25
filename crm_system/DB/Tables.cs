@@ -8,7 +8,7 @@ namespace crm_system.DB
 {
     class org
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string City { get; set; }
@@ -19,7 +19,7 @@ namespace crm_system.DB
 
         public org(string id, string code, string name, string city, string status, string kurator, string phone, string prioriry)
         {
-            Id = id;
+            Id = int.Parse(id);
             Name = name;
             Code = code;
             City = city;
@@ -31,7 +31,7 @@ namespace crm_system.DB
     }
     public class calls
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string date_cal { get; set; }
         public string id_org { get; set; }
         public string org { get; set; }
@@ -39,7 +39,7 @@ namespace crm_system.DB
         public string status_call { get; set; }
         public calls(string Id, string Date_call, string Org, string Call_target, string Status_call, string id_org)
         {
-            id = Id;
+            id = int.Parse(Id);
             date_cal = Date_call;
             org = Org;
             call_target = Call_target;
@@ -48,13 +48,13 @@ namespace crm_system.DB
     }
     public class user
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string login { get; set; }
         public string pass { get; set; }
         public string roll { get; set; }
         public user(string Id, string Login, string Pass, string Roll)
         {
-            id = Id;
+            id = int.Parse(Id);
             login = Login;
             pass = Pass;
             roll = Roll;
@@ -62,28 +62,28 @@ namespace crm_system.DB
     }
     public class roll
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string name { get; set; }
         public roll(string Id, string Name)
         {
-            id = Id;
+            id = int.Parse(Id);
             name = Name;
         }
     }
     public class grid_items
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string name { get; set; }
 
         public grid_items(string Id, string Name)
         {
-            id = Id;
+            id = int.Parse(Id);
             name = Name;
         }
     }
     public class worker
     {
-        public string id { get; set; }
+        public int id { get; set; }
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Second_name { get; set; }
@@ -92,7 +92,7 @@ namespace crm_system.DB
 
         public worker(string Id, string name, string surname, string second_name, string org, string job)
         {
-            id = Id;
+            id = int.Parse(Id);
             Name = name;
             Surname = surname;
             Second_name = second_name;

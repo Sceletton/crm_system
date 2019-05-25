@@ -34,7 +34,7 @@ namespace crm_system
             {
                 string pass = null;
                 connection.Open();
-                MySqlCommand get_pass = new MySqlCommand("select t.id as user_id, t.password, t.rol from users t where t.login = @login", connection);
+                MySqlCommand get_pass = new MySqlCommand("select t.id as user_id, t.password, t.rol, tt.name as rol_name from users t join rols tt on tt.id = t.rol where t.login = @login", connection);
                 get_pass.Parameters.AddWithValue("login", Login.Text);
                 MySqlDataReader reader_pass = get_pass.ExecuteReader();
                 if (reader_pass.Read())
@@ -46,6 +46,7 @@ namespace crm_system
                 if (Pass.Password == pass)
                 {
                     MainWindow.auntif = true;
+
                     ((MainWindow)this.Owner).aunt_result();
                     ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
                     ((MainWindow)this.Owner).exit.Height = 39;
