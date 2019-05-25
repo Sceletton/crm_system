@@ -251,24 +251,25 @@ namespace crm_system
                     List<calls> callses = new List<calls>();
                     if (org_id != null)
                     {
-                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name from calls t " +
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name  from calls t" +
                             "join users tt on tt.id = t.id_oper " +
                             "where t.id_org = @org_id", connection);
                         sel_calls.Parameters.AddWithValue("org_id", org_id);
                         MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                         while (reader_calls.Read())
                         {
-                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString()));
+                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString(), reader_calls["name"].ToString() + " " + reader_calls["surname"].ToString() + " " + reader_calls["second_name"].ToString()));
                         }
                         reader_calls.Close();
                     }
                     else
                     {
-                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t", connection);
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call, tt.name, tt.surname, tt.second_name from calls t " +
+                            "join users tt on tt.id = t.id_oper", connection);
                         MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                         while (reader_calls.Read())
                         {
-                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString()));
+                            callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString(), reader_calls["name"].ToString() + " " + reader_calls["surname"].ToString() + " " + reader_calls["second_name"].ToString()));
                         }
                         reader_calls.Close();
                     }
@@ -363,11 +364,11 @@ namespace crm_system
                 if (tab == "emps" || tab == null)
                 {
                     //sotrs
-                    string query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers";
+                    string query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers t ";
                     List<worker> workers = new List<worker>();
                     if (org_id != null)
                     {
-                        query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers where id_org=" + org_id;
+                        query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post(select t1.name from posts t1 where t1.id = id_post) as post from workers t  where id_org=" + org_id;
                     }
                     MySqlCommand sel_sotrs = new MySqlCommand(query, connection);
                     MySqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
@@ -938,7 +939,8 @@ namespace crm_system
         {
             try
             {
-                string query = "select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t";
+                string query = "select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name  from calls t " +
+                    "join users tt on tt.id = t.id_oper";
                 string filt = "";
                 if (org_filt.SelectedValue != null)
                 {
@@ -964,7 +966,7 @@ namespace crm_system
                 MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                 while (reader_calls.Read())
                 {
-                    callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString()));
+                    callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString(), reader_calls["name"].ToString() + " " + reader_calls["surname"].ToString() + " " + reader_calls["second_name"].ToString()));
                 }
                 calls_grid.ItemsSource = callses;
                 connection.Close();
@@ -1002,14 +1004,15 @@ namespace crm_system
             dat_filt.Text = "";
             stat_filt.Text = "";
             oper_filt.Text = "";
-            string query = "select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call from calls t";
+            string query = "select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name  from calls t " +
+                "join users tt on tt.id = t.id_oper";
             connection.Open();
             List<calls> callses = new List<calls>();
             MySqlCommand sel_calls = new MySqlCommand(query, connection);
             MySqlDataReader reader_calls = sel_calls.ExecuteReader();
             while (reader_calls.Read())
             {
-                callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString()));
+                callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString(), reader_calls["name"].ToString() + " " + reader_calls["surname"].ToString() + " " + reader_calls["second_name"].ToString()));
             }
             calls_grid.ItemsSource = callses;
             connection.Close();
