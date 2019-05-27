@@ -1273,7 +1273,8 @@ namespace crm_system
             {
                 string path = null;
                 connection.Open();
-                MySqlCommand command = new MySqlCommand("select t.save_path from settings t where is_first_start = 0", connection);
+                MySqlCommand command = new MySqlCommand("select t.save_path from settings t where t.id_user = @id_user", connection);
+                command.Parameters.AddWithValue("id_user", user_id);
                 MySqlDataReader reader1 = command.ExecuteReader();
                 if (reader1.Read())
                 {
@@ -1308,6 +1309,7 @@ namespace crm_system
             }
             catch (Exception ex)
             {
+                connection.Close();
                 MessageBox.Show(ex.Message);
             }
         }
@@ -1402,6 +1404,7 @@ namespace crm_system
             }
             catch (Exception ex)
             {
+                connection.Close();
                 MessageBox.Show(ex.Message);
             }
         }

@@ -156,7 +156,7 @@ namespace crm_system
         private void phone_TextChanged(object sender, TextChangedEventArgs e)
         {
             phone.BorderBrush = Brushes.Black;
-            check.CheckFieldsCaption(name, "number");
+            check.CheckFieldsCaption(phone, "number");
         }
     }
 }

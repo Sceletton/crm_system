@@ -2,3 +2,4 @@
 DATABASE=bMjNqMlkRS;
 UID=bMjNqMlkRS;
 Pwd=yoaqLEF23P;
+save_path=;
