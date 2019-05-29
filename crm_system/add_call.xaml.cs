@@ -83,36 +83,43 @@ namespace crm_system
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            List<comboItems> Orgs = new List<comboItems>();
-            connection = new MySqlConnection(MainWindow.constr);
-            connection.Open();
-            MySqlCommand sel_orgs = new MySqlCommand("select id, name from org order by name ", connection);
-            MySqlDataReader orgs_read = sel_orgs.ExecuteReader();
-            while (orgs_read.Read())
+            try
             {
-                Orgs.Add(new comboItems(orgs_read["id"].ToString(), orgs_read["name"].ToString()));
-            }
-            orgs_read.Close();
-            org.ItemsSource = Orgs;
-            if (id_org != null)
-            {
-                org.SelectedValue = id_org;
-
-            }
-            if (id_call != null)
-            {
-                MySqlCommand sel_calls = new MySqlCommand("select t.id_org, t.date_cal, t.call_target from calls t where t.id = @id_call", connection);
-                sel_calls.Parameters.AddWithValue("id_call",id_call);
-                MySqlDataReader calls_read = sel_calls.ExecuteReader();
-                if (calls_read.Read())
+                List<comboItems> Orgs = new List<comboItems>();
+                connection = new MySqlConnection(MainWindow.constr);
+                connection.Open();
+                MySqlCommand sel_orgs = new MySqlCommand("select id, name from org order by name ", connection);
+                MySqlDataReader orgs_read = sel_orgs.ExecuteReader();
+                while (orgs_read.Read())
                 {
-                    org.SelectedValue = int.Parse(calls_read["id_org"].ToString());
-                    call_date.Text = calls_read["date_cal"].ToString();
-                    call_traget.Text = calls_read["call_target"].ToString();
+                    Orgs.Add(new comboItems(orgs_read["id"].ToString(), orgs_read["name"].ToString()));
                 }
-                add_cal.Content = "Сохранеть";
+                orgs_read.Close();
+                org.ItemsSource = Orgs;
+                if (id_org != null)
+                {
+                    org.SelectedValue = id_org;
+
+                }
+                if (id_call != null)
+                {
+                    MySqlCommand sel_calls = new MySqlCommand("select t.id_org, t.date_cal, t.call_target from calls t where t.id = @id_call", connection);
+                    sel_calls.Parameters.AddWithValue("id_call", id_call);
+                    MySqlDataReader calls_read = sel_calls.ExecuteReader();
+                    if (calls_read.Read())
+                    {
+                        org.SelectedValue = int.Parse(calls_read["id_org"].ToString());
+                        call_date.Text = calls_read["date_cal"].ToString();
+                        call_traget.Text = calls_read["call_target"].ToString();
+                    }
+                    add_cal.Content = "Сохранеть";
+                }
+                connection.Close();
             }
-            connection.Close();
+            catch
+            {
+                connection.Close();
+            }
         }
 
         private void call_traget_TextChanged(object sender, TextChangedEventArgs e)

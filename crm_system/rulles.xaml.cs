@@ -107,7 +107,6 @@ namespace crm_system
                 r.is_check = false;
                 permision.Add(r);
             }
-
             permis_grid.ItemsSource = permision;
         }
     }

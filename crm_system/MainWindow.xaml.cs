@@ -65,8 +65,7 @@ namespace crm_system
             connection = new MySqlConnection(constr);
         }
 
-        public ChartValues<opertator> analitycs { get; set; }
-        public string[] Labels { get; set; }
+       
         public int Find(string[] ar, string word)
         {
             for (int i = 0; i < ar.Length; i++)
@@ -971,10 +970,9 @@ namespace crm_system
                 calls_grid.ItemsSource = callses;
                 connection.Close();
             }
-            catch(Exception ex)
+            catch
             {
                 connection.Close();
-                MessageBox.Show(ex.Message);
             }
         }
 
@@ -1060,7 +1058,7 @@ namespace crm_system
                 org_grid.ItemsSource = orgs;
                 connection.Close();
             }
-            catch(Exception ex)
+            catch
             {
                 connection.Close();
             }
@@ -1141,27 +1139,34 @@ namespace crm_system
 
         private void clear_Click(object sender, RoutedEventArgs e)
         {
-            name_filt.Text = "";
-            fam_filt.Text = "";
-            otch_filt.Text = "";
-            org_filt_.Text = "";
-            job_filt.Text = "";
-            connection.Open();
-            string query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers";
-            List<worker> workers = new List<worker>();
-            if (org_id != null)
+            try
             {
-                query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers where id_org=" + org_id;
+                name_filt.Text = "";
+                fam_filt.Text = "";
+                otch_filt.Text = "";
+                org_filt_.Text = "";
+                job_filt.Text = "";
+                connection.Open();
+                string query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers";
+                List<worker> workers = new List<worker>();
+                if (org_id != null)
+                {
+                    query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post from workers where id_org=" + org_id;
+                }
+                MySqlCommand sel_sotrs = new MySqlCommand(query, connection);
+                MySqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
+                while (read_sotrs.Read())
+                {
+                    workers.Add(new worker(read_sotrs["id"].ToString(), read_sotrs["name"].ToString(), read_sotrs["surname"].ToString(), read_sotrs["second_name"].ToString(), read_sotrs["org"].ToString(), read_sotrs["post"].ToString()));
+                }
+                sotr_grid.ItemsSource = workers;
+                connection.Close();
             }
-            MySqlCommand sel_sotrs = new MySqlCommand(query, connection);
-            MySqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
-            while (read_sotrs.Read())
+            catch(Exception ex)
             {
-                workers.Add(new worker(read_sotrs["id"].ToString(), read_sotrs["name"].ToString(), read_sotrs["surname"].ToString(), read_sotrs["second_name"].ToString(), read_sotrs["org"].ToString(), read_sotrs["post"].ToString()));
+                connection.Close();
+                MessageBox.Show(ex.Message);
             }
-            sotr_grid.ItemsSource = workers;
-            connection.Close();
-
         }
 
         private void city_org_filt_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1222,6 +1227,7 @@ namespace crm_system
             }
             catch(Exception ex)
             {
+                connection.Close();
                 MessageBox.Show(ex.Message);
             }
 }
@@ -1492,54 +1498,63 @@ namespace crm_system
                 MessageBox.Show(ex.Message);
             }
         }
+        public ChartValues<opertator> analitycs { get; set; }
+        public string[] Labels { get; set; }
         private void emploers_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            int all_calls = 0, add_cals = 0, callback = 0;
-            connection.Open();
-            MySqlCommand analyze = new MySqlCommand("select count(1) as all_calls from calls_analytics t where t.id_oper = @id", connection); // положительный ответ
-            analyze.Parameters.AddWithValue("id", int.Parse(emploers.SelectedValue.ToString()));
-            MySqlDataReader reader = analyze.ExecuteReader();
-            while(reader.Read())
+            try
             {
-                all_calls = int.Parse(reader["all_calls"].ToString());
-            }
-            reader.Close();
-            //
-            MySqlCommand analyze1 = new MySqlCommand("select count(1) as add_calls from calls_analytics t where t.id_oper = @id and call_status = 0", connection);
-            analyze1.Parameters.AddWithValue("id", emploers.SelectedValue);
-            MySqlDataReader reader1 = analyze1.ExecuteReader();
-            while (reader1.Read())
-            {
-                add_cals = int.Parse(reader1["add_calls"].ToString());
-            }
-            reader1.Close();
-            //
-            MySqlCommand analyze2 = new MySqlCommand("select count(1) as callback from calls_analytics t where t.id_oper = @id and call_status = 1", connection); // положительный ответ
-            analyze2.Parameters.AddWithValue("id", emploers.SelectedValue);
-            MySqlDataReader reader2 = analyze2.ExecuteReader();
-            while (reader2.Read())
-            {
-                callback = int.Parse(reader2["callback"].ToString());
-            }
-            reader2.Close();
-            //
-            connection.Close();
-            analitycs = new ChartValues<opertator>
-            {
-                new opertator(emploers.Text,all_calls),
-                new opertator(emploers.Text,add_cals),
-                new opertator(emploers.Text,callback)
-            };
-            Labels = new[] { "Всего звонков", "Добавлено звонков", "Положительный ответ" };
-            legendTitle.Title = emploers.Text;
-            //let create a mapper so LiveCharts know how to plot our CustomerViewModel class
-            var customerVmMapper = Mappers.Xy<opertator>()
-                .X((value, index) => index) // lets use the position of the item as X
-                .Y(value => value.value); //and PurchasedItems property as Y
+                int all_calls = 0, add_cals = 0, callback = 0;
+                connection.Open();
+                MySqlCommand analyze = new MySqlCommand("select count(1) as all_calls from calls_analytics t where t.id_oper = @id", connection); // положительный ответ
+                analyze.Parameters.AddWithValue("id", int.Parse(emploers.SelectedValue.ToString()));
+                MySqlDataReader reader = analyze.ExecuteReader();
+                while (reader.Read())
+                {
+                    all_calls = int.Parse(reader["all_calls"].ToString());
+                }
+                reader.Close();
+                //
+                MySqlCommand analyze1 = new MySqlCommand("select count(1) as add_calls from calls_analytics t where t.id_oper = @id and call_status = 0", connection);
+                analyze1.Parameters.AddWithValue("id", int.Parse(emploers.SelectedValue.ToString()));
+                MySqlDataReader reader1 = analyze1.ExecuteReader();
+                while (reader1.Read())
+                {
+                    add_cals = int.Parse(reader1["add_calls"].ToString());
+                }
+                reader1.Close();
+                //
+                MySqlCommand analyze2 = new MySqlCommand("select count(1) as callback from calls_analytics t where t.id_oper = @id and call_status = 1", connection); // положительный ответ
+                analyze2.Parameters.AddWithValue("id", int.Parse(emploers.SelectedValue.ToString()));
+                MySqlDataReader reader2 = analyze2.ExecuteReader();
+                while (reader2.Read())
+                {
+                    callback = int.Parse(reader2["callback"].ToString());
+                }
+                reader2.Close();
+                //
+                connection.Close();
+                analitycs = new ChartValues<opertator>();
+                analitycs.Clear();
+                analitycs.Add(new opertator(emploers.Text, all_calls));
+                analitycs.Add(new opertator(emploers.Text, add_cals));
+                analitycs.Add(new opertator(emploers.Text, callback));
+                legendTitle.Values = analitycs;
+                Labels = new[] { "Всего звонков", "Добавлено звонков", "Положительный ответ" };
+                legendTitle.Title = (emploers.SelectedItem as comboItems).name;
+                //let create a mapper so LiveCharts know how to plot our CustomerViewModel class
+                var customerVmMapper = Mappers.Xy<opertator>()
+                    .X((value, index) => index) // lets use the position of the item as X
+                    .Y(value => value.value); //and PurchasedItems property as Y
 
-            //lets save the mapper globally
-            Charting.For<opertator>(customerVmMapper);
-            DataContext = this;
+                //lets save the mapper globally
+                Charting.For<opertator>(customerVmMapper);
+                DataContext = this;
+            }
+            catch
+            {
+                connection.Close();
+            }
         }
 
         private void clouse_call_Click(object sender, RoutedEventArgs e)

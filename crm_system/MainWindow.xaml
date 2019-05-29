@@ -274,7 +274,7 @@
                         <TabItem Style="{DynamicResource Tabit}" Header="Эффективность сотрудника">
                             <StackPanel HorizontalAlignment="Left">
                                 <ComboBox Name="emploers"  HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="emploers_SelectionChanged" Style="{DynamicResource ComboBoxFlatStyle}" DisplayMemberPath="name" SelectedValuePath="value" ItemsSource="{Binding comboitems}" Width="150"/>
-                                <lvc:CartesianChart LegendLocation="Right" Height="350" Width="800">
+                                <lvc:CartesianChart Name="graph" LegendLocation="Right" Height="350" Width="800">
                                     <lvc:CartesianChart.Series>
                                         <lvc:ColumnSeries Name="legendTitle" Title="Работник" Values="{Binding analitycs}"></lvc:ColumnSeries>
                                     </lvc:CartesianChart.Series>

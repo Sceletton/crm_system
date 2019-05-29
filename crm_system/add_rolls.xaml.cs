@@ -56,7 +56,9 @@ namespace crm_system
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {     
+        {
+            try
+            {
                 if (id_rool != null)
                 {
                     connection = new MySqlConnection(MainWindow.constr);
@@ -80,6 +82,11 @@ namespace crm_system
                     connection.Close();
                     load_permisions();
                 }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             
         }
 

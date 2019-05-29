@@ -76,9 +76,10 @@ namespace crm_system
                         city.SelectedValue = int.Parse(read_org["city"].ToString());
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
                     connection.Close();
+                    MessageBox.Show(ex.Message);
                 }
             }
             connection.Close();

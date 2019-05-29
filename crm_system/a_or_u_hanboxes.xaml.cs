@@ -26,18 +26,25 @@ namespace crm_system
         public a_or_u_hanboxes()
         {
             InitializeComponent();
-            connection = new MySqlConnection(MainWindow.constr);
-            if (hanbox_id != -1)
+            try
             {
-                connection.Open();
-                MySqlCommand command = new MySqlCommand("select t.name from " + type + " t where t.id = @id", connection);
-                command.Parameters.AddWithValue("id", hanbox_id);
-                MySqlDataReader reader = command.ExecuteReader();
-                if (reader.Read())
+                connection = new MySqlConnection(MainWindow.constr);
+                if (hanbox_id != -1)
                 {
-                    value.Text = reader["name"].ToString();
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand("select t.name from " + type + " t where t.id = @id", connection);
+                    command.Parameters.AddWithValue("id", hanbox_id);
+                    MySqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        value.Text = reader["name"].ToString();
+                    }
+                    reader.Close();
+                    connection.Close();
                 }
-                reader.Close();
+            }
+            catch
+            {
                 connection.Close();
             }
         }
