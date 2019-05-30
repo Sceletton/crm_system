@@ -33,8 +33,8 @@ namespace crm_system
 
         private void add_cal_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 if (org.Text != "" && call_traget.Text != "" && call_date.Text != "")
                 {
                     if (id_call == null)
@@ -67,13 +67,14 @@ namespace crm_system
                         connection.Close();
                         Close();
                     }
+                    ((MainWindow)this.Owner).refresh("calls");
                 }
-            }
-            catch (Exception ex)
-            {
-                connection.Close();
-                MessageBox.Show(ex.Message.ToString());
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    connection.Close();
+            //    MessageBox.Show(ex.Message.ToString());
+            //}
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)

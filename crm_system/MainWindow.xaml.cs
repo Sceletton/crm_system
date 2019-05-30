@@ -632,6 +632,7 @@ namespace crm_system
             {
                 add_Call = new add_call();
                 add_call.id_call = null;
+                add_Call.Owner = this;
                 add_Call.Show();
             }
             else
@@ -654,6 +655,7 @@ namespace crm_system
                 {
 
                 }
+                add_Call.Owner = this;
                 add_Call.Show();
             }
             else
@@ -904,8 +906,9 @@ namespace crm_system
             if (!add_Sotr.IsLoaded)
             {
                 add_Sotr = new add_sotr();
-                add_Sotr.Show();
+                add_sotr.id_sotr = null;
                 add_Sotr.Owner = this;
+                add_Sotr.Show();
             }
             else
             {
