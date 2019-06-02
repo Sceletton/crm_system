@@ -1,0 +1,4 @@
+﻿SERVER=remotemysql.com;
+DATABASE=bMjNqMlkRS;
+UID=bMjNqMlkRS;
+Pwd=yoaqLEF23P;

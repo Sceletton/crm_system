@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("conf/conf.txt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("crm_logo.ico")]
 
 

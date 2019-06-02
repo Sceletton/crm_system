@@ -4,15 +4,15 @@
 winexe
 C#
 .cs
-C:\Users\Рамиль\Desktop\crm\crm_system\obj\Debug\
+C:\Users\Рамиль\Desktop\crm\crm_system\obj\Release\
 crm_system
 none
 false
-DEBUG;TRACE
+TRACE
 C:\Users\Рамиль\Desktop\crm\crm_system\App.xaml
 101871717522
 
-191723675339
+15-490896251
 75681429999
 addOrgn.xaml;add_call.xaml;add_rolls.xaml;add_sotr.xaml;add_user.xaml;auntif.xaml;a_or_u_hanboxes.xaml;MainWindow.xaml;rulles.xaml;Styles.xaml;
 

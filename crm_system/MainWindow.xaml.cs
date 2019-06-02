@@ -453,6 +453,23 @@ namespace crm_system
                 }
                 kurator_org_filt.ItemsSource = comboItem_kur;
                 kurator_read.Close();
+                string save_dir = null;
+                MySqlCommand cm = new MySqlCommand("select t.save_path from settings t where  t.id_user = @id_user", connection);
+                cm.Parameters.AddWithValue("id_user", user_id);
+                MySqlDataReader rd = cm.ExecuteReader();
+                if (rd.Read())
+                {
+                    save_dir = rd["save_path"].ToString();
+
+                }
+                rd.Close();
+                if (!Directory.Exists(save_dir))
+                {
+                    MySqlCommand cmd = new MySqlCommand("update settings set save_path = @save_path where id_user = @id_user", connection);
+                    cmd.Parameters.AddWithValue("id_user", user_id);
+                    cmd.Parameters.AddWithValue("save_path", Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+                    cmd.ExecuteNonQuery();
+                }
                 if (tab == "settings" || tab == null)
                 {
                     //настройки
