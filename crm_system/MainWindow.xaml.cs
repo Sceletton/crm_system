@@ -1631,25 +1631,51 @@ namespace crm_system
 
         private void org_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 connection.Open();
                 MySqlCommand analytic = new MySqlCommand("select ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status != 0)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as answers, ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status = 2)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as cancel, ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status = 1)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as susesful", connection);
                 analytic.Parameters.AddWithValue("org", org.SelectedValue);
                 MySqlDataReader reader = analytic.ExecuteReader();
                 if (reader.Read())
                 {
-                    callbacks.Value = double.Parse(reader["answers"].ToString());
-                    clouse_calls.Value = double.Parse(reader["cancel"].ToString());
-                    sucsesful_calls.Value = double.Parse(reader["susesful"].ToString());
+                    double calback, clouse, sucses;
+                    if (reader["answers"].ToString() == "")
+                    {
+                        calback = 0;
+                    }
+                    else
+                    {
+                        calback = double.Parse(reader["answers"].ToString());
+                    }
+                    if (reader["cancel"].ToString() == "")
+                    {
+                        clouse = 0;
+                    }
+                    else
+                    {
+
+                        clouse = double.Parse(reader["cancel"].ToString());
+                    }
+                    if (reader["susesful"].ToString() == "")
+                    {
+                        sucses = 0;
+                    }
+                    else
+                    {
+
+                        sucses = double.Parse(reader["susesful"].ToString());
+                    }
+                    callbacks.Value = calback;
+                    clouse_calls.Value = clouse;
+                    sucsesful_calls.Value = sucses;
                 }
                 connection.Close();
-            }
-            catch (Exception ex)
-            {
-                connection.Close();
-                MessageBox.Show(ex.Message);
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    connection.Close();
+            //}
         }
 
         public void setFiltersVisible(StackPanel panel, int val)
