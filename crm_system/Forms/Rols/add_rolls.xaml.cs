@@ -23,7 +23,6 @@ namespace crm_system
     public partial class add_rolls : Window
     {
         MySqlConnection connection;
-        rulles rulles = new rulles();
         CheckFields check = new CheckFields();
         List<permision> permisions;
         public add_rolls()
@@ -168,26 +167,6 @@ namespace crm_system
             check.CheckFieldsCaption(roll_name);
         }
 
-        private void add_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                if (!rulles.IsLoaded)
-                {
-                    rulles = new rulles();
-                    rulles.Owner = this;
-                    rulles.Show();
-                }
-                else
-                {
-                    rulles.Focus();
-                }
-            }
-            catch
-            {
-
-            }
-        }
         private void CheckBox_Checked(object sender, RoutedEventArgs e)
         {
             List<permision> permi = new List<permision>();

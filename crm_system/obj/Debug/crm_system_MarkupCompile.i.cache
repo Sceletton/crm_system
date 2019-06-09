@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 C:\Users\Рамиль\Desktop\crm\crm_system\App.xaml
-101871717522
+9522028067
 
-191723675339
+18717986161
 75681429999
-addOrgn.xaml;add_call.xaml;add_rolls.xaml;add_sotr.xaml;add_user.xaml;auntif.xaml;a_or_u_hanboxes.xaml;MainWindow.xaml;rulles.xaml;Styles.xaml;
+Forms\Orgs\addOrgn.xaml;Forms\Calls\add_call.xaml;Forms\Rols\add_rolls.xaml;Forms\Emps\add_sotr.xaml;Forms\Users\add_user.xaml;Forms\Users\auntif.xaml;Forms\a_or_u_hanboxes.xaml;MainWindow.xaml;Styles.xaml;
 
 False
 

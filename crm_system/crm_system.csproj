@@ -92,51 +92,48 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="add_call.xaml.cs">
+    <Compile Include="Forms\Calls\add_call.xaml.cs">
       <DependentUpon>add_call.xaml</DependentUpon>
     </Compile>
-    <Compile Include="add_rolls.xaml.cs">
+    <Compile Include="Forms\Rols\add_rolls.xaml.cs">
       <DependentUpon>add_rolls.xaml</DependentUpon>
     </Compile>
-    <Compile Include="add_sotr.xaml.cs">
+    <Compile Include="Forms\Emps\add_sotr.xaml.cs">
       <DependentUpon>add_sotr.xaml</DependentUpon>
     </Compile>
-    <Compile Include="auntif.xaml.cs">
+    <Compile Include="Forms\Users\auntif.xaml.cs">
       <DependentUpon>auntif.xaml</DependentUpon>
     </Compile>
-    <Compile Include="a_or_u_hanboxes.xaml.cs">
+    <Compile Include="Forms\a_or_u_hanboxes.xaml.cs">
       <DependentUpon>a_or_u_hanboxes.xaml</DependentUpon>
     </Compile>
     <Compile Include="CheckFields.cs" />
     <Compile Include="DB\Tables.cs" />
-    <Compile Include="rulles.xaml.cs">
-      <DependentUpon>rulles.xaml</DependentUpon>
-    </Compile>
-    <Page Include="addOrgn.xaml">
+    <Page Include="Forms\Orgs\addOrgn.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="add_call.xaml">
+    <Page Include="Forms\Calls\add_call.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="add_rolls.xaml">
+    <Page Include="Forms\Rols\add_rolls.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="add_sotr.xaml">
+    <Page Include="Forms\Emps\add_sotr.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="add_user.xaml">
+    <Page Include="Forms\Users\add_user.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="auntif.xaml">
+    <Page Include="Forms\Users\auntif.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="a_or_u_hanboxes.xaml">
+    <Page Include="Forms\a_or_u_hanboxes.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -144,10 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="addOrgn.xaml.cs">
+    <Compile Include="Forms\Orgs\addOrgn.xaml.cs">
       <DependentUpon>addOrgn.xaml</DependentUpon>
     </Compile>
-    <Compile Include="add_user.xaml.cs">
+    <Compile Include="Forms\Users\add_user.xaml.cs">
       <DependentUpon>add_user.xaml</DependentUpon>
     </Compile>
     <Compile Include="App.xaml.cs">
@@ -158,10 +155,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="rulles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -244,5 +237,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
