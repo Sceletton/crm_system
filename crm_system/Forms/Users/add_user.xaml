@@ -21,6 +21,7 @@
                     <TextBox Name="Name" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource TextBoxStyle}" TextChanged="Name_TextChanged"/>
                     <TextBox Name="Surname" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource TextBoxStyle}" TextChanged="Surname_TextChanged"/>
                     <TextBox Name="second_name" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource TextBoxStyle}" TextChanged="second_name_TextChanged"/>
+                    <TextBlock Name="exception" Text="Логин уже занят!" Foreground="Red" Height="0"/>
                     <TextBox Name="Login" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource TextBoxStyle}" TextChanged="Login_TextChanged"/>
                     <PasswordBox Name="Pass" FontSize="15pt" Margin="0,0,0,15" Width="180" Style="{DynamicResource PasswordBoxStyle}"/>
                     <ComboBox Name="rols" FontSize="15pt" Margin="0,0,0,15" Width="180" ItemsSource="{Binding comboitem}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>

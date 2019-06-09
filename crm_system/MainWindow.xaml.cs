@@ -690,6 +690,7 @@ namespace crm_system
             {
                 add_User = new add_user();
                 add_User.Owner = this;
+                add_user.id_user = null;
                 add_User.Show();
             }
             else

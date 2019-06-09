@@ -33,10 +33,10 @@ namespace crm_system
 
         private void save_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 check.CheckNullFields(new[] { Name, Surname, second_name, Login });
-                if (Name.Text != "" && Surname.Text != "" && second_name.Text != "" && Login.Text != "" && Pass.Password != "" && rols.Text != "")
+                if (Name.Text != "" && Surname.Text != "" && second_name.Text != "" && Login.Text != "" && Pass.Password != "" && rols.Text != "" && exception.Height == 0)
                 {
                     connection.Open();
                     if (id_user == null)
@@ -71,12 +71,12 @@ namespace crm_system
                     connection.Close();
                     ((MainWindow)this.Owner).refresh();
                 }
-            }
-            catch (Exception ex)
-            {
-                connection.Close();
-                MessageBox.Show(ex.Message.ToString());
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    connection.Close();
+            //    MessageBox.Show(ex.Message.ToString());
+            //}
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)
@@ -86,8 +86,8 @@ namespace crm_system
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 List<comboItems> comboItems = new List<comboItems>();
                 connection = new MySqlConnection(MainWindow.constr);
                 connection.Open();
@@ -116,12 +116,12 @@ namespace crm_system
                     }
                 }
                 connection.Close();
-            }
-            catch (Exception ex)
-            {
-                connection.Close();
-                MessageBox.Show(ex.Message.ToString());
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    connection.Close();
+            //    MessageBox.Show(ex.Message.ToString());
+            //}
         }
 
         private void Name_TextChanged(object sender, TextChangedEventArgs e)
@@ -144,8 +144,26 @@ namespace crm_system
 
         private void Login_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Login.BorderBrush = Brushes.Black;
-            check.CheckFieldsCaption(Login);
+            try
+            {
+                Login.BorderBrush = Brushes.Black;
+                check.CheckFieldsCaption(Login);
+                exception.Height = 0;
+                connection.Open();
+                MySqlCommand command = new MySqlCommand("select t.id from users t where t.login = @login and (@id_user is null or t.id != @id_user)", connection);
+                command.Parameters.AddWithValue("login", Login.Text);
+                command.Parameters.AddWithValue("id_user", id_user);
+                MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    exception.Height = 15;
+                }
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                
+            }
         }
     }
 }
