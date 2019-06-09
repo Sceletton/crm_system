@@ -119,14 +119,14 @@ namespace crm_system
                         upd_org.ExecuteNonQuery();
                         connection.Close();
                     }
-                    try
-                    {
+                    //try
+                    //{
                         ((MainWindow)this.Owner).refresh();
-                    }
-                    catch
-                    {
+                    //}
+                    //catch
+                    //{
 
-                    }
+                    //}
                     Close();
                 }
             }

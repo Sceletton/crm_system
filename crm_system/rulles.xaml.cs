@@ -83,7 +83,7 @@ namespace crm_system
                 MessageBox.Show(ex.Message.ToString());
             }
             add_rolls.rights = rulles;
-            ((add_rolls)this.Owner).load_permisions();
+            //((add_rolls)this.Owner).load_permisions();
             this.Close();
         }
 

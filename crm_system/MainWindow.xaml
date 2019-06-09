@@ -7,7 +7,7 @@
         xmlns:lc ="http://oxyplot.org/wpf"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="MainWindow" Height="520" Width="1250" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" d:DataContext="{d:DesignInstance local:MainWindow}">
+        Title="Главная" Height="520" Width="1250" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" d:DataContext="{d:DesignInstance local:MainWindow}">
     <Grid>
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

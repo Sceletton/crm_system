@@ -62,7 +62,6 @@ namespace crm_system
             {
                 MessageBox.Show("Крнфигурационный файл не найден");
             }
-            connection = new MySqlConnection(constr);
         }
 
        
@@ -218,19 +217,16 @@ namespace crm_system
                 }
                 connection.Close();
             }
-            else
-            {
-
-            }
         }
 
         
 
         public void refresh(string tab = null)
         {
-            connection.Open();
             try
             {
+                connection = new MySqlConnection(constr);
+                connection.Open();
                 if (tab == "orgs" || tab == null)
                 {
                     //orgs
@@ -306,23 +302,23 @@ namespace crm_system
                     List<grid_items> jobs = new List<grid_items>();
                     List<grid_items> cities = new List<grid_items>();
                     List<grid_items> rulls = new List<grid_items>();
-                    //Должности
-                    try
-                    {
-                        MySqlCommand sel_jobs = new MySqlCommand("select t.* from posts t", connection);
-                        MySqlDataReader read_jobs = sel_jobs.ExecuteReader();
-                        while (read_jobs.Read())
-                        {
-                            jobs.Add(new grid_items(read_jobs["id"].ToString(), read_jobs["name"].ToString()));
-                        }
-                        read_jobs.Close();
-                        post_grid.ItemsSource = jobs;
-                    }
-                    catch (MySqlException sqlEx)
-                    {
-                        MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
-                        connection.Close();
-                    }
+                //Должности
+                //try
+                //{
+                //    MySqlCommand sel_jobs = new MySqlCommand("select t.* from posts t", connection);
+                //    MySqlDataReader read_jobs = sel_jobs.ExecuteReader();
+                //    while (read_jobs.Read())
+                //    {
+                //        jobs.Add(new grid_items(read_jobs["id"].ToString(), read_jobs["name"].ToString()));
+                //    }
+                //    read_jobs.Close();
+                //    post_grid.ItemsSource = jobs;
+                //}
+                //catch (MySqlException sqlEx)
+                //{
+                //    MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
+                //    connection.Close();
+                //}
 
                     //Города
                     try
@@ -336,9 +332,9 @@ namespace crm_system
                         cities_jobs.Close();
                         cities_grid.ItemsSource = cities;
                     }
-                    catch (MySqlException sqlEx)
+                    catch
                     {
-                        MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении Городов!");
+                        //MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении Городов!");
                         connection.Close();
                     }
 
@@ -354,10 +350,9 @@ namespace crm_system
                         rol_rulls_grid.ItemsSource = rulls;
                         read_rols.Close();
                     }
-                    catch (MySqlException sqlEx)
+                    catch
                     {
-                        MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении прав ролей!");
-                        connection.Close();
+
                     }
                 }
                 if (tab == "emps" || tab == null)
@@ -369,17 +364,22 @@ namespace crm_system
                     {
                         query = "select id, name, surname, second_name, (select t.name from org t where t.id = id_org) as org, (select t1.name from posts t1 where t1.id = id_post) as post(select t1.name from posts t1 where t1.id = id_post) as post from workers t  where id_org=" + org_id;
                     }
-                    MySqlCommand sel_sotrs = new MySqlCommand(query, connection);
-                    MySqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
-                    while (read_sotrs.Read())
+                    try
                     {
-                        workers.Add(new worker(read_sotrs["id"].ToString(), read_sotrs["name"].ToString(), read_sotrs["surname"].ToString(), read_sotrs["second_name"].ToString(), read_sotrs["org"].ToString(), read_sotrs["post"].ToString()));
+                        MySqlCommand sel_sotrs = new MySqlCommand(query, connection);
+                        MySqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
+                        while (read_sotrs.Read())
+                        {
+                            workers.Add(new worker(read_sotrs["id"].ToString(), read_sotrs["name"].ToString(), read_sotrs["surname"].ToString(), read_sotrs["second_name"].ToString(), read_sotrs["org"].ToString(), read_sotrs["post"].ToString()));
+                        }
+                        read_sotrs.Close();
+                        sotr_grid.ItemsSource = workers;
                     }
-                    read_sotrs.Close();
-                    sotr_grid.ItemsSource = workers;
+                    catch
+                    {
+
+                    }
                 }
-                //
-                //
                 //
                 List<comboItems> Orgs = new List<comboItems>();
                 List<comboItems> Opers = new List<comboItems>();
@@ -399,8 +399,8 @@ namespace crm_system
                 }
                 emploers.ItemsSource = Opers;
                 opers_read.Close();
-                try
-                {
+                //try
+                //{
                     MySqlCommand sel_jobs = new MySqlCommand("select t.* from posts t", connection);
                     MySqlDataReader read_jobs = sel_jobs.ExecuteReader();
                     while (read_jobs.Read())
@@ -409,12 +409,12 @@ namespace crm_system
                     }
                     read_jobs.Close();
                     post_grid.ItemsSource = jobes;
-                }
-                catch (MySqlException sqlEx)
-                {
-                    connection.Close();
-                    MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
-                }
+                //}
+                //catch (MySqlException sqlEx)
+                //{
+                //    connection.Close();
+                //    MessageBox.Show(sqlEx.Message.ToString(), "Ошибка при получении должностей!");
+                //}
                 org_filt.ItemsSource = Orgs;
                 org_filt_.ItemsSource = Orgs;
                 oper_filt.ItemsSource = Opers;
@@ -495,9 +495,8 @@ namespace crm_system
             catch (Exception ex)
             {
                 connection.Close();
-                MessageBox.Show(ex.Message.ToString());
             }
-}
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             refresh();
@@ -516,8 +515,8 @@ namespace crm_system
                         MySqlCommand command = new MySqlCommand("delete from org where id=@id", connection);
                         command.Parameters.AddWithValue("id", table.Id);
                         command.ExecuteNonQuery();
-                        refresh();
                         connection.Close();
+                        refresh();
                         break;
                 }
             }
@@ -543,9 +542,9 @@ namespace crm_system
 
         private void upd__org_Click(object sender, RoutedEventArgs e)
         {
-            if (!addOrgn.IsLoaded)
+            try
             {
-                try
+                if (!addOrgn.IsLoaded)
                 {
                     org table = org_grid.SelectedItem as org;
                     addOrgn.id = table.Id.ToString();
@@ -553,14 +552,14 @@ namespace crm_system
                     addOrgn.Owner = this;
                     addOrgn.Show();
                 }
-                catch
+                else
                 {
-
+                    addOrgn.Focus();
                 }
             }
-            else
+            catch
             {
-                addOrgn.Focus();
+
             }
         }
 
@@ -593,24 +592,24 @@ namespace crm_system
 
         private void add__call_Click(object sender, RoutedEventArgs e)
         {
-            if (!add_Call.IsLoaded)
+            try
             {
-                org table = org_grid.SelectedItem as org;
-                add_Call = new add_call();
-                try
+                if (!add_Call.IsLoaded)
                 {
+                    org table = org_grid.SelectedItem as org;
+                    add_Call = new add_call();
                     add_call.id_org = table.Id.ToString();
                     add_call.id_call = null;
+                    add_Call.Show();
                 }
-                catch
+                else
                 {
-
+                    add_Call.Focus();
                 }
-                add_Call.Show();
             }
-            else
+            catch
             {
-                add_Call.Focus();
+
             }
         }
 
@@ -627,7 +626,6 @@ namespace crm_system
                 ancalytic.Parameters.AddWithValue("id_org", calls.id_org);
                 ancalytic.Parameters.AddWithValue("status", status);
                 ancalytic.Parameters.AddWithValue("user_id", MainWindow.user_id);
-                connection.Close();
                 connection.Close();
                 refresh();
             }
@@ -660,24 +658,24 @@ namespace crm_system
 
         private void upd_call__Click(object sender, RoutedEventArgs e)
         {
-            if (!add_Call.IsLoaded)
+            try
             {
-                calls table = calls_grid.SelectedItem as calls;
-                add_Call = new add_call();
-                try
+                if (!add_Call.IsLoaded)
                 {
+                    calls table = calls_grid.SelectedItem as calls;
+                    add_Call = new add_call();
                     add_call.id_call = table.id.ToString();
+                    add_Call.Owner = this;
+                    add_Call.Show();
                 }
-                catch
+                else
                 {
-
+                    add_Call.Focus();
                 }
-                add_Call.Owner = this;
-                add_Call.Show();
             }
-            else
+            catch
             {
-                add_Call.Focus();
+
             }
         }
 
@@ -702,16 +700,23 @@ namespace crm_system
 
         private void upd_us_Click(object sender, RoutedEventArgs e)
         {
-            if (!add_User.IsLoaded)
+            try
             {
-                add_User = new add_user();
-                add_User.Owner = this;
-                add_user.id_user = (user_grid.SelectedItem as user).id.ToString();
-                add_User.Show();
+                if (!add_User.IsLoaded)
+                {
+                    add_User = new add_user();
+                    add_User.Owner = this;
+                    add_user.id_user = (user_grid.SelectedItem as user).id.ToString();
+                    add_User.Show();
+                }
+                else
+                {
+                    add_User.Focus();
+                }
             }
-            else
+            catch
             {
-                add_User.Focus();
+
             }
         }
 
@@ -751,17 +756,24 @@ namespace crm_system
 
         private void upd_roll_Click(object sender, RoutedEventArgs e)
         {
-            if (!add_rolles.IsLoaded)
+            try
             {
-                roll table = roll_grid.SelectedItem as roll;
-                add_rolls.id_rool = table.id.ToString();
-                add_rolles = new add_rolls();
-                add_rolles.Owner = this;
-                add_rolles.Show();
+                if (!add_rolles.IsLoaded)
+                {
+                    roll table = roll_grid.SelectedItem as roll;
+                    add_rolls.id_rool = table.id.ToString();
+                    add_rolles = new add_rolls();
+                    add_rolles.Owner = this;
+                    add_rolles.Show();
+                }
+                else
+                {
+                    add_rolles.Focus();
+                }
             }
-            else
+            catch
             {
-                add_rolles.Focus();
+
             }
         }
 
@@ -772,35 +784,49 @@ namespace crm_system
 
         private void add_post_Click(object sender, RoutedEventArgs e)
         {
-            if (!hanboxes_posts.IsLoaded)
+            try
             {
-                var table = post_grid.SelectedItem as grid_items;
-                a_or_u_hanboxes.type = "posts";
-                a_or_u_hanboxes.hanbox_id = -1;
-                hanboxes_posts = new a_or_u_hanboxes();
-                hanboxes_posts.Owner = this;
-                hanboxes_posts.Show();
+                if (!hanboxes_posts.IsLoaded)
+                {
+                    var table = post_grid.SelectedItem as grid_items;
+                    a_or_u_hanboxes.type = "posts";
+                    a_or_u_hanboxes.hanbox_id = -1;
+                    hanboxes_posts = new a_or_u_hanboxes();
+                    hanboxes_posts.Owner = this;
+                    hanboxes_posts.Show();
+                }
+                else
+                {
+                    add_rolles.Focus();
+                }
             }
-            else
+            catch
             {
-                add_rolles.Focus();
+
             }
         }
 
         private void upd_post_Click(object sender, RoutedEventArgs e)
         {
-            if (!hanboxes_posts.IsLoaded)
+            try
             {
-                var table = post_grid.SelectedItem as grid_items;
-                a_or_u_hanboxes.hanbox_id = int.Parse(table.id.ToString());
-                a_or_u_hanboxes.type = "posts";
-                hanboxes_posts = new a_or_u_hanboxes();
-                hanboxes_posts.Owner = this;
-                hanboxes_posts.Show();
+                if (!hanboxes_posts.IsLoaded)
+                {
+                    var table = post_grid.SelectedItem as grid_items;
+                    a_or_u_hanboxes.hanbox_id = int.Parse(table.id.ToString());
+                    a_or_u_hanboxes.type = "posts";
+                    hanboxes_posts = new a_or_u_hanboxes();
+                    hanboxes_posts.Owner = this;
+                    hanboxes_posts.Show();
+                }
+                else
+                {
+                    add_rolles.Focus();
+                }
             }
-            else
+            catch
             {
-                add_rolles.Focus();
+
             }
         }
 
@@ -831,35 +857,49 @@ namespace crm_system
 
         private void add_citi_Click(object sender, RoutedEventArgs e)
         {
-            if (!hanboxes_cities.IsLoaded)
+            try
             {
-                var table = cities_grid.SelectedItem as grid_items;
-                a_or_u_hanboxes.type = "cities";
-                a_or_u_hanboxes.hanbox_id = -1;
-                hanboxes_cities = new a_or_u_hanboxes();
-                hanboxes_cities.Owner = this;
-                hanboxes_cities.Show();
+                if (!hanboxes_cities.IsLoaded)
+                {
+                    var table = cities_grid.SelectedItem as grid_items;
+                    a_or_u_hanboxes.type = "cities";
+                    a_or_u_hanboxes.hanbox_id = -1;
+                    hanboxes_cities = new a_or_u_hanboxes();
+                    hanboxes_cities.Owner = this;
+                    hanboxes_cities.Show();
+                }
+                else
+                {
+                    add_rolles.Focus();
+                }
             }
-            else
+            catch
             {
-                add_rolles.Focus();
+
             }
         }
 
         private void upd_citi_Click(object sender, RoutedEventArgs e)
         {
-            if (!hanboxes_cities.IsLoaded)
+            try
             {
-                var table = cities_grid.SelectedItem as grid_items;
-                a_or_u_hanboxes.hanbox_id = int.Parse(table.id.ToString());
-                a_or_u_hanboxes.type = "cities";
-                hanboxes_cities = new a_or_u_hanboxes();
-                hanboxes_cities.Owner = this;
-                hanboxes_cities.Show();
+                if (!hanboxes_cities.IsLoaded)
+                {
+                    var table = cities_grid.SelectedItem as grid_items;
+                    a_or_u_hanboxes.hanbox_id = int.Parse(table.id.ToString());
+                    a_or_u_hanboxes.type = "cities";
+                    hanboxes_cities = new a_or_u_hanboxes();
+                    hanboxes_cities.Owner = this;
+                    hanboxes_cities.Show();
+                }
+                else
+                {
+                    add_rolles.Focus();
+                }
             }
-            else
+            catch
             {
-                add_rolles.Focus();
+
             }
         }
 
@@ -906,8 +946,8 @@ namespace crm_system
                         MySqlCommand command = new MySqlCommand("delete from workers where id=@id", connection);
                         command.Parameters.AddWithValue("id", table.id);
                         command.ExecuteNonQuery();
-                        refresh();
                         connection.Close();
+                        refresh();
                         break;
                 }
             }
@@ -1113,7 +1153,6 @@ namespace crm_system
                 filt = filt.Remove(1, 3);
                 query = query + " where " + filt;
                 connection.Open();
-
                 MySqlCommand sel_sotrs = new MySqlCommand(query, connection);
                 MySqlDataReader read_sotrs = sel_sotrs.ExecuteReader();
                 while (read_sotrs.Read())
@@ -1125,7 +1164,7 @@ namespace crm_system
             }
             catch
             {
-
+                connection.Close();
             }
         }
 
@@ -1245,26 +1284,33 @@ namespace crm_system
                 permis_grid.ItemsSource = permisions;
                 connection.Close();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 connection.Close();
                 MessageBox.Show(ex.Message);
             }
-}
+        }
 
         private void upd_st_Click(object sender, RoutedEventArgs e)
         {
-            if (!add_Sotr.IsLoaded)
+            try
             {
-                var table = sotr_grid.SelectedValue as worker;
-                add_sotr.id_sotr = table.id.ToString();
-                add_Sotr = new add_sotr();
-                add_Sotr.Show();
-                add_Sotr.Owner = this;
+                if (!add_Sotr.IsLoaded)
+                {
+                    var table = sotr_grid.SelectedValue as worker;
+                    add_sotr.id_sotr = table.id.ToString();
+                    add_Sotr = new add_sotr();
+                    add_Sotr.Show();
+                    add_Sotr.Owner = this;
+                }
+                else
+                {
+                    add_Sotr.Focus();
+                }
             }
-            else
+            catch
             {
-                add_Sotr.Focus();
+
             }
         }
 

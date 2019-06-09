@@ -31,45 +31,65 @@ namespace crm_system
             InitializeComponent();
         }
         public static string id_rool = null, rights = null;
-        public void load_permisions()
+        public class permision
         {
-            connection = new MySqlConnection(MainWindow.constr);
-            connection.Open();
-            string rights_name = null;
-            string[] permis_array = null;
-            permisions = new List<permision>();
-            MySqlCommand sel_permissions = new MySqlCommand("select REPLACE(GROUP_CONCAT(t.name,';'),',','') as permissions from permissions t where  ';" + rights + "' like CONCAT('%;',convert(t.id,char),';%')  ", connection);
-            MySqlDataReader read_permissions = sel_permissions.ExecuteReader();
-            if (read_permissions.Read())
+            public int id { get; set; }
+            public string name { get; set; }
+            public bool is_check { get; set; }
+            public permision(int Id, string Name, bool Is_check)
             {
-                rights_name = read_permissions["permissions"].ToString();
+                id = Id;
+                name = Name;
+                is_check = Is_check;
             }
-            read_permissions.Close();
-            rights_name = rights_name.Remove(rights_name.Length-1,1);
-            permis_array = rights_name.Split(';');
-            for (int i = 0; i < permis_array.Length; i++)
-            {
-                permisions.Add(new permision(permis_array[i]));
-            }
-            permis_grid.ItemsSource = permisions;
-            connection.Close();
         }
-
+        public bool in_arr(string[] ar, string value)
+        {
+            for (int i = 0;i< ar.Length; i++)
+            {
+                if (ar[i] == value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
+                connection = new MySqlConnection(MainWindow.constr);
+                List<permision> permisions = new List<permision>();
+                connection.Open();
+                MySqlCommand cmd = new MySqlCommand("select t.id, t.name from permissions t", connection);
+                MySqlDataReader reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    permisions.Add(new permision(int.Parse(reader["id"].ToString()), reader["name"].ToString(), false));
+                }
+                permis_grid.ItemsSource = permisions;
+                reader.Close();
                 if (id_rool != null)
                 {
-                    connection = new MySqlConnection(MainWindow.constr);
-                    connection.Open();
-                    MySqlCommand sel_rulls = new MySqlCommand("select REPLACE(GROUP_CONCAT(rights,';'),',','') as rights from rols t where t.id = @id", connection);
+                    MySqlCommand sel_rulls = new MySqlCommand("select REPLACE(GROUP_CONCAT(rights),',',';') as rights from rols t where t.id = @id", connection);
                     sel_rulls.Parameters.AddWithValue("id", id_rool);
                     MySqlDataReader read_ruls = sel_rulls.ExecuteReader();
                     if (read_ruls.Read())
                     {
                         rights = read_ruls["rights"].ToString();
                     }
+                    var rights_arr = rights.Split(';');
+                    List<permision> permi = new List<permision>();
+                    for (int i = 0; i < permis_grid.Items.Count; i++)
+                    {
+                        var col = permis_grid.Items[i] as permision;
+                        if (in_arr(rights_arr, col.id.ToString()))
+                        {
+                            col.is_check = true;
+                        }
+                        permi.Add(col);
+                    }
+                    permis_grid.ItemsSource = permi;
                     read_ruls.Close();
                     MySqlCommand sel_roll_info = new MySqlCommand("select t.name from rols t where t.id = @id", connection);
                     sel_roll_info.Parameters.AddWithValue("id", id_rool);
@@ -79,12 +99,12 @@ namespace crm_system
                         roll_name.Text = read_roll_info["name"].ToString();
                     }
                     read_roll_info.Close();
-                    connection.Close();
-                    load_permisions();
                 }
+                connection.Close();
             }
             catch(Exception ex)
             {
+                connection.Close();
                 MessageBox.Show(ex.Message);
             }
             
@@ -96,17 +116,20 @@ namespace crm_system
             for (int i = 0; i< permis_grid.Items.Count; i++)
             {
                 var col = permis_grid.Items[i] as permision;
-                rightss = rightss + col.caption.ToString() + ";";
+                if (col.is_check)
+                {
+                    rightss = rightss + col.id.ToString() + ";";
+                }
             }
-            try
-            {
+            //try
+            //{
                 if (roll_name.Text != "")
                 {
                     if (id_rool == null)
                     {
                         connection.Open();
                         MySqlCommand ins_in_users = new MySqlCommand("insert into rols (rights, name) values (@rights, @name)", connection);
-                        ins_in_users.Parameters.AddWithValue("rights", rights);
+                        ins_in_users.Parameters.AddWithValue("rights", rightss);
                         ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
                         ins_in_users.ExecuteNonQuery();
                         connection.Close();
@@ -115,21 +138,21 @@ namespace crm_system
                     {
                         connection.Open();
                         MySqlCommand ins_in_users = new MySqlCommand("update rols set rights = @rights, name = @name where id = @id", connection);
-                        ins_in_users.Parameters.AddWithValue("rights", rights);
+                        ins_in_users.Parameters.AddWithValue("rights", rightss);
                         ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
                         ins_in_users.Parameters.AddWithValue("id", id_rool);
                         ins_in_users.ExecuteNonQuery();
                         connection.Close();
                     }
-                    ((MainWindow)this.Owner).refresh();
                     Close();
                 }
-            }
-            catch (Exception ex)
-            {
-                connection.Close();
-                MessageBox.Show(ex.Message.ToString());
-            }
+                ((MainWindow)this.Owner).refresh();
+            //}
+            //catch (Exception ex)
+            //{
+            //    connection.Close();
+            //    MessageBox.Show(ex.Message.ToString());
+            //}
         }
 
         private void del_Click(object sender, RoutedEventArgs e)
@@ -164,6 +187,30 @@ namespace crm_system
             {
 
             }
+        }
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            List<permision> permi = new List<permision>();
+            for (int i = 0; i< permis_grid.Items.Count; i++)
+            {
+                var col = permis_grid.Items[i] as permision;
+                col.is_check = true;
+                permi.Add(col);
+            }
+            permis_grid.ItemsSource = permi;
+
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            List<permision> permi = new List<permision>();
+            for (int i = 0; i < permis_grid.Items.Count; i++)
+            {
+                var col = permis_grid.Items[i] as permision;
+                col.is_check = false;
+                permi.Add(col);
+            }
+            permis_grid.ItemsSource = permi;
         }
     }
 }

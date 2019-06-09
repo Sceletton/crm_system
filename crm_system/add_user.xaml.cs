@@ -99,6 +99,7 @@ namespace crm_system
                 }
                 read_rols.Close();
                 rols.ItemsSource = comboItems;
+                
                 if (id_user != null)
                 {
                     MySqlCommand sel_user_info = new MySqlCommand("select t.* from users t where t.id = @id", connection);

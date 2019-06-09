@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:crm_system"
         mc:Ignorable="d"
-        Title="add_rolls" Height="400" Width="340" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="" Height="480" Width="340" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Canvas>
-            <StackPanel Orientation="Horizontal" Margin="50,10,0,0">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="50,10,0,0">
                 <StackPanel>
                     <TextBlock Text="Имя роли" FontSize="13pt"/>
                 </StackPanel>
@@ -17,19 +18,25 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel>
-                <DataGrid FontSize ="12pt" MaxHeight="260" Name="permis_grid" AutoGenerateColumns="False" Width="300" Margin="10,50,0,0" Style="{DynamicResource DataGridStyle}">
-                    <DataGrid.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Name="del" Header="Удалить право" Click="del_Click"/>
-                            <MenuItem Name="add" Header="Доьавить право" Click="add_Click"/>
-                        </ContextMenu>
-                    </DataGrid.ContextMenu>
+                <DataGrid FontSize ="12pt"  MaxHeight="350" Name="permis_grid" AutoGenerateColumns="False" Width="310" Margin="10,10,0,0" Style="{DynamicResource DataGridStyle}" >
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Права" Width="300" Binding="{Binding Path = caption}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.Header>
+                                <CheckBox  Checked="CheckBox_Checked"  Unchecked="CheckBox_Unchecked"/>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox HorizontalAlignment="Center"  Width="50" IsChecked="{Binding Path = is_check, UpdateSourceTrigger=PropertyChanged}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Название" Width="350" Binding="{Binding Path = name}">
+                        </DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
                 <Button Name="add_or_upd" Width="150" Margin="10" Content="Сохранить" FontSize="12pt" Click="add_or_upd_Click"  Style="{DynamicResource DefaultBtn}"/>
             </StackPanel>
+           </StackPanel>
         </Canvas>
     </Grid>
 </Window>
