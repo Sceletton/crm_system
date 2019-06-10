@@ -382,6 +382,7 @@ namespace crm_system
                 }
                 //
                 List<comboItems> Orgs = new List<comboItems>();
+                List<comboItems> OrgsAnalisitcs = new List<comboItems>();
                 List<comboItems> Opers = new List<comboItems>();
                 List<grid_items> jobes = new List<grid_items>();
                 MySqlCommand sel_orgs = new MySqlCommand("select id, name from org order by name ", connection);
@@ -391,6 +392,13 @@ namespace crm_system
                     Orgs.Add(new comboItems(orgs_read["id"].ToString(), orgs_read["name"].ToString()));
                 }
                 orgs_read.Close();
+                MySqlCommand sel_orgs_analit = new MySqlCommand("select t.id, t.name from org t where exists (select null from calls tt where tt.id_org = t.id) order by name ", connection);
+                MySqlDataReader orgs_read_analit = sel_orgs_analit.ExecuteReader();
+                while (orgs_read_analit.Read())
+                {
+                    OrgsAnalisitcs.Add(new comboItems(orgs_read_analit["id"].ToString(), orgs_read_analit["name"].ToString()));
+                }
+                orgs_read_analit.Close();
                 MySqlCommand sel_opers = new MySqlCommand("select id, name, surname, second_name from users", connection);
                 MySqlDataReader opers_read = sel_opers.ExecuteReader();
                 while (opers_read.Read())
@@ -419,7 +427,7 @@ namespace crm_system
                 org_filt_.ItemsSource = Orgs;
                 oper_filt.ItemsSource = Opers;
                 job_filt.ItemsSource = jobes;
-                org.ItemsSource = Orgs;
+                org.ItemsSource = OrgsAnalisitcs;
 
                 stat_filt.Items.Clear();
                 stat_filt.Items.Add("Назначен");
@@ -1573,33 +1581,17 @@ namespace crm_system
             {
                 int all_calls = 0, add_cals = 0, callback = 0;
                 connection.Open();
-                MySqlCommand analyze = new MySqlCommand("select count(1) as all_calls from calls_analytics t where t.id_oper = @id", connection); // положительный ответ
+                MySqlCommand analyze = new MySqlCommand("select (select count(1) from calls_analytics t where t.id_oper = @id) as all_cals, (select count(1) from calls_analytics t where t.id_oper = @id and call_status = 0) as add_cals,(select count(1) from calls_analytics t where t.id_oper = @id and call_status = 1) as callback ", connection); // положительный ответ
                 analyze.Parameters.AddWithValue("id", int.Parse(emploers.SelectedValue.ToString()));
                 MySqlDataReader reader = analyze.ExecuteReader();
                 while (reader.Read())
                 {
+                    MessageBox.Show(all_calls.ToString());
                     all_calls = int.Parse(reader["all_calls"].ToString());
+                    add_cals = int.Parse(reader["add_calls"].ToString());
+                    callback = int.Parse(reader["callback"].ToString());
                 }
                 reader.Close();
-                //
-                MySqlCommand analyze1 = new MySqlCommand("select count(1) as add_calls from calls_analytics t where t.id_oper = @id and call_status = 0", connection);
-                analyze1.Parameters.AddWithValue("id", int.Parse(emploers.SelectedValue.ToString()));
-                MySqlDataReader reader1 = analyze1.ExecuteReader();
-                while (reader1.Read())
-                {
-                    add_cals = int.Parse(reader1["add_calls"].ToString());
-                }
-                reader1.Close();
-                //
-                MySqlCommand analyze2 = new MySqlCommand("select count(1) as callback from calls_analytics t where t.id_oper = @id and call_status = 1", connection); // положительный ответ
-                analyze2.Parameters.AddWithValue("id", int.Parse(emploers.SelectedValue.ToString()));
-                MySqlDataReader reader2 = analyze2.ExecuteReader();
-                while (reader2.Read())
-                {
-                    callback = int.Parse(reader2["callback"].ToString());
-                }
-                reader2.Close();
-                //
                 connection.Close();
                 analitycs = new ChartValues<opertator>();
                 analitycs.Clear();
@@ -1631,8 +1623,8 @@ namespace crm_system
 
         private void org_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //try
-            //{
+            try
+            {
                 connection.Open();
                 MySqlCommand analytic = new MySqlCommand("select ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status != 0)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as answers, ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status = 2)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as cancel, ((select count(1) from calls_analytics t where t.id_org = @org and t.call_status = 1)/(select count(1) from calls_analytics t where t.id_org = @org) * 100) as susesful", connection);
                 analytic.Parameters.AddWithValue("org", org.SelectedValue);
@@ -1671,11 +1663,12 @@ namespace crm_system
                     sucsesful_calls.Value = sucses;
                 }
                 connection.Close();
-            //}
-            //catch (Exception ex)
-            //{
-            //    connection.Close();
-            //}
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message, "Analytics");
+            }
         }
 
         public void setFiltersVisible(StackPanel panel, int val)
