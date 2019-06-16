@@ -82,7 +82,7 @@ namespace crm_system
                         reader.Close();
                         if (us_cnt == 1 && in_arr(us_id, id_user) && !in_arr(rols_id, rols.SelectedValue.ToString()))
                         {
-                            MessageBox.Show("В системе должна быть хотя бы однин пользователь, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение");
+                            MessageBox.Show("В системе должна быть хотя бы однин пользователь, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Information);
                             connection.Close();
                         }
                         else

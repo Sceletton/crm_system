@@ -111,61 +111,74 @@ namespace crm_system
 
         private void add_or_upd_Click(object sender, RoutedEventArgs e)
         {
+            except.Height = 0;
+            except.Margin = new Thickness(0, 0, 0, 0);
             string rightss = null;
+            int is_chec_cnt = 0;
             for (int i = 0; i< permis_grid.Items.Count; i++)
             {
                 var col = permis_grid.Items[i] as permision;
                 if (col.is_check)
                 {
                     rightss = rightss + col.id.ToString() + ";";
+                    is_chec_cnt++;
                 }
             }
             try
             {
-                if (roll_name.Text != "")
+                check.CheckNullFields(new[] { roll_name });
+                if (is_chec_cnt != 0)
                 {
-                    if (id_rool == null)
+                    if (roll_name.Text != "")
                     {
-                        connection.Open();
-                        MySqlCommand ins_in_users = new MySqlCommand("insert into rols (rights, name) values (@rights, @name)", connection);
-                        ins_in_users.Parameters.AddWithValue("rights", rightss);
-                        ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
-                        ins_in_users.ExecuteNonQuery();
-                        connection.Close();
-                    }
-                    else
-                    {
-                        int rolls_count = 0;
-                        string[] rols_id = null;
-                        connection.Open();
-                        MySqlCommand rols_cnt = new MySqlCommand("select count(1) as count, REPLACE(GROUP_CONCAT(t.id),',',';') as rols_id from rols t where t.rights like '%9%' and t.rights like '%10%'", connection);
-                        MySqlDataReader reader = rols_cnt.ExecuteReader();
-                        while (reader.Read())
+                        if (id_rool == null)
                         {
-                            rolls_count = int.Parse(reader["count"].ToString());
-                            rols_id = reader["rols_id"].ToString().Split(';');
-                        }
-                        reader.Close();
-                        if (rolls_count == 1 && rols_id[0] == id_rool && !in_arr(rightss.Split(';'),"9") && !in_arr(rightss.Split(';'), "9"))
-                        {
-                            MessageBox.Show("В системе должна быть хотя бы одна роль, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение");
+                            connection.Open();
+                            MySqlCommand ins_in_users = new MySqlCommand("insert into rols (rights, name) values (@rights, @name)", connection);
+                            ins_in_users.Parameters.AddWithValue("rights", rightss);
+                            ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
+                            ins_in_users.ExecuteNonQuery();
                             connection.Close();
                         }
-                        MySqlCommand ins_in_users = new MySqlCommand("update rols set rights = @rights, name = @name where id = @id", connection);
-                        ins_in_users.Parameters.AddWithValue("rights", rightss);
-                        ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
-                        ins_in_users.Parameters.AddWithValue("id", id_rool);
-                        ins_in_users.ExecuteNonQuery();
-                        connection.Close();
+                        else
+                        {
+                            int rolls_count = 0;
+                            string[] rols_id = null;
+                            connection.Open();
+                            MySqlCommand rols_cnt = new MySqlCommand("select count(1) as count, REPLACE(GROUP_CONCAT(t.id),',',';') as rols_id from rols t where t.rights like '%9%' and t.rights like '%10%'", connection);
+                            MySqlDataReader reader = rols_cnt.ExecuteReader();
+                            while (reader.Read())
+                            {
+                                rolls_count = int.Parse(reader["count"].ToString());
+                                rols_id = reader["rols_id"].ToString().Split(';');
+                            }
+                            reader.Close();
+                            if (rolls_count == 1 && rols_id[0] == id_rool && !in_arr(rightss.Split(';'), "9") && !in_arr(rightss.Split(';'), "9"))
+                            {
+                                MessageBox.Show("В системе должна быть хотя бы одна роль, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Information);
+                                connection.Close();
+                            }
+                            MySqlCommand ins_in_users = new MySqlCommand("update rols set rights = @rights, name = @name where id = @id", connection);
+                            ins_in_users.Parameters.AddWithValue("rights", rightss);
+                            ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
+                            ins_in_users.Parameters.AddWithValue("id", id_rool);
+                            ins_in_users.ExecuteNonQuery();
+                            connection.Close();
+                        }
+                        Close();
                     }
-                    Close();
+                    ((MainWindow)this.Owner).refresh();
+                    ((MainWindow)this.Owner).aunt_result();
+                    ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
+                    ((MainWindow)this.Owner).exit.Height = 39;
+                    ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
+                    ((MainWindow)this.Owner).re_aunt.Height = 39;
                 }
-                ((MainWindow)this.Owner).refresh();
-                ((MainWindow)this.Owner).aunt_result();
-                ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
-                ((MainWindow)this.Owner).exit.Height = 39;
-                ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
-                ((MainWindow)this.Owner).re_aunt.Height = 39;
+                else
+                {
+                    except.Height = 24;
+                    except.Margin = new Thickness(10, 0, 0, 0);
+                }
             }
             catch (Exception ex)
             {

@@ -54,6 +54,7 @@
                                             <MenuItem Name="view__sotr" Header="Сотрудники организации" Click="view__sotr_Click" Height="20"/>
                                             <MenuItem Name="add__call" Header="Назначить звонок" Click="add__call_Click" Height="20"/>
                                             <MenuItem Name="to_excel" Header="Excel" Height="20" Click="to_excel_Click"/>
+                                            <MenuItem Name="orgs_cansel_filter" Header="Сбросить фильтр" Height="20" Click="orgs_cansel_filter_Click"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -69,7 +70,7 @@
                         </StackPanel>
                     </Canvas>
                 </TabItem>
-                <TabItem Name="cals" Header="Звонки" Height="40" Style="{DynamicResource Tabit}">
+                <TabItem Name="cals" Header="Звонки" Height="40" Style="{DynamicResource Tabit}" VerticalAlignment="Top">
                     <Canvas>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Name="calls_filter">
@@ -79,7 +80,7 @@
                                 </StackPanel>
                                 <StackPanel  Margin="20,0,0,0">
                                     <TextBlock Text="Дата звонка:" FontSize="12pt"/>
-                                    <DatePicker Name="dat_filt" FontSize="12pt" DataContextChanged="dat_filt_DataContextChanged" Width="180"/>
+                                    <DatePicker Name="dat_filt" FontSize="12pt" Width="180"/>
                                 </StackPanel>
                                 <StackPanel Width="180" Margin="70,0,0,0">
                                     <TextBlock Text="Статус:" FontSize="12pt"/>
@@ -91,7 +92,7 @@
                                 </StackPanel>
                                 <!--<Button Content="Отчистить" Margin="10,0,0,0" FontSize="12pt" Height="30" Click="Button_Click"/>-->
                             </StackPanel>
-                            <DataGrid FontSize ="12pt" MaxHeight="350" Name="calls_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}">
+                            <DataGrid FontSize ="12pt" MaxHeight="350" Name="calls_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="995">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
                                         <MenuItem Name="add_call_" Header="Добавить звонок" Click="add_call__Click"/>
@@ -99,6 +100,7 @@
                                         <MenuItem Name="del_call_" Header="Отменить звонок" Click="del_call__Click"/>
                                         <MenuItem Name="clouse_call" Header="Закрыть звонок" Click="clouse_call_Click"/>
                                         <MenuItem Name="create_report" Header="Excel" Click="create_report_Click"/>
+                                        <MenuItem Name="calls_cansel_filter" Header="Сбросить фильтр" Height="20" Click="calls_cansel_filter_Click"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -113,7 +115,6 @@
                 </TabItem>
                 <TabItem Name="sotrs" Header="Сотрудники" Height="40" Style="{DynamicResource Tabit}">
                     <Canvas>
-
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Height="61" Name="emps_filter">
                                 <StackPanel Width="190" Margin="10,0,0,0">
@@ -136,7 +137,6 @@
                                     <TextBlock Text="Должность:" FontSize="12pt"/>
                                     <ComboBox Name="job_filt" FontSize="12pt" SelectionChanged="job_filt_SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                                 </StackPanel>
-                                <Button Content="Отчистить" Margin="10,0,0,0" FontSize="12pt" Height="30" Name="clear" Click="clear_Click"/>
                             </StackPanel>
                             <DataGrid FontSize ="12pt" MaxHeight="350" Name="sotr_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1052" HorizontalAlignment="Left">
                                 <DataGrid.ContextMenu>
@@ -145,6 +145,7 @@
                                         <MenuItem Name="add_st" Header="Добавить" Click="add_st_Click"/>
                                         <MenuItem Name="upd_st" Header="Изменить" Click="upd_st_Click"/>
                                         <MenuItem Name="to_excel_workers" Header="Excel" Click="to_excel_workers_Click"/>
+                                        <MenuItem Name="emps_cansel_filter" Header="Сбросить фильтр" Height="20" Click="emps_cansel_filter_Click"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
