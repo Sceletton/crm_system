@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-C:\Users\Рамиль\Desktop\crm\crm_system\obj\Release\
+C:\Users\Рамиль\Desktop\crm_system\crm_system\obj\Release\
 crm_system
 none
 false
 TRACE
-C:\Users\Рамиль\Desktop\crm\crm_system\App.xaml
-101871717522
+C:\Users\Рамиль\Desktop\crm_system\crm_system\App.xaml
+9-32071017
 
-15-490896251
-75681429999
-addOrgn.xaml;add_call.xaml;add_rolls.xaml;add_sotr.xaml;add_user.xaml;auntif.xaml;a_or_u_hanboxes.xaml;MainWindow.xaml;rulles.xaml;Styles.xaml;
+14-1431923707
+75-1860880937
+Forms\Orgs\addOrgn.xaml;Forms\Calls\add_call.xaml;Forms\Rols\add_rolls.xaml;Forms\Emps\add_sotr.xaml;Forms\Users\add_user.xaml;Forms\Users\auntif.xaml;Forms\a_or_u_hanboxes.xaml;Forms\MainWindow.xaml;Forms\Styles\Styles.xaml;
 
 False
 

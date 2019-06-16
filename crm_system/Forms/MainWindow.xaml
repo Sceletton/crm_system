@@ -89,7 +89,7 @@
                                     <TextBlock Text="Оператор:" FontSize="12pt"/>
                                     <ComboBox Name="oper_filt" FontSize="12pt" SelectionChanged="oper_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                                 </StackPanel>
-                                <Button Content="Отчистить" Margin="10,0,0,0" FontSize="12pt" Height="30" Click="Button_Click"/>
+                                <!--<Button Content="Отчистить" Margin="10,0,0,0" FontSize="12pt" Height="30" Click="Button_Click"/>-->
                             </StackPanel>
                             <DataGrid FontSize ="12pt" MaxHeight="350" Name="calls_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}">
                                 <DataGrid.ContextMenu>
@@ -276,7 +276,7 @@
                                 <ComboBox Name="emploers"  HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="emploers_SelectionChanged" Style="{DynamicResource ComboBoxFlatStyle}" DisplayMemberPath="name" SelectedValuePath="value" ItemsSource="{Binding comboitems}" Width="150"/>
                                 <lvc:CartesianChart Name="graph" LegendLocation="Right" Height="350" Width="800">
                                     <lvc:CartesianChart.Series>
-                                        <lvc:ColumnSeries Name="legendTitle" Title="Работник" Values="{Binding analitycs}"></lvc:ColumnSeries>
+                                        <lvc:ColumnSeries Name="legendTitle" Title="Работник" Values="{Binding analitycs}"/>
                                     </lvc:CartesianChart.Series>
                                     <lvc:CartesianChart.AxisX >
                                         <lvc:Axis Labels="{Binding Labels}" LabelsRotation="-15">

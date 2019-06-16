@@ -76,7 +76,18 @@ namespace crm_system
             }
             return -1;
         }
-        public void no_visible()
+        public bool in_arr(string[] ar, string value)
+        {
+            for (int i = 0; i < ar.Length; i++)
+            {
+                if (ar[i] == value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+            public void no_visible()
         {
             Thickness no_margin = new Thickness(0, 0, 0, 0);
 
@@ -512,26 +523,57 @@ namespace crm_system
 
         private void del__org_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 org table = org_grid.SelectedItem as org;
                 int result = (int)MessageBox.Show("Удалить организацию " + table.Name + " ?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
+                int calls_count = 0, emps_count = 0; 
                 switch (result)
                 {
                     case (int)MessageBoxResult.Yes:
                         connection.Open();
-                        MySqlCommand command = new MySqlCommand("delete from org where id=@id", connection);
-                        command.Parameters.AddWithValue("id", table.Id);
-                        command.ExecuteNonQuery();
-                        connection.Close();
-                        refresh();
+                        MySqlCommand forgn_cnt = new MySqlCommand("select (select count(1) from calls t where t.id_org = @id) as calls_cnt , (select count(1) from workers t where t.id_org = @id) as emps_cnt", connection);
+                        forgn_cnt.Parameters.AddWithValue("id",table.Id);
+                        MySqlDataReader reader = forgn_cnt.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            calls_count = int.Parse(reader["calls_cnt"].ToString());
+                            emps_count = int.Parse(reader["emps_cnt"].ToString());
+                        }
+                        reader.Close();
+                        MessageBox.Show(calls_count + " " + emps_count);
+                        if (emps_count != 0 || calls_count != 0)
+                        {
+                            int resu = (int)MessageBox.Show("Есть записи в разделах [Звонки] и [Сотрудники] ссылающиеся на удаляемую запись, они будут удалены. Продолжить?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
+                            switch (result)
+                            {
+                                case (int)MessageBoxResult.Yes:
+
+                                    MySqlCommand command = new MySqlCommand("delete from calls where id_org = @id;" +
+                                                                            "delete from workers where id_org = @id;" +
+                                                                            "delete from org where id=@id;", connection);
+                                    command.Parameters.AddWithValue("id", table.Id);
+                                    command.ExecuteNonQuery();
+                                    connection.Close();
+                                    refresh();
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            MySqlCommand command = new MySqlCommand("delete from org where id=@id", connection);
+                            command.Parameters.AddWithValue("id", table.Id);
+                            command.ExecuteNonQuery();
+                            connection.Close();
+                            refresh();
+                        }
                         break;
                 }
-            }
-            catch
-            {
+            //}
+            //catch
+            //{
 
-            }
+            //}
         }
 
         private void add__org_Click(object sender, RoutedEventArgs e)
@@ -689,7 +731,48 @@ namespace crm_system
 
         private void del_us_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                user table = user_grid.SelectedItem as user;
+                int result = (int)MessageBox.Show("Удалить Пользователя " + table.login + " ?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
+                int rolls_count = 0;
+                string[] rols_id = null, us_id = null;
+                switch (result)
+                {
+                    case (int)MessageBoxResult.Yes:
+                        connection.Open();
+                        int us_cnt = 0;
+                        MySqlCommand sel_us_cnt = new MySqlCommand("select count(1) as count, REPLACE(GROUP_CONCAT(t.id),',',';') as users_id, REPLACE(GROUP_CONCAT(tt.id),',',';') as rols_id from users t join rols tt on tt.id = t.rol where tt.rights like '%9%' and tt.rights like '%10%'", connection);
+                        MySqlDataReader reader = sel_us_cnt.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            us_cnt = int.Parse(reader["count"].ToString());
+                            us_id = reader["users_id"].ToString().Split(';');
+                            rols_id = reader["rols_id"].ToString().Split(';');
+                        }
+                        reader.Close();
+                        if (us_cnt == 1 && in_arr(us_id, table.id.ToString()) && !in_arr(rols_id, table.roll.ToString()))
+                        {
+                            MessageBox.Show("В системе должна быть хотя бы однин пользователь, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение");
+                            connection.Close();
+                        }
+                        else
+                        {
+                            MySqlCommand del_roll = new MySqlCommand("delete from users where id = @rol_id", connection);
+                            del_roll.Parameters.AddWithValue("rol_id", table.id);
+                            del_roll.ExecuteNonQuery();
+                            connection.Close();
+                            refresh("rols");
+                            permis_grid.ItemsSource = "";
+                        }
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void add_us_Click(object sender, RoutedEventArgs e)
@@ -733,13 +816,39 @@ namespace crm_system
         {
             try
             {
-                connection.Open();
-                MySqlCommand del_roll = new MySqlCommand("delete from rols where id = @rol_id", connection);
-                del_roll.Parameters.AddWithValue("rol_id", (roll_grid.SelectedItem as roll).id);
-                del_roll.ExecuteNonQuery();
-                connection.Close();
-                refresh("rols");
-                permis_grid.ItemsSource= "";
+                roll table = roll_grid.SelectedItem as roll;
+                int result = (int)MessageBox.Show("Удалить Роль " + table.name + " ?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
+                int rolls_count = 0;
+                string[] rols_id = null;
+                switch (result)
+                {
+                    case (int)MessageBoxResult.Yes:
+                        connection.Open();
+                        MySqlCommand rols_cnt = new MySqlCommand("select count(1) as count, REPLACE(GROUP_CONCAT(t.id),',',';') as rols_id from rols t where t.rights like '%9%' and t.rights like '%10%'", connection);
+                        MySqlDataReader reader = rols_cnt.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            rolls_count = int.Parse(reader["count"].ToString());
+                            rols_id = reader["rols_id"].ToString().Split(';');
+                        }
+                        reader.Close();
+                        MessageBox.Show(rolls_count.ToString());
+                        if (rolls_count == 1 && rols_id[0] == table.id.ToString())
+                        {
+                            MessageBox.Show("В системе должна быть хотя бы одна роль, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение");
+                            connection.Close();
+                        }
+                        else
+                        {
+                            MySqlCommand del_roll = new MySqlCommand("delete from rols where id = @rol_id", connection);
+                            del_roll.Parameters.AddWithValue("rol_id", (roll_grid.SelectedItem as roll).id);
+                            del_roll.ExecuteNonQuery();
+                            connection.Close();
+                            refresh("rols");
+                            permis_grid.ItemsSource = "";
+                        }
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -1586,9 +1695,8 @@ namespace crm_system
                 MySqlDataReader reader = analyze.ExecuteReader();
                 while (reader.Read())
                 {
-                    MessageBox.Show(all_calls.ToString());
-                    all_calls = int.Parse(reader["all_calls"].ToString());
-                    add_cals = int.Parse(reader["add_calls"].ToString());
+                    all_calls = int.Parse(reader["all_cals"].ToString());
+                    add_cals = int.Parse(reader["add_cals"].ToString());
                     callback = int.Parse(reader["callback"].ToString());
                 }
                 reader.Close();
@@ -1601,12 +1709,9 @@ namespace crm_system
                 legendTitle.Values = analitycs;
                 Labels = new[] { "Всего звонков", "Добавлено звонков", "Положительный ответ" };
                 legendTitle.Title = (emploers.SelectedItem as comboItems).name;
-                //let create a mapper so LiveCharts know how to plot our CustomerViewModel class
                 var customerVmMapper = Mappers.Xy<opertator>()
                     .X((value, index) => index) // lets use the position of the item as X
                     .Y(value => value.value); //and PurchasedItems property as Y
-
-                //lets save the mapper globally
                 Charting.For<opertator>(customerVmMapper);
                 DataContext = this;
             }

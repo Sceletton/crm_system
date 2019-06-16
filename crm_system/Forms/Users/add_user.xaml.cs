@@ -31,10 +31,22 @@ namespace crm_system
             InitializeComponent();
         }
 
+        public bool in_arr(string[] ar, string value)
+        {
+            for (int i = 0; i < ar.Length; i++)
+            {
+                if (ar[i] == value)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void save_Click(object sender, RoutedEventArgs e)
         {
-            //try
-            //{
+            try
+            {
                 check.CheckNullFields(new[] { Name, Surname, second_name, Login });
                 if (Name.Text != "" && Surname.Text != "" && second_name.Text != "" && Login.Text != "" && Pass.Password != "" && rols.Text != "" && exception.Height == 0)
                 {
@@ -57,27 +69,55 @@ namespace crm_system
                     }
                     else
                     {
-                        MySqlCommand upd_user = new MySqlCommand("update users set name = @name , surname = @surname , second_name = @second_name, login = @login, password = @password, rol = @rol where id = @id", connection);
-                        upd_user.Parameters.AddWithValue("name", Name.Text);
-                        upd_user.Parameters.AddWithValue("surname", Surname.Text);
-                        upd_user.Parameters.AddWithValue("second_name", second_name.Text);
-                        upd_user.Parameters.AddWithValue("login", Login.Text);
-                        upd_user.Parameters.AddWithValue("password", Pass.Password);
-                        upd_user.Parameters.AddWithValue("rol", rols.SelectedValue);
-                        upd_user.Parameters.AddWithValue("id", id_user);
-                        upd_user.ExecuteNonQuery();
+                        int us_cnt = 0;
+                        string[] us_id =  null, rols_id = null;
+                        MySqlCommand sel_us_cnt = new MySqlCommand("select count(1) as count, REPLACE(GROUP_CONCAT(t.id),',',';') as users_id, REPLACE(GROUP_CONCAT(tt.id),',',';') as rols_id from users t join rols tt on tt.id = t.rol where tt.rights like '%9%' and tt.rights like '%10%'", connection);
+                        MySqlDataReader reader = sel_us_cnt.ExecuteReader();
+                        while(reader.Read())
+                        {
+                            us_cnt = int.Parse(reader["count"].ToString());
+                            us_id = reader["users_id"].ToString().Split(';');
+                            rols_id = reader["rols_id"].ToString().Split(';');
+                        }
+                        reader.Close();
+                        if (us_cnt == 1 && in_arr(us_id, id_user) && !in_arr(rols_id, rols.SelectedValue.ToString()))
+                        {
+                            MessageBox.Show("В системе должна быть хотя бы однин пользователь, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение");
+                            connection.Close();
+                        }
+                        else
+                        {
+                            MySqlCommand upd_user = new MySqlCommand("update users set name = @name , surname = @surname , second_name = @second_name, login = @login, password = @password, rol = @rol where id = @id", connection);
+                            upd_user.Parameters.AddWithValue("name", Name.Text);
+                            upd_user.Parameters.AddWithValue("surname", Surname.Text);
+                            upd_user.Parameters.AddWithValue("second_name", second_name.Text);
+                            upd_user.Parameters.AddWithValue("login", Login.Text);
+                            upd_user.Parameters.AddWithValue("password", Pass.Password);
+                            upd_user.Parameters.AddWithValue("rol", rols.SelectedValue);
+                            upd_user.Parameters.AddWithValue("id", id_user);
+                            upd_user.ExecuteNonQuery();
+                            if (id_user == MainWindow.user_id.ToString())
+                            {
+                                MainWindow.rol_id = rols.SelectedValue.ToString();
+                            }
+                            Close();
+                            connection.Close();
+                            ((MainWindow)this.Owner).refresh();
+                            ((MainWindow)this.Owner).aunt_result();
+                            ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
+                            ((MainWindow)this.Owner).exit.Height = 39;
+                            ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
+                            ((MainWindow)this.Owner).re_aunt.Height = 39;
+                        }
                     }
-                    Close();
-                    connection.Close();
-                    ((MainWindow)this.Owner).refresh();
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //    connection.Close();
-            //    MessageBox.Show(ex.Message.ToString());
-            //}
-        }
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message.ToString());
+            }
+}
 
         private void cancel_Click(object sender, RoutedEventArgs e)
         {

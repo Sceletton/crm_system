@@ -120,8 +120,8 @@ namespace crm_system
                     rightss = rightss + col.id.ToString() + ";";
                 }
             }
-            //try
-            //{
+            try
+            {
                 if (roll_name.Text != "")
                 {
                     if (id_rool == null)
@@ -135,7 +135,22 @@ namespace crm_system
                     }
                     else
                     {
+                        int rolls_count = 0;
+                        string[] rols_id = null;
                         connection.Open();
+                        MySqlCommand rols_cnt = new MySqlCommand("select count(1) as count, REPLACE(GROUP_CONCAT(t.id),',',';') as rols_id from rols t where t.rights like '%9%' and t.rights like '%10%'", connection);
+                        MySqlDataReader reader = rols_cnt.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            rolls_count = int.Parse(reader["count"].ToString());
+                            rols_id = reader["rols_id"].ToString().Split(';');
+                        }
+                        reader.Close();
+                        if (rolls_count == 1 && rols_id[0] == id_rool && !in_arr(rightss.Split(';'),"9") && !in_arr(rightss.Split(';'), "9"))
+                        {
+                            MessageBox.Show("В системе должна быть хотя бы одна роль, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение");
+                            connection.Close();
+                        }
                         MySqlCommand ins_in_users = new MySqlCommand("update rols set rights = @rights, name = @name where id = @id", connection);
                         ins_in_users.Parameters.AddWithValue("rights", rightss);
                         ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
@@ -146,12 +161,17 @@ namespace crm_system
                     Close();
                 }
                 ((MainWindow)this.Owner).refresh();
-            //}
-            //catch (Exception ex)
-            //{
-            //    connection.Close();
-            //    MessageBox.Show(ex.Message.ToString());
-            //}
+                ((MainWindow)this.Owner).aunt_result();
+                ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
+                ((MainWindow)this.Owner).exit.Height = 39;
+                ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
+                ((MainWindow)this.Owner).re_aunt.Height = 39;
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                //MessageBox.Show(ex.Message.ToString());
+            }
         }
 
         private void del_Click(object sender, RoutedEventArgs e)
@@ -193,3 +213,5 @@ namespace crm_system
         }
     }
 }
+//select count(1) from rols t where t.rights like '%9%' and t.rights like '%10%'
+//select count(1) from users t where t.id in (select t.id from rols tt where tt.rights like '%9%' and tt.rights like '%10%')

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:crm_system"
         mc:Ignorable="d"
-        Title="" Height="380" Width="330" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="Регитсрация" Height="380" Width="330" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Canvas>
             <StackPanel Orientation="Horizontal" Margin="10,10,10,0">
