@@ -163,7 +163,17 @@ namespace crm_system
             re_aunt.Height = 0;
             exit.Visibility = Visibility.Hidden;
             exit.Height = 0;
+            //
 
+            //Выгрузка организаций
+            to_excel.Visibility = Visibility.Hidden;
+            to_excel.Height = 0;
+            //Выгрузка звонков
+            create_report.Visibility = Visibility.Hidden;
+            create_report.Height = 0;
+            //Выгрузка сотрудников
+            to_excel_workers.Visibility = Visibility.Hidden;
+            to_excel_workers.Height = 0;
         }
 
         public void aunt_result()
@@ -245,10 +255,26 @@ namespace crm_system
                                     analityc.Height = 40;
                                     break;
                                 case "12":
-                                    //Настройка
+                                    //Настройки
                                     settings.Visibility = Visibility.Visible;
                                     settings.Height = 40;
                                     break;
+                                case "13":
+                                    //Выгрузка организаций
+                                    to_excel.Visibility = Visibility.Visible;
+                                    to_excel.Height = 20;
+                                    break;
+                                case "14":
+                                    //Выгрузка звонков
+                                    create_report.Visibility = Visibility.Visible;
+                                    create_report.Height = 20;
+                                    break;
+                                case "15":
+                                    //Выгрузка сотрудников
+                                    to_excel_workers.Visibility = Visibility.Visible;
+                                    to_excel_workers.Height = 20;
+                                    break;
+
                             }
                         }
                     }
@@ -305,13 +331,14 @@ namespace crm_system
                                 MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                                 while (reader_calls.Read())
                                 {
+                                    MessageBox.Show(reader_calls["status"].ToString());
                                     callses.Add(new calls(reader_calls["id"].ToString(), reader_calls["date_cal"].ToString(), reader_calls["org"].ToString(), reader_calls["call_target"].ToString(), reader_calls["status_call"].ToString(), reader_calls["id_org"].ToString(), reader_calls["name"].ToString() + " " + reader_calls["surname"].ToString() + " " + reader_calls["second_name"].ToString(), int.Parse(reader_calls["status"].ToString())));
                                 }
                                 reader_calls.Close();
                             }
                             else
                             {
-                                MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t " +
+                                MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t " +
                                     "join users tt on tt.id = t.id_oper", connection);
                                 MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                                 while (reader_calls.Read())

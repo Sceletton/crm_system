@@ -46,16 +46,16 @@
                             <StackPanel x:Name="grid" Margin="0,10,0,0">
                                 <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="org_grid" AutoGenerateColumns="False" Margin="0,0,0,0" Style="{DynamicResource DataGridStyle}">
                                     <DataGrid.ContextMenu>
-                                        <ContextMenu x:Name="org_grid_popup" Width="300">
-                                            <MenuItem x:Name="refr_orgs" Header="Обновить" Click="refr_orgs_Click" Height="20"/>
-                                            <MenuItem x:Name="add__org" Header="Добавить организацию" Click="add__org_Click" Height="20"/>
-                                            <MenuItem x:Name="upd__org" Header="Редактировать оргранизацию" Click="upd__org_Click" Height="20"/>
-                                            <MenuItem x:Name="del__org" Header="Удалить организацию" Click="del__org_Click" Height="20"/>
-                                            <MenuItem x:Name="add__sotr" Header="Добавить сотрудников" Click="add__sotr_Click" Height="20"/>
-                                            <MenuItem x:Name="view__sotr" Header="Сотрудники организации" Click="view__sotr_Click" Height="20"/>
-                                            <MenuItem x:Name="add__call" Header="Назначить звонок" Click="add__call_Click" Height="20"/>
-                                            <MenuItem x:Name="to_excel" Header="Excel" Height="20" Click="to_excel_Click"/>
-                                            <MenuItem x:Name="orgs_cansel_filter" Header="Сбросить фильтр" Height="20" Click="orgs_cansel_filter_Click"/>
+                                        <ContextMenu x:Name="org_grid_popup" Width="300" Style="{DynamicResource MenuStyle}">
+                                            <MenuItem x:Name="refr_orgs" Header="Обновить" Click="refr_orgs_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="add__org" Header="Добавить организацию" Click="add__org_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="upd__org" Header="Редактировать оргранизацию" Click="upd__org_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="del__org" Header="Удалить организацию" Click="del__org_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="add__sotr" Header="Добавить сотрудников" Click="add__sotr_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="view__sotr" Header="Сотрудники организации" Click="view__sotr_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="add__call" Header="Назначить звонок" Click="add__call_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="to_excel" Header="Выгрузить в Excel" Height="20" Click="to_excel_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="orgs_cansel_filter" Header="Сбросить фильтр" Height="20" Click="orgs_cansel_filter_Click" Style="{DynamicResource MenuItemStyle}"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -94,15 +94,15 @@
                             </StackPanel>
                             <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="calls_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1130" SelectionChanged="calls_grid_SelectionChanged">
                                 <DataGrid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem x:Name="refr_calls" Header="Обновить" Click="refr_calls_Click" Height="20"/>
-                                        <MenuItem x:Name="add_call_" Header="Добавить звонок" Click="add_call__Click"/>
-                                        <MenuItem x:Name="upd_call_" Header="Изменить звонок" Click="upd_call__Click"/>
-                                        <MenuItem x:Name="delete_call" Header="Удалить звонок" Click="delete_call_Click"/>
-                                        <MenuItem x:Name="del_call_" Header="Отменить звонок" Click="del_call__Click"/>
-                                        <MenuItem x:Name="clouse_call" Header="Закрыть звонок" Click="clouse_call_Click"/>
-                                        <MenuItem x:Name="create_report" Header="Excel" Click="create_report_Click"/>
-                                        <MenuItem x:Name="calls_cansel_filter" Header="Сбросить фильтр" Height="20" Click="calls_cansel_filter_Click"/>
+                                    <ContextMenu Style="{DynamicResource MenuStyle}">
+                                        <MenuItem x:Name="refr_calls" Header="Обновить" Click="refr_calls_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="add_call_" Header="Добавить звонок" Click="add_call__Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="upd_call_" Header="Изменить звонок" Click="upd_call__Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="delete_call" Header="Удалить звонок" Click="delete_call_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="del_call_" Header="Отменить звонок" Click="del_call__Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="clouse_call" Header="Закрыть звонок" Click="clouse_call_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="create_report" Header="Выгрузить в Excel" Click="create_report_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="calls_cansel_filter" Header="Сбросить фильтр" Height="20" Click="calls_cansel_filter_Click" Style="{DynamicResource MenuItemStyle}"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -142,13 +142,13 @@
                             </StackPanel>
                             <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="sotr_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1130" HorizontalAlignment="Left">
                                 <DataGrid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem x:Name="refr_emps" Header="Обновить" Click="refr_emps_Click" Height="20"/>
-                                        <MenuItem x:Name="add_st" Header="Добавить сотрудника" Click="add_st_Click"/>
-                                        <MenuItem x:Name="upd_st" Header="Редактировать сотрудника" Click="upd_st_Click"/>
-                                        <MenuItem x:Name="del_st" Header="Удалить сотрудника" Click="del_st_Click"/>
-                                        <MenuItem x:Name="to_excel_workers" Header="Excel" Click="to_excel_workers_Click"/>
-                                        <MenuItem x:Name="emps_cansel_filter" Header="Сбросить фильтр" Height="20" Click="emps_cansel_filter_Click"/>
+                                    <ContextMenu Style="{DynamicResource MenuStyle}">
+                                        <MenuItem x:Name="refr_emps" Header="Обновить" Click="refr_emps_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="add_st" Header="Добавить сотрудника" Click="add_st_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="upd_st" Header="Редактировать сотрудника" Click="upd_st_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="del_st" Header="Удалить сотрудника" Click="del_st_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="to_excel_workers" Header="Выгрузить в Excel" Click="to_excel_workers_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="emps_cansel_filter" Header="Сбросить фильтр" Height="20" Click="emps_cansel_filter_Click" Style="{DynamicResource MenuItemStyle}"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -167,11 +167,11 @@
                         <StackPanel>
                             <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="user_grid" AutoGenerateColumns="False"  Style="{DynamicResource DataGridStyle}">
                                 <DataGrid.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem x:Name="refr_us" Header="Обновить" Click="refr_us_Click" Height="20"/>
-                                        <MenuItem x:Name="add_us" Header="Регистрация пользователя" Click="add_us_Click"/>
-                                        <MenuItem x:Name="upd_us" Header="Редактировать пользователя" Click="upd_us_Click"/>
-                                        <MenuItem x:Name="del_us" Header="Удалить пользователя" Click="del_us_Click"/>
+                                    <ContextMenu Style="{DynamicResource MenuStyle}">
+                                        <MenuItem x:Name="refr_us" Header="Обновить" Click="refr_us_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="add_us" Header="Регистрация пользователя" Click="add_us_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="upd_us" Header="Редактировать пользователя" Click="upd_us_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="del_us" Header="Удалить пользователя" Click="del_us_Click" Style="{DynamicResource MenuItemStyle}"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -192,11 +192,11 @@
                             <StackPanel>
                                 <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="roll_grid" AutoGenerateColumns="False" Width="500" Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" SelectionChanged="roll_grid_SelectionChanged">
                                     <DataGrid.ContextMenu>
-                                        <ContextMenu Width="300">
-                                            <MenuItem x:Name="refr_rols"     Header="Обновить" Click="refr_rols_Click" Height="20"/>
-                                            <MenuItem x:Name="add_roll"      Header="Добавить роль" Click="add_roll_Click"/>
-                                            <MenuItem x:Name="upd_roll"      Header="Редактировать роль" Click="upd_roll_Click"/>
-                                            <MenuItem x:Name="del_roll"      Header="Удалить роль"  Click="del_roll_Click"/>
+                                        <ContextMenu Width="300" Style="{DynamicResource MenuStyle}">
+                                            <MenuItem x:Name="refr_rols"     Header="Обновить" Click="refr_rols_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="add_roll"      Header="Добавить роль" Click="add_roll_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="upd_roll"      Header="Редактировать роль" Click="upd_roll_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                            <MenuItem x:Name="del_roll"      Header="Удалить роль"  Click="del_roll_Click" Style="{DynamicResource MenuItemStyle}"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -225,11 +225,11 @@
                                         <TextBlock Text="Должности" FontSize="15pt" HorizontalAlignment="Center"/>
                                         <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="post_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" >
                                             <DataGrid.ContextMenu>
-                                                <ContextMenu Width="300">
-                                                    <MenuItem x:Name="refresh_posts" Header="Обновить" Click="refresh_posts_Click"/>
-                                                    <MenuItem x:Name="add_post" Header="Добавить" Click="add_post_Click"  Height="20"/>
-                                                    <MenuItem x:Name="upd_post" Header="Редактировать" Click="upd_post_Click"  Height="20"/>
-                                                    <MenuItem x:Name="del_post" Header="Удалить" Click="del_post_Click"  Height="20"/>
+                                                <ContextMenu Width="300" Style="{DynamicResource MenuStyle}">
+                                                    <MenuItem x:Name="refresh_posts" Header="Обновить" Click="refresh_posts_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                                    <MenuItem x:Name="add_post" Header="Добавить" Click="add_post_Click"  Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                                    <MenuItem x:Name="upd_post" Header="Редактировать" Click="upd_post_Click"  Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                                    <MenuItem x:Name="del_post" Header="Удалить" Click="del_post_Click"  Height="20" Style="{DynamicResource MenuItemStyle}"/>
                                                 </ContextMenu>
                                             </DataGrid.ContextMenu>
                                             <DataGrid.Columns>
@@ -243,11 +243,11 @@
                                         <TextBlock Text="Города" FontSize="15pt" HorizontalAlignment="Center"/>
                                         <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="cities_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
                                             <DataGrid.ContextMenu>
-                                                <ContextMenu Width="300">
-                                                    <MenuItem x:Name="refresh_handboxes" Header="Обновить" Click="refresh_Click"/>
-                                                    <MenuItem x:Name="add_citi" Header="Добавить" Click="add_citi_Click"  Height="20"/>
-                                                    <MenuItem x:Name="upd_citi" Header="Редактировать" Click="upd_citi_Click"  Height="20"/>
-                                                    <MenuItem x:Name="del_cities" Header="Удалить" Click="del_cities_Click"  Height="20"/>
+                                                <ContextMenu Width="300" Style="{DynamicResource MenuStyle}">
+                                                    <MenuItem x:Name="refresh_handboxes" Header="Обновить" Click="refresh_Click" Style="{DynamicResource MenuItemStyle}"/>
+                                                    <MenuItem x:Name="add_citi" Header="Добавить" Click="add_citi_Click"  Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                                    <MenuItem x:Name="upd_citi" Header="Редактировать" Click="upd_citi_Click"  Height="20" Style="{DynamicResource MenuItemStyle}"/>
+                                                    <MenuItem x:Name="del_cities" Header="Удалить" Click="del_cities_Click"  Height="20" Style="{DynamicResource MenuItemStyle}"/>
                                                 </ContextMenu>
                                             </DataGrid.ContextMenu>
                                             <DataGrid.Columns>
