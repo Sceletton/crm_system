@@ -241,6 +241,7 @@ namespace crm_system
         {
             try
             {
+
                 connection = new MySqlConnection(constr);
                 connection.Open();
                 if (tab == "orgs" || tab == null)
@@ -298,19 +299,6 @@ namespace crm_system
                     }
                     read_users.Close();
                     user_grid.ItemsSource = users;
-                }
-                if (tab == "rols" || tab == null)
-                {
-                    //rols
-                    List<roll> rolls = new List<roll>();
-                    MySqlCommand sel_ruls = new MySqlCommand("select t.id, t.name from rols t", connection);
-                    MySqlDataReader read_ruls = sel_ruls.ExecuteReader();
-                    while (read_ruls.Read())
-                    {
-                        rolls.Add(new roll(read_ruls["id"].ToString(), read_ruls["name"].ToString()));
-                    }
-                    read_ruls.Close();
-                    roll_grid.ItemsSource = rolls;
                 }
                 //handbooks
                 if (tab == "handbooks" || tab == null)
@@ -513,10 +501,29 @@ namespace crm_system
                     }
                     set_reader.Close();
                 }
-
+                if (tab == "rols" || tab == null)
+                {
+                    //rols
+                    List<roll> rolls = new List<roll>();
+                    MySqlCommand sel_ruls = new MySqlCommand("select t.id, t.name from rols t", connection);
+                    MySqlDataReader read_ruls = sel_ruls.ExecuteReader();
+                    while (read_ruls.Read())
+                    {
+                        rolls.Add(new roll(read_ruls["id"].ToString(), read_ruls["name"].ToString()));
+                    }
+                    read_ruls.Close();
+                    try
+                    {
+                        roll_grid.ItemsSource = rolls;
+                    }
+                    catch(Exception ex)
+                    {
+                        MessageBox.Show("asdasd");
+                    }
+                }
                 connection.Close();
             }
-            catch (Exception ex)
+            catch
             {
                 connection.Close();
             }
@@ -913,11 +920,6 @@ namespace crm_system
             }
         }
 
-        private void rulls_rolls_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void add_post_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1096,11 +1098,6 @@ namespace crm_system
                 connection.Close();
                 MessageBox.Show(ex.Message);
             }
-        }
-
-        private void upd_rull_Click(object sender, RoutedEventArgs e)
-        {
-
         }
 
         private void del_st_Click(object sender, RoutedEventArgs e)
@@ -1425,7 +1422,6 @@ namespace crm_system
             catch (Exception ex)
             {
                 connection.Close();
-                MessageBox.Show(ex.Message);
             }
         }
 
@@ -1508,7 +1504,7 @@ namespace crm_system
                     ExcelApp.Cells[i + 2, 2] = items.date_cal.ToString();
                     ExcelApp.Cells[i + 2, 3] = items.status_call.ToString();
                     ExcelApp.Cells[i + 2, 4] = items.call_target.ToString();
-                    ExcelApp.Cells[i + 2, 5] = "Костыль";//items..ToString();
+                    ExcelApp.Cells[i + 2, 5] = items.oper.ToString();
                 }
                 ExcelApp.Height = 800;
                 ExcelApp.Width = 800;
@@ -1520,7 +1516,7 @@ namespace crm_system
             catch (Exception ex)
             {
                 connection.Close();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "excel");
             }
         }
         private void to_excel_Click(object sender, RoutedEventArgs e)
@@ -1569,7 +1565,7 @@ namespace crm_system
             catch (Exception ex)
             {
                 connection.Close();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "excel");
             }
         }
 
@@ -1615,7 +1611,7 @@ namespace crm_system
             catch (Exception ex)
             {
                 connection.Close();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "excel");
             }
         }
 
@@ -1730,8 +1726,8 @@ namespace crm_system
                 Labels = new[] { "Всего звонков", "Добавлено звонков", "Положительный ответ" };
                 legendTitle.Title = (emploers.SelectedItem as comboItems).name;
                 var customerVmMapper = Mappers.Xy<opertator>()
-                    .X((value, index) => index) // lets use the position of the item as X
-                    .Y(value => value.value); //and PurchasedItems property as Y
+                    .X((value, index) => index)
+                    .Y(value => value.value);
                 Charting.For<opertator>(customerVmMapper);
                 DataContext = this;
             }
@@ -1743,7 +1739,27 @@ namespace crm_system
 
         private void clouse_call_Click(object sender, RoutedEventArgs e)
         {
-            dell_call(1);
+            try
+            {
+                calls table = calls_grid.SelectedItem as calls;
+                int result = (int)MessageBox.Show("Отменить звонок организации [" + table.org + "] назначеный ["+table.date_cal+"] ?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
+                switch (result)
+                {
+                    case (int)MessageBoxResult.Yes:
+                        connection.Open();
+                        MySqlCommand command = new MySqlCommand("update calls set status_call = 1 where id=@id", connection);
+                        command.Parameters.AddWithValue("id", table.id);
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        refresh("calls");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void org_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1792,7 +1808,6 @@ namespace crm_system
             catch (Exception ex)
             {
                 connection.Close();
-                MessageBox.Show(ex.Message, "Analytics");
             }
         }
 
@@ -1908,6 +1923,12 @@ namespace crm_system
                 connection.Close();
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void dat_filt_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            MessageBox.Show("sel date change");
+            sel_change();
         }
 
         public void setFiltersVisible(StackPanel panel,MenuItem mt, int val)

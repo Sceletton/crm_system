@@ -47,9 +47,9 @@
                                 <DataGrid FontSize ="12pt" MaxHeight="350" Name="org_grid" AutoGenerateColumns="False" Margin="0,0,0,0" Style="{DynamicResource DataGridStyle}">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu Name="org_grid_popup" Width="300">
-                                            <MenuItem Name="del__org" Header="Удалить организацию" Click="del__org_Click" Height="20"/>
                                             <MenuItem Name="add__org" Header="Добавить организацию" Click="add__org_Click" Height="20"/>
                                             <MenuItem Name="upd__org" Header="Изменить оргранизацию" Click="upd__org_Click" Height="20"/>
+                                            <MenuItem Name="del__org" Header="Удалить организацию" Click="del__org_Click" Height="20"/>
                                             <MenuItem Name="add__sotr" Header="Добавить сотрудников" Click="add__sotr_Click" Height="20"/>
                                             <MenuItem Name="view__sotr" Header="Сотрудники организации" Click="view__sotr_Click" Height="20"/>
                                             <MenuItem Name="add__call" Header="Назначить звонок" Click="add__call_Click" Height="20"/>
@@ -80,7 +80,7 @@
                                 </StackPanel>
                                 <StackPanel  Margin="20,0,0,0">
                                     <TextBlock Text="Дата звонка:" FontSize="12pt"/>
-                                    <DatePicker Name="dat_filt" FontSize="12pt" Width="180"/>
+                                    <DatePicker Name="dat_filt" FontSize="12pt" Width="180" SelectedDateChanged="dat_filt_SelectedDateChanged"/>
                                 </StackPanel>
                                 <StackPanel Width="180" Margin="70,0,0,0">
                                     <TextBlock Text="Статус:" FontSize="12pt"/>
@@ -141,9 +141,9 @@
                             <DataGrid FontSize ="12pt" MaxHeight="350" Name="sotr_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1052" HorizontalAlignment="Left">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Name="del_st" Header="Удалить" Click="del_st_Click"/>
                                         <MenuItem Name="add_st" Header="Добавить" Click="add_st_Click"/>
                                         <MenuItem Name="upd_st" Header="Изменить" Click="upd_st_Click"/>
+                                        <MenuItem Name="del_st" Header="Удалить" Click="del_st_Click"/>
                                         <MenuItem Name="to_excel_workers" Header="Excel" Click="to_excel_workers_Click"/>
                                         <MenuItem Name="emps_cansel_filter" Header="Сбросить фильтр" Height="20" Click="emps_cansel_filter_Click"/>
                                     </ContextMenu>
@@ -165,9 +165,9 @@
                             <DataGrid FontSize ="12pt" MaxHeight="350" Name="user_grid" AutoGenerateColumns="False"  Style="{DynamicResource DataGridStyle}">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Name="del_us" Header="Удалить" Click="del_us_Click"/>
                                         <MenuItem Name="add_us" Header="Добавить" Click="add_us_Click"/>
                                         <MenuItem Name="upd_us" Header="Изменить" Click="upd_us_Click"/>
+                                        <MenuItem Name="del_us" Header="Удалить" Click="del_us_Click"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
@@ -189,10 +189,9 @@
                                 <DataGrid FontSize ="12pt" MaxHeight="350" Name="roll_grid" AutoGenerateColumns="False" Width="500" Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" SelectionChanged="roll_grid_SelectionChanged">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu Width="300">
-                                            <MenuItem Name="del_roll"      Header="Удалить роль"  Click="del_roll_Click"/>
                                             <MenuItem Name="add_roll"      Header="Добавить роль" Click="add_roll_Click"/>
                                             <MenuItem Name="upd_roll"      Header="Изменить роль" Click="upd_roll_Click"/>
-                                            <MenuItem Name="rulls_rolls"   Header="Права ролей"   Click="rulls_rolls_Click"/>
+                                            <MenuItem Name="del_roll"      Header="Удалить роль"  Click="del_roll_Click"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
@@ -255,11 +254,6 @@
                                 <StackPanel>
                                     <TextBlock Text="Права ролей" FontSize="15pt" HorizontalAlignment="Center"/>
                                     <DataGrid FontSize ="13pt" MaxHeight="350" Name="rol_rulls_grid" AutoGenerateColumns="False" Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
-                                        <DataGrid.ContextMenu>
-                                            <ContextMenu Name="org_grid_popu" Width="300">
-                                                <MenuItem Name="upd_rull" Header="Добавить" Click="upd_rull_Click"  Height="20"/>
-                                            </ContextMenu>
-                                        </DataGrid.ContextMenu>
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="id" Width="150" Binding="{Binding Path = id}"/>
                                             <DataGridTextColumn Header="Название" Width="300" Binding="{Binding Path = name}"/>

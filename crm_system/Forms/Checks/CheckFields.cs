@@ -29,7 +29,17 @@ namespace crm_system
                 }
             }
         }
-
+        public bool array_exists(string[] mass1, string var)
+        {
+            for (int i = 0; i<= mass1.Length; i++)
+            {
+                if (mass1[i] == var)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
         public void CheckFieldsCaption(TextBox tb, string type = "alphanumber")
         {
             Regex regex;
@@ -68,7 +78,7 @@ namespace crm_system
                     case "alphanumber":
                         regex = new Regex(@"\W");
                         match = regex.Matches(tb.Text[tb.SelectionStart - 1].ToString());
-                        if (match.Count > 0)
+                        if (match.Count > 0 && tb.Text[tb.SelectionStart - 1].ToString() != " " && tb.Text[tb.SelectionStart - 1].ToString() != ('"').ToString() && tb.Text[tb.SelectionStart - 1].ToString() != "<" && tb.Text[tb.SelectionStart - 1].ToString() != ">" && tb.Text[tb.SelectionStart - 1].ToString() != "(" && tb.Text[tb.SelectionStart - 1].ToString() != ")" && tb.Text[tb.SelectionStart - 1].ToString() != "-")
                         {
                             tb.Text = tb.Text.Remove(tb.SelectionStart - 1, 1);
                             tb.SelectionStart = selStart - 1;
