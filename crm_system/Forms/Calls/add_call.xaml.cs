@@ -69,9 +69,9 @@ namespace crm_system
                             connection.Close();
                             Close();
                         }
-                        ((MainWindow)this.Owner).refresh("calls");
+                      ((MainWindow)this.Owner).refresh("calls");
                     }
-                
+
                 }
                 catch (Exception ex)
                 {
@@ -128,7 +128,7 @@ namespace crm_system
                     connection.Close();
 
                 }
-                catch
+                catch(Exception ex)
                 {
                     connection.Close();
                 }

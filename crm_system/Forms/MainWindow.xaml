@@ -47,6 +47,7 @@
                                 <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="org_grid" AutoGenerateColumns="False" Margin="0,0,0,0" Style="{DynamicResource DataGridStyle}">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu x:Name="org_grid_popup" Width="300">
+                                            <MenuItem x:Name="refr_orgs" Header="Обновить" Click="refr_orgs_Click" Height="20"/>
                                             <MenuItem x:Name="add__org" Header="Добавить организацию" Click="add__org_Click" Height="20"/>
                                             <MenuItem x:Name="upd__org" Header="Редактировать оргранизацию" Click="upd__org_Click" Height="20"/>
                                             <MenuItem x:Name="del__org" Header="Удалить организацию" Click="del__org_Click" Height="20"/>
@@ -90,13 +91,14 @@
                                     <TextBlock Text="Оператор:" FontSize="12pt"/>
                                     <ComboBox x:Name="oper_filt" FontSize="12pt" SelectionChanged="oper_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                                 </StackPanel>
-                                <!--<Button Content="Отчистить" Margin="10,0,0,0" FontSize="12pt" Height="30" Click="Button_Click"/>-->
                             </StackPanel>
                             <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="calls_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1130" SelectionChanged="calls_grid_SelectionChanged">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
+                                        <MenuItem x:Name="refr_calls" Header="Обновить" Click="refr_calls_Click" Height="20"/>
                                         <MenuItem x:Name="add_call_" Header="Добавить звонок" Click="add_call__Click"/>
                                         <MenuItem x:Name="upd_call_" Header="Изменить звонок" Click="upd_call__Click"/>
+                                        <MenuItem x:Name="delete_call" Header="Удалить звонок" Click="delete_call_Click"/>
                                         <MenuItem x:Name="del_call_" Header="Отменить звонок" Click="del_call__Click"/>
                                         <MenuItem x:Name="clouse_call" Header="Закрыть звонок" Click="clouse_call_Click"/>
                                         <MenuItem x:Name="create_report" Header="Excel" Click="create_report_Click"/>
@@ -117,19 +119,19 @@
                     <Canvas>
                         <StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Height="61" x:Name="emps_filter">
-                                <StackPanel Width="190" Margin="10,0,0,0">
+                                <StackPanel Width="200" Margin="10,0,0,0">
                                     <TextBlock Text="Имя:" FontSize="12pt"/>
                                     <TextBox x:Name="name_filt" FontSize="12pt"   Margin="0,0,0,10" Height="30"  Style="{DynamicResource TextBoxStyle}" TextChanged="name_filt_TextChanged"/>
                                 </StackPanel>
-                                <StackPanel Width="190" Margin="20,0,0,0">
+                                <StackPanel Width="200" Margin="40,0,0,0">
                                     <TextBlock Text="Фамилия:" FontSize="12pt"/>
                                     <TextBox x:Name="fam_filt" FontSize="12pt"  Margin="0,0,0,10" Height="30"  Style="{DynamicResource TextBoxStyle}" TextChanged="fam_filt_TextChanged"/>
                                 </StackPanel>
-                                <StackPanel Width="210" Margin="10,0,0,0">
+                                <StackPanel Width="200" Margin="30,0,0,0">
                                     <TextBlock Text="Отчество:" FontSize="12pt"/>
                                     <TextBox x:Name="otch_filt" FontSize="12pt"  Margin="0,0,0,10" Height="30" Style="{DynamicResource TextBoxStyle}" TextChanged="otch_filt_TextChanged"/>
                                 </StackPanel>
-                                <StackPanel Width="220" Margin="10,0,0,0">
+                                <StackPanel Width="200" Margin="10,0,0,0">
                                     <TextBlock Text="Организация:" FontSize="12pt"/>
                                     <ComboBox x:Name="org_filt_" FontSize="12pt" SelectionChanged="org_filt__SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}" />
                                 </StackPanel>
@@ -141,6 +143,7 @@
                             <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="sotr_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1130" HorizontalAlignment="Left">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
+                                        <MenuItem x:Name="refr_emps" Header="Обновить" Click="refr_emps_Click" Height="20"/>
                                         <MenuItem x:Name="add_st" Header="Добавить сотрудника" Click="add_st_Click"/>
                                         <MenuItem x:Name="upd_st" Header="Редактировать сотрудника" Click="upd_st_Click"/>
                                         <MenuItem x:Name="del_st" Header="Удалить сотрудника" Click="del_st_Click"/>
@@ -165,6 +168,7 @@
                             <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="user_grid" AutoGenerateColumns="False"  Style="{DynamicResource DataGridStyle}">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
+                                        <MenuItem x:Name="refr_us" Header="Обновить" Click="refr_us_Click" Height="20"/>
                                         <MenuItem x:Name="add_us" Header="Регистрация пользователя" Click="add_us_Click"/>
                                         <MenuItem x:Name="upd_us" Header="Редактировать пользователя" Click="upd_us_Click"/>
                                         <MenuItem x:Name="del_us" Header="Удалить пользователя" Click="del_us_Click"/>
@@ -189,6 +193,7 @@
                                 <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="roll_grid" AutoGenerateColumns="False" Width="500" Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" SelectionChanged="roll_grid_SelectionChanged">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu Width="300">
+                                            <MenuItem x:Name="refr_rols"     Header="Обновить" Click="refr_rols_Click" Height="20"/>
                                             <MenuItem x:Name="add_roll"      Header="Добавить роль" Click="add_roll_Click"/>
                                             <MenuItem x:Name="upd_roll"      Header="Редактировать роль" Click="upd_roll_Click"/>
                                             <MenuItem x:Name="del_roll"      Header="Удалить роль"  Click="del_roll_Click"/>
@@ -221,6 +226,7 @@
                                         <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="post_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" >
                                             <DataGrid.ContextMenu>
                                                 <ContextMenu Width="300">
+                                                    <MenuItem x:Name="refresh_posts" Header="Обновить" Click="refresh_posts_Click"/>
                                                     <MenuItem x:Name="add_post" Header="Добавить" Click="add_post_Click"  Height="20"/>
                                                     <MenuItem x:Name="upd_post" Header="Редактировать" Click="upd_post_Click"  Height="20"/>
                                                     <MenuItem x:Name="del_post" Header="Удалить" Click="del_post_Click"  Height="20"/>
@@ -238,6 +244,7 @@
                                         <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="cities_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
                                             <DataGrid.ContextMenu>
                                                 <ContextMenu Width="300">
+                                                    <MenuItem x:Name="refresh_handboxes" Header="Обновить" Click="refresh_Click"/>
                                                     <MenuItem x:Name="add_citi" Header="Добавить" Click="add_citi_Click"  Height="20"/>
                                                     <MenuItem x:Name="upd_citi" Header="Редактировать" Click="upd_citi_Click"  Height="20"/>
                                                     <MenuItem x:Name="del_cities" Header="Удалить" Click="del_cities_Click"  Height="20"/>
@@ -266,6 +273,11 @@
                 <TabItem x:Name="analityc" Header="Аналитика" Height="40" Style="{DynamicResource Tabit}">
                     <TabControl>
                         <TabItem Style="{DynamicResource Tabit}" Header="Эффективность сотрудника">
+                            <TabItem.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Name="refresh_analytics_emps" Header="Обновить" Click="refresh_analytics_emps_Click"/>
+                                </ContextMenu>
+                            </TabItem.ContextMenu>
                             <StackPanel HorizontalAlignment="Left">
                                 <ComboBox x:Name="emploers"  HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="emploers_SelectionChanged" Style="{DynamicResource ComboBoxFlatStyle}" DisplayMemberPath="name" SelectedValuePath="value" ItemsSource="{Binding comboitems}" Width="150"/>
                                 <lvc:CartesianChart x:Name="graph" LegendLocation="Right" Height="350" Width="800">
@@ -286,6 +298,11 @@
                             </StackPanel>
                         </TabItem>
                         <TabItem Style="{DynamicResource Tabit}" Header="Эфектиность общения с организацией">
+                            <TabItem.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Name="refresh_analytics_orgn" Header="Обновить" Click="refresh_analytics_orgn_Click"/>
+                                </ContextMenu>
+                            </TabItem.ContextMenu>
                             <StackPanel>
                                 <ComboBox x:Name="org" Style="{DynamicResource ComboBoxFlatStyle}" Width="150" HorizontalAlignment="Left" SelectionChanged="org_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
                                 <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,80,0,0">
@@ -334,6 +351,11 @@
                     </TabControl>
                 </TabItem>
                 <TabItem  x:Name="settings" Header="Найстройки" Height="40" Style="{DynamicResource Tabit}">
+                    <TabItem.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Name="refresh_settings" Header="Обновить" Click="refresh_settings_Click"/>
+                        </ContextMenu>
+                    </TabItem.ContextMenu>
                     <StackPanel  HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Путь сохранения файлов: " FontSize="12pt" VerticalAlignment="Center"/>
