@@ -55,135 +55,148 @@ namespace crm_system
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            try
+            if (MainWindow.CheckForInternetConnection())
             {
-                connection = new MySqlConnection(MainWindow.constr);
-                List<permision> permisions = new List<permision>();
-                connection.Open();
-                MySqlCommand cmd = new MySqlCommand("select t.id, t.name from permissions t", connection);
-                MySqlDataReader reader = cmd.ExecuteReader();
-                while (reader.Read())
+                try
                 {
-                    permisions.Add(new permision(int.Parse(reader["id"].ToString()), reader["name"].ToString(), false));
-                }
-                permis_grid.ItemsSource = permisions;
-                reader.Close();
-                if (id_rool != null)
-                {
-                    MySqlCommand sel_rulls = new MySqlCommand("select REPLACE(GROUP_CONCAT(rights),',',';') as rights from rols t where t.id = @id", connection);
-                    sel_rulls.Parameters.AddWithValue("id", id_rool);
-                    MySqlDataReader read_ruls = sel_rulls.ExecuteReader();
-                    if (read_ruls.Read())
+                    connection = new MySqlConnection(MainWindow.constr);
+                    List<permision> permisions = new List<permision>();
+                    connection.Open();
+                    MySqlCommand cmd = new MySqlCommand("select t.id, t.name from permissions t", connection);
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
                     {
-                        rights = read_ruls["rights"].ToString();
+                        permisions.Add(new permision(int.Parse(reader["id"].ToString()), reader["name"].ToString(), false));
                     }
-                    var rights_arr = rights.Split(';');
-                    List<permision> permi = new List<permision>();
-                    for (int i = 0; i < permis_grid.Items.Count; i++)
+                    permis_grid.ItemsSource = permisions;
+                    reader.Close();
+                    if (id_rool != null)
                     {
-                        var col = permis_grid.Items[i] as permision;
-                        if (in_arr(rights_arr, col.id.ToString()))
+                        MySqlCommand sel_rulls = new MySqlCommand("select REPLACE(GROUP_CONCAT(rights),',',';') as rights from rols t where t.id = @id", connection);
+                        sel_rulls.Parameters.AddWithValue("id", id_rool);
+                        MySqlDataReader read_ruls = sel_rulls.ExecuteReader();
+                        if (read_ruls.Read())
                         {
-                            col.is_check = true;
+                            rights = read_ruls["rights"].ToString();
                         }
-                        permi.Add(col);
+                        var rights_arr = rights.Split(';');
+                        List<permision> permi = new List<permision>();
+                        for (int i = 0; i < permis_grid.Items.Count; i++)
+                        {
+                            var col = permis_grid.Items[i] as permision;
+                            if (in_arr(rights_arr, col.id.ToString()))
+                            {
+                                col.is_check = true;
+                            }
+                            permi.Add(col);
+                        }
+                        permis_grid.ItemsSource = permi;
+                        read_ruls.Close();
+                        MySqlCommand sel_roll_info = new MySqlCommand("select t.name from rols t where t.id = @id", connection);
+                        sel_roll_info.Parameters.AddWithValue("id", id_rool);
+                        MySqlDataReader read_roll_info = sel_roll_info.ExecuteReader();
+                        if (read_roll_info.Read())
+                        {
+                            roll_name.Text = read_roll_info["name"].ToString();
+                        }
+                        read_roll_info.Close();
                     }
-                    permis_grid.ItemsSource = permi;
-                    read_ruls.Close();
-                    MySqlCommand sel_roll_info = new MySqlCommand("select t.name from rols t where t.id = @id", connection);
-                    sel_roll_info.Parameters.AddWithValue("id", id_rool);
-                    MySqlDataReader read_roll_info = sel_roll_info.ExecuteReader();
-                    if (read_roll_info.Read())
-                    {
-                        roll_name.Text = read_roll_info["name"].ToString();
-                    }
-                    read_roll_info.Close();
+                    connection.Close();
                 }
-                connection.Close();
+                catch (Exception ex)
+                {
+                    connection.Close();
+                    MessageBox.Show(ex.Message);
+                }
             }
-            catch(Exception ex)
+            else
             {
-                connection.Close();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Отсутствует или ограниченно физическое подключение к сети\nПроверьте настройки вашего сетевого подключения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            
         }
 
         private void add_or_upd_Click(object sender, RoutedEventArgs e)
         {
-            except.Height = 0;
-            except.Margin = new Thickness(0, 0, 0, 0);
-            string rightss = null;
-            int is_chec_cnt = 0;
-            for (int i = 0; i< permis_grid.Items.Count; i++)
+            if (MainWindow.CheckForInternetConnection())
             {
-                var col = permis_grid.Items[i] as permision;
-                if (col.is_check)
+                except.Height = 0;
+                except.Margin = new Thickness(0, 0, 0, 0);
+                string rightss = null;
+                int is_chec_cnt = 0;
+                for (int i = 0; i < permis_grid.Items.Count; i++)
                 {
-                    rightss = rightss + col.id.ToString() + ";";
-                    is_chec_cnt++;
-                }
-            }
-            try
-            {
-                check.CheckNullFields(new[] { roll_name });
-                if (is_chec_cnt != 0)
-                {
-                    if (roll_name.Text != "")
+                    var col = permis_grid.Items[i] as permision;
+                    if (col.is_check)
                     {
-                        if (id_rool == null)
+                        rightss = rightss + col.id.ToString() + ";";
+                        is_chec_cnt++;
+                    }
+                }
+                try
+                {
+                    check.CheckNullFields(new[] { roll_name });
+                    if (is_chec_cnt != 0)
+                    {
+                        if (roll_name.Text != "")
                         {
-                            connection.Open();
-                            MySqlCommand ins_in_users = new MySqlCommand("insert into rols (rights, name) values (@rights, @name)", connection);
-                            ins_in_users.Parameters.AddWithValue("rights", rightss);
-                            ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
-                            ins_in_users.ExecuteNonQuery();
-                            connection.Close();
-                        }
-                        else
-                        {
-                            int rolls_count = 0;
-                            string[] rols_id = null;
-                            connection.Open();
-                            MySqlCommand rols_cnt = new MySqlCommand("select count(1) as count, REPLACE(GROUP_CONCAT(t.id),',',';') as rols_id from rols t where t.rights like '%9%' and t.rights like '%10%'", connection);
-                            MySqlDataReader reader = rols_cnt.ExecuteReader();
-                            while (reader.Read())
+                            if (id_rool == null)
                             {
-                                rolls_count = int.Parse(reader["count"].ToString());
-                                rols_id = reader["rols_id"].ToString().Split(';');
-                            }
-                            reader.Close();
-                            if (rolls_count == 1 && rols_id[0] == id_rool && !in_arr(rightss.Split(';'), "9") && !in_arr(rightss.Split(';'), "9"))
-                            {
-                                MessageBox.Show("В системе должна быть хотя бы одна роль, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Information);
+                                connection.Open();
+                                MySqlCommand ins_in_users = new MySqlCommand("insert into rols (rights, name) values (@rights, @name)", connection);
+                                ins_in_users.Parameters.AddWithValue("rights", rightss);
+                                ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
+                                ins_in_users.ExecuteNonQuery();
                                 connection.Close();
                             }
-                            MySqlCommand ins_in_users = new MySqlCommand("update rols set rights = @rights, name = @name where id = @id", connection);
-                            ins_in_users.Parameters.AddWithValue("rights", rightss);
-                            ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
-                            ins_in_users.Parameters.AddWithValue("id", id_rool);
-                            ins_in_users.ExecuteNonQuery();
-                            connection.Close();
+                            else
+                            {
+                                int rolls_count = 0;
+                                string[] rols_id = null;
+                                connection.Open();
+                                MySqlCommand rols_cnt = new MySqlCommand("select count(1) as count, REPLACE(GROUP_CONCAT(t.id),',',';') as rols_id from rols t where t.rights like '%9%' and t.rights like '%10%'", connection);
+                                MySqlDataReader reader = rols_cnt.ExecuteReader();
+                                while (reader.Read())
+                                {
+                                    rolls_count = int.Parse(reader["count"].ToString());
+                                    rols_id = reader["rols_id"].ToString().Split(';');
+                                }
+                                reader.Close();
+                                if (rolls_count == 1 && rols_id[0] == id_rool && !in_arr(rightss.Split(';'), "9") && !in_arr(rightss.Split(';'), "9"))
+                                {
+                                    MessageBox.Show("В системе должна быть хотя бы одна роль, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Information);
+                                    connection.Close();
+                                }
+                                MySqlCommand ins_in_users = new MySqlCommand("update rols set rights = @rights, name = @name where id = @id", connection);
+                                ins_in_users.Parameters.AddWithValue("rights", rightss);
+                                ins_in_users.Parameters.AddWithValue("name", roll_name.Text);
+                                ins_in_users.Parameters.AddWithValue("id", id_rool);
+                                ins_in_users.ExecuteNonQuery();
+                                connection.Close();
+                            }
+                            Close();
                         }
-                        Close();
+                        ((MainWindow)this.Owner).refresh();
+                        ((MainWindow)this.Owner).aunt_result();
+                        ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
+                        ((MainWindow)this.Owner).exit.Height = 39;
+                        ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
+                        ((MainWindow)this.Owner).re_aunt.Height = 39;
                     }
-                    ((MainWindow)this.Owner).refresh();
-                    ((MainWindow)this.Owner).aunt_result();
-                    ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
-                    ((MainWindow)this.Owner).exit.Height = 39;
-                    ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
-                    ((MainWindow)this.Owner).re_aunt.Height = 39;
+                    else
+                    {
+                        except.Height = 24;
+                        except.Margin = new Thickness(10, 0, 0, 0);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    except.Height = 24;
-                    except.Margin = new Thickness(10, 0, 0, 0);
+                    connection.Close();
+                    //MessageBox.Show(ex.Message.ToString());
                 }
             }
-            catch (Exception ex)
+            else
             {
-                connection.Close();
-                //MessageBox.Show(ex.Message.ToString());
+                MessageBox.Show("Отсутствует или ограниченно физическое подключение к сети\nПроверьте настройки вашего сетевого подключения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

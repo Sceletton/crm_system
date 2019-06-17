@@ -17,246 +17,245 @@
                 <TabItem Header="Организации" Height="40" Style="{DynamicResource Tabit}">
                     <Canvas>
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Height="61" Name="organiz_filter">
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Height="61" x:Name="organiz_filter">
                                 <StackPanel>
                                     <TextBlock Text="Наименование:" FontSize="12pt"/>
-                                    <TextBox Name="org_name_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="190" Margin="0,0,10,0" TextChanged="org_name_filt_TextChanged"/>
+                                    <TextBox x:Name="org_name_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="190" Margin="0,0,10,0" TextChanged="org_name_filt_TextChanged"/>
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Город:" FontSize="12pt"/>
-                                    <ComboBox Name="city_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="170" Margin="0,0,10,0" SelectionChanged="city_org_filt_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
+                                    <ComboBox x:Name="city_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="170" Margin="0,0,10,0" SelectionChanged="city_org_filt_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Приоритет:" FontSize="12pt"/>
-                                    <ComboBox Name="prioryty_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="180" Margin="0,0,10,0" SelectionChanged="prioryty_org_filt_SelectionChanged"/>
+                                    <ComboBox x:Name="prioryty_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="180" Margin="0,0,10,0" SelectionChanged="prioryty_org_filt_SelectionChanged"/>
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Статус:" FontSize="12pt"/>
-                                    <ComboBox Name="org_status_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="140" Margin="0,0,10,0" SelectionChanged="org_status_filt_SelectionChanged"/>
+                                    <ComboBox x:Name="org_status_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="140" Margin="0,0,10,0" SelectionChanged="org_status_filt_SelectionChanged"/>
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Куратор:" FontSize="12pt"/>
-                                    <ComboBox Name="kurator_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="190" Margin="0,0,10,0" SelectionChanged="kurator_org_filt_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
+                                    <ComboBox x:Name="kurator_org_filt" FontSize="12pt" Style="{DynamicResource ComboBoxFlatStyle}" Width="190" Margin="0,0,10,0" SelectionChanged="kurator_org_filt_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Телефон:" FontSize="12pt"/>
-                                    <TextBox Name="phone_org_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="180" TextChanged="phone_org_filt_TextChanged"/>
+                                    <TextBox x:Name="phone_org_filt" FontSize="12pt" Style="{DynamicResource TextBoxStyle}" Width="180" TextChanged="phone_org_filt_TextChanged"/>
                                 </StackPanel>
                             </StackPanel>
-                            <StackPanel Name="grid" Margin="0,10,0,0">
-                                <DataGrid FontSize ="12pt" MaxHeight="350" Name="org_grid" AutoGenerateColumns="False" Margin="0,0,0,0" Style="{DynamicResource DataGridStyle}">
+                            <StackPanel x:Name="grid" Margin="0,10,0,0">
+                                <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="org_grid" AutoGenerateColumns="False" Margin="0,0,0,0" Style="{DynamicResource DataGridStyle}">
                                     <DataGrid.ContextMenu>
-                                        <ContextMenu Name="org_grid_popup" Width="300">
-                                            <MenuItem Name="add__org" Header="Добавить организацию" Click="add__org_Click" Height="20"/>
-                                            <MenuItem Name="upd__org" Header="Изменить оргранизацию" Click="upd__org_Click" Height="20"/>
-                                            <MenuItem Name="del__org" Header="Удалить организацию" Click="del__org_Click" Height="20"/>
-                                            <MenuItem Name="add__sotr" Header="Добавить сотрудников" Click="add__sotr_Click" Height="20"/>
-                                            <MenuItem Name="view__sotr" Header="Сотрудники организации" Click="view__sotr_Click" Height="20"/>
-                                            <MenuItem Name="add__call" Header="Назначить звонок" Click="add__call_Click" Height="20"/>
-                                            <MenuItem Name="to_excel" Header="Excel" Height="20" Click="to_excel_Click"/>
-                                            <MenuItem Name="orgs_cansel_filter" Header="Сбросить фильтр" Height="20" Click="orgs_cansel_filter_Click"/>
+                                        <ContextMenu x:Name="org_grid_popup" Width="300">
+                                            <MenuItem x:Name="add__org" Header="Добавить организацию" Click="add__org_Click" Height="20"/>
+                                            <MenuItem x:Name="upd__org" Header="Редактировать оргранизацию" Click="upd__org_Click" Height="20"/>
+                                            <MenuItem x:Name="del__org" Header="Удалить организацию" Click="del__org_Click" Height="20"/>
+                                            <MenuItem x:Name="add__sotr" Header="Добавить сотрудников" Click="add__sotr_Click" Height="20"/>
+                                            <MenuItem x:Name="view__sotr" Header="Сотрудники организации" Click="view__sotr_Click" Height="20"/>
+                                            <MenuItem x:Name="add__call" Header="Назначить звонок" Click="add__call_Click" Height="20"/>
+                                            <MenuItem x:Name="to_excel" Header="Excel" Height="20" Click="to_excel_Click"/>
+                                            <MenuItem x:Name="orgs_cansel_filter" Header="Сбросить фильтр" Height="20" Click="orgs_cansel_filter_Click"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Наименование" Width="200" Binding="{Binding Path = Name}"/>
-                                        <DataGridTextColumn Header="Город" Width="180" Binding="{Binding Path = City}"/>
-                                        <DataGridTextColumn Header="Приоритет" Width="200" Binding="{Binding Path = Prioriry}"/>
-                                        <DataGridTextColumn Header="Статус клиента" Width="150" Binding="{Binding Path = Status}"/>
-                                        <DataGridTextColumn Header="Куратор" Width="200" Binding="{Binding Path = Kurator}"/>
-                                        <DataGridTextColumn Header="Телефон" Width="190" Binding="{Binding Path = Phone}"/>
+                                        <DataGridTextColumn Header="Наименование" Width="200" Binding="{Binding Name}"/>
+                                        <DataGridTextColumn Header="Город" Width="180" Binding="{Binding City}"/>
+                                        <DataGridTextColumn Header="Приоритет" Width="200" Binding="{Binding Prioriry}"/>
+                                        <DataGridTextColumn Header="Статус клиента" Width="150" Binding="{Binding Status}"/>
+                                        <DataGridTextColumn Header="Куратор" Width="200" Binding="{Binding Kurator}"/>
+                                        <DataGridTextColumn Header="Телефон" Width="190" Binding="{Binding Phone}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </StackPanel>
                         </StackPanel>
                     </Canvas>
                 </TabItem>
-                <TabItem Name="cals" Header="Звонки" Height="40" Style="{DynamicResource Tabit}" VerticalAlignment="Top">
+                <TabItem x:Name="cals" Header="Звонки" Height="40" Style="{DynamicResource Tabit}" VerticalAlignment="Top">
                     <Canvas>
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Name="calls_filter">
-                                <StackPanel Width="210" Margin="20,0,0,0">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" x:Name="calls_filter">
+                                <StackPanel Width="260" Margin="20,0,0,0">
                                     <TextBlock Text="Организация:" FontSize="12pt"/>
-                                    <ComboBox Name="org_filt" FontSize="12pt" SelectionChanged="org_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                                    <ComboBox x:Name="org_filt" FontSize="12pt" SelectionChanged="org_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                                 </StackPanel>
                                 <StackPanel  Margin="20,0,0,0">
                                     <TextBlock Text="Дата звонка:" FontSize="12pt"/>
-                                    <DatePicker Name="dat_filt" FontSize="12pt" Width="180" SelectedDateChanged="dat_filt_SelectedDateChanged"/>
+                                    <DatePicker x:Name="dat_filt" FontSize="12pt" Width="180" SelectedDateChanged="dat_filt_SelectedDateChanged"/>
                                 </StackPanel>
                                 <StackPanel Width="180" Margin="70,0,0,0">
                                     <TextBlock Text="Статус:" FontSize="12pt"/>
-                                    <ComboBox Name="stat_filt" FontSize="12pt" SelectionChanged="stat_filt_SelectionChanged" Margin="0,0,0,10" Height="30" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                                    <ComboBox x:Name="stat_filt" FontSize="12pt" SelectionChanged="stat_filt_SelectionChanged" Margin="0,0,0,10" Height="30" Style="{DynamicResource ComboBoxFlatStyle}"/>
                                 </StackPanel>
-                                <StackPanel Width="220" Margin="70,0,0,0">
+                                <StackPanel Width="280" Margin="80,0,0,0">
                                     <TextBlock Text="Оператор:" FontSize="12pt"/>
-                                    <ComboBox Name="oper_filt" FontSize="12pt" SelectionChanged="oper_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                                    <ComboBox x:Name="oper_filt" FontSize="12pt" SelectionChanged="oper_filt_SelectionChanged" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                                 </StackPanel>
                                 <!--<Button Content="Отчистить" Margin="10,0,0,0" FontSize="12pt" Height="30" Click="Button_Click"/>-->
                             </StackPanel>
-                            <DataGrid FontSize ="12pt" MaxHeight="350" Name="calls_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="995">
+                            <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="calls_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1130" SelectionChanged="calls_grid_SelectionChanged">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Name="add_call_" Header="Добавить звонок" Click="add_call__Click"/>
-                                        <MenuItem Name="upd_call_" Header="Изменить звонок" Click="upd_call__Click"/>
-                                        <MenuItem Name="del_call_" Header="Отменить звонок" Click="del_call__Click"/>
-                                        <MenuItem Name="clouse_call" Header="Закрыть звонок" Click="clouse_call_Click"/>
-                                        <MenuItem Name="create_report" Header="Excel" Click="create_report_Click"/>
-                                        <MenuItem Name="calls_cansel_filter" Header="Сбросить фильтр" Height="20" Click="calls_cansel_filter_Click"/>
+                                        <MenuItem x:Name="add_call_" Header="Добавить звонок" Click="add_call__Click"/>
+                                        <MenuItem x:Name="upd_call_" Header="Изменить звонок" Click="upd_call__Click"/>
+                                        <MenuItem x:Name="del_call_" Header="Отменить звонок" Click="del_call__Click"/>
+                                        <MenuItem x:Name="clouse_call" Header="Закрыть звонок" Click="clouse_call_Click"/>
+                                        <MenuItem x:Name="create_report" Header="Excel" Click="create_report_Click"/>
+                                        <MenuItem x:Name="calls_cansel_filter" Header="Сбросить фильтр" Height="20" Click="calls_cansel_filter_Click"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Организация" Width="250" Binding="{Binding Path = org}"/>
-                                    <DataGridTextColumn Header="Дата звонка" Width="250" Binding="{Binding Path = date_cal}"/>
-                                    <DataGridTextColumn Header="Статуст звонка" Width="250" Binding="{Binding Path = status_call}"/>
-                                    <DataGridTextColumn Header="Оператор" Width="230" Binding="{Binding Path = oper}"/>
+                                    <DataGridTextColumn Header="Организация" Width="300" Binding="{Binding org}"/>
+                                    <DataGridTextColumn Header="Дата звонка" Width="250" Binding="{Binding date_cal}"/>
+                                    <DataGridTextColumn Header="Статуст звонка" Width="264" Binding="{Binding status_call}"/>
+                                    <DataGridTextColumn Header="Оператор" Width="300" Binding="{Binding oper}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                     </Canvas>
                 </TabItem>
-                <TabItem Name="sotrs" Header="Сотрудники" Height="40" Style="{DynamicResource Tabit}">
+                <TabItem x:Name="sotrs" Header="Сотрудники" Height="40" Style="{DynamicResource Tabit}">
                     <Canvas>
                         <StackPanel>
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Height="61" Name="emps_filter">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10" Height="61" x:Name="emps_filter">
                                 <StackPanel Width="190" Margin="10,0,0,0">
                                     <TextBlock Text="Имя:" FontSize="12pt"/>
-                                    <TextBox Name="name_filt" FontSize="12pt"   Margin="0,0,0,10" Height="30"  Style="{DynamicResource TextBoxStyle}" TextChanged="name_filt_TextChanged"/>
+                                    <TextBox x:Name="name_filt" FontSize="12pt"   Margin="0,0,0,10" Height="30"  Style="{DynamicResource TextBoxStyle}" TextChanged="name_filt_TextChanged"/>
                                 </StackPanel>
                                 <StackPanel Width="190" Margin="20,0,0,0">
                                     <TextBlock Text="Фамилия:" FontSize="12pt"/>
-                                    <TextBox Name="fam_filt" FontSize="12pt"  Margin="0,0,0,10" Height="30"  Style="{DynamicResource TextBoxStyle}" TextChanged="fam_filt_TextChanged"/>
+                                    <TextBox x:Name="fam_filt" FontSize="12pt"  Margin="0,0,0,10" Height="30"  Style="{DynamicResource TextBoxStyle}" TextChanged="fam_filt_TextChanged"/>
                                 </StackPanel>
                                 <StackPanel Width="210" Margin="10,0,0,0">
                                     <TextBlock Text="Отчество:" FontSize="12pt"/>
-                                    <TextBox Name="otch_filt" FontSize="12pt"  Margin="0,0,0,10" Height="30" Style="{DynamicResource TextBoxStyle}" TextChanged="otch_filt_TextChanged"/>
+                                    <TextBox x:Name="otch_filt" FontSize="12pt"  Margin="0,0,0,10" Height="30" Style="{DynamicResource TextBoxStyle}" TextChanged="otch_filt_TextChanged"/>
                                 </StackPanel>
                                 <StackPanel Width="220" Margin="10,0,0,0">
                                     <TextBlock Text="Организация:" FontSize="12pt"/>
-                                    <ComboBox Name="org_filt_" FontSize="12pt" SelectionChanged="org_filt__SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}" />
+                                    <ComboBox x:Name="org_filt_" FontSize="12pt" SelectionChanged="org_filt__SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}" />
                                 </StackPanel>
                                 <StackPanel Width="160" Margin="10,0,0,0">
                                     <TextBlock Text="Должность:" FontSize="12pt"/>
-                                    <ComboBox Name="job_filt" FontSize="12pt" SelectionChanged="job_filt_SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                                    <ComboBox x:Name="job_filt" FontSize="12pt" SelectionChanged="job_filt_SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                                 </StackPanel>
                             </StackPanel>
-                            <DataGrid FontSize ="12pt" MaxHeight="350" Name="sotr_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1052" HorizontalAlignment="Left">
+                            <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="sotr_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1130" HorizontalAlignment="Left">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Name="add_st" Header="Добавить" Click="add_st_Click"/>
-                                        <MenuItem Name="upd_st" Header="Изменить" Click="upd_st_Click"/>
-                                        <MenuItem Name="del_st" Header="Удалить" Click="del_st_Click"/>
-                                        <MenuItem Name="to_excel_workers" Header="Excel" Click="to_excel_workers_Click"/>
-                                        <MenuItem Name="emps_cansel_filter" Header="Сбросить фильтр" Height="20" Click="emps_cansel_filter_Click"/>
+                                        <MenuItem x:Name="add_st" Header="Добавить сотрудника" Click="add_st_Click"/>
+                                        <MenuItem x:Name="upd_st" Header="Редактировать сотрудника" Click="upd_st_Click"/>
+                                        <MenuItem x:Name="del_st" Header="Удалить сотрудника" Click="del_st_Click"/>
+                                        <MenuItem x:Name="to_excel_workers" Header="Excel" Click="to_excel_workers_Click"/>
+                                        <MenuItem x:Name="emps_cansel_filter" Header="Сбросить фильтр" Height="20" Click="emps_cansel_filter_Click"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Имя" Width="210" Binding="{Binding Path = Name}"/>
-                                    <DataGridTextColumn Header="Фамилия" Width="210" Binding="{Binding Path=Surname}"/>
-                                    <DataGridTextColumn Header="Отчество" Width="210" Binding="{Binding Path=Second_name}"/>
-                                    <DataGridTextColumn Header="Организация" Width="230" Binding="{Binding Path=Org}"/>
-                                    <DataGridTextColumn Header="Должность" Width="190" Binding="{Binding Path=Job}"/>
+                                    <DataGridTextColumn Header="Имя" Width="230" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Фамилия" Width="230" Binding="{Binding Surname}"/>
+                                    <DataGridTextColumn Header="Отчество" Width="230" Binding="{Binding Second_name}"/>
+                                    <DataGridTextColumn Header="Организация" Width="210" Binding="{Binding Org}"/>
+                                    <DataGridTextColumn Header="Должность" Width="210" Binding="{Binding Job}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                     </Canvas>
                 </TabItem>
-                <TabItem Name="users" Header="Пользователи" Height="40" Style="{DynamicResource Tabit}">
+                <TabItem x:Name="users" Header="Пользователи" Height="40" Style="{DynamicResource Tabit}">
                     <Canvas>
                         <StackPanel>
-                            <DataGrid FontSize ="12pt" MaxHeight="350" Name="user_grid" AutoGenerateColumns="False"  Style="{DynamicResource DataGridStyle}">
+                            <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="user_grid" AutoGenerateColumns="False"  Style="{DynamicResource DataGridStyle}">
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Name="add_us" Header="Добавить" Click="add_us_Click"/>
-                                        <MenuItem Name="upd_us" Header="Изменить" Click="upd_us_Click"/>
-                                        <MenuItem Name="del_us" Header="Удалить" Click="del_us_Click"/>
+                                        <MenuItem x:Name="add_us" Header="Регистрация пользователя" Click="add_us_Click"/>
+                                        <MenuItem x:Name="upd_us" Header="Редактировать пользователя" Click="upd_us_Click"/>
+                                        <MenuItem x:Name="del_us" Header="Удалить пользователя" Click="del_us_Click"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Фамилия" Width="200" Binding="{Binding Path = login}"/>
-                                    <DataGridTextColumn Header="Имя" Width="200" Binding="{Binding Path = login}"/>
-                                    <DataGridTextColumn Header="Отчество" Width="200" Binding="{Binding Path = login}"/>
-                                    <DataGridTextColumn Header="Логин" Width="170" Binding="{Binding Path = login}"/>
-                                    <DataGridTextColumn Header="Пароль" Width="170" Binding="{Binding Path = pass}"/>
-                                    <DataGridTextColumn Header="Роль" Width="170" Binding="{Binding Path = roll}"/>
+                                    <DataGridTextColumn Header="Фамилия" Width="200" Binding="{Binding login}"/>
+                                    <DataGridTextColumn Header="Имя" Width="200" Binding="{Binding login}"/>
+                                    <DataGridTextColumn Header="Отчество" Width="200" Binding="{Binding login}"/>
+                                    <DataGridTextColumn Header="Логин" Width="170" Binding="{Binding login}"/>
+                                    <DataGridTextColumn Header="Пароль" Width="170" Binding="{Binding pass}"/>
+                                    <DataGridTextColumn Header="Роль" Width="170" Binding="{Binding roll}"/>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                     </Canvas>
                 </TabItem>
-                <TabItem Name="rols" Header="Роли" Height="40" Style="{DynamicResource Tabit}">
+                <TabItem x:Name="rols" Header="Роли" Height="40" Style="{DynamicResource Tabit}">
                     <Canvas>
                         <StackPanel Orientation="Horizontal">
                             <StackPanel>
-                                <DataGrid FontSize ="12pt" MaxHeight="350" Name="roll_grid" AutoGenerateColumns="False" Width="500" Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" SelectionChanged="roll_grid_SelectionChanged">
+                                <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="roll_grid" AutoGenerateColumns="False" Width="500" Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" SelectionChanged="roll_grid_SelectionChanged">
                                     <DataGrid.ContextMenu>
                                         <ContextMenu Width="300">
-                                            <MenuItem Name="add_roll"      Header="Добавить роль" Click="add_roll_Click"/>
-                                            <MenuItem Name="upd_roll"      Header="Изменить роль" Click="upd_roll_Click"/>
-                                            <MenuItem Name="del_roll"      Header="Удалить роль"  Click="del_roll_Click"/>
+                                            <MenuItem x:Name="add_roll"      Header="Добавить роль" Click="add_roll_Click"/>
+                                            <MenuItem x:Name="upd_roll"      Header="Редактировать роль" Click="upd_roll_Click"/>
+                                            <MenuItem x:Name="del_roll"      Header="Удалить роль"  Click="del_roll_Click"/>
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="id" Width="100" Binding="{Binding Path = id}"/>
-                                        <DataGridTextColumn Header="Наименование" Width="380" Binding="{Binding Path = name}"/>
+                                        <DataGridTextColumn Header="id" Width="100" Binding="{Binding id}"/>
+                                        <DataGridTextColumn Header="Наименование" Width="380" Binding="{Binding name}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </StackPanel>
                             <StackPanel>
                                 <TextBlock Text="Права" FontSize="14pt" HorizontalAlignment="Center"/>
-                                <DataGrid FontSize ="12pt"  MaxHeight="350" Name="permis_grid" AutoGenerateColumns="False" Width="400" Margin="10,10,0,0" Style="{DynamicResource DataGridStyle}" >
+                                <DataGrid FontSize ="12pt"  MaxHeight="350" x:Name="permis_grid" AutoGenerateColumns="False" Width="400" Margin="10,10,0,0" Style="{DynamicResource DataGridStyle}" >
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Название" Width="350" Binding="{Binding Path = caption}">
-                                        </DataGridTextColumn>
+                                        <DataGridTextColumn Header="Название" Width="350" Binding="{Binding caption}"/>
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </StackPanel>
                         </StackPanel>
                     </Canvas>
                 </TabItem>
-                <TabItem Name="handbooks" Header="Справочники" Height="40" Style="{DynamicResource Tabit}">
+                <TabItem x:Name="handbooks" Header="Справочники" Height="40" Style="{DynamicResource Tabit}">
                     <Canvas>
                         <StackPanel Orientation="Vertical" Margin="10,0">
                             <StackPanel Orientation="Horizontal"  Width="1920" HorizontalAlignment="Center">
                                 <StackPanel Margin="0,0,50,0" >
                                     <StackPanel Margin="0,0,50,0">
                                         <TextBlock Text="Должности" FontSize="15pt" HorizontalAlignment="Center"/>
-                                        <DataGrid FontSize ="13pt" MaxHeight="350" Name="post_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" >
+                                        <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="post_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" >
                                             <DataGrid.ContextMenu>
                                                 <ContextMenu Width="300">
-                                                    <MenuItem Name="add_post" Header="Добавить" Click="add_post_Click"  Height="20"/>
-                                                    <MenuItem Name="upd_post" Header="Изменить" Click="upd_post_Click"  Height="20"/>
-                                                    <MenuItem Name="del_post" Header="Удалить" Click="del_post_Click"  Height="20"/>
+                                                    <MenuItem x:Name="add_post" Header="Добавить" Click="add_post_Click"  Height="20"/>
+                                                    <MenuItem x:Name="upd_post" Header="Редактировать" Click="upd_post_Click"  Height="20"/>
+                                                    <MenuItem x:Name="del_post" Header="Удалить" Click="del_post_Click"  Height="20"/>
                                                 </ContextMenu>
                                             </DataGrid.ContextMenu>
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="id" Width="150" Binding="{Binding Path = id}"/>
-                                                <DataGridTextColumn Header="Название" Width="300" Binding="{Binding Path = name}"/>
+                                                <DataGridTextColumn Header="id" Width="150" Binding="{Binding id}"/>
+                                                <DataGridTextColumn Header="Название" Width="300" Binding="{Binding name}"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </StackPanel>
 
                                     <StackPanel Margin="0,0,50,0">
                                         <TextBlock Text="Города" FontSize="15pt" HorizontalAlignment="Center"/>
-                                        <DataGrid FontSize ="13pt" MaxHeight="350" Name="cities_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
+                                        <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="cities_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
                                             <DataGrid.ContextMenu>
                                                 <ContextMenu Width="300">
-                                                    <MenuItem Name="add_citi" Header="Добавить" Click="add_citi_Click"  Height="20"/>
-                                                    <MenuItem Name="upd_citi" Header="Изменить" Click="upd_citi_Click"  Height="20"/>
-                                                    <MenuItem Name="del_cities" Header="Удалить" Click="del_cities_Click"  Height="20"/>
+                                                    <MenuItem x:Name="add_citi" Header="Добавить" Click="add_citi_Click"  Height="20"/>
+                                                    <MenuItem x:Name="upd_citi" Header="Редактировать" Click="upd_citi_Click"  Height="20"/>
+                                                    <MenuItem x:Name="del_cities" Header="Удалить" Click="del_cities_Click"  Height="20"/>
                                                 </ContextMenu>
                                             </DataGrid.ContextMenu>
                                             <DataGrid.Columns>
-                                                <DataGridTextColumn Header="id" Width="150" Binding="{Binding Path = id}"/>
-                                                <DataGridTextColumn Header="Название" Width="300" Binding="{Binding Path = name}"/>
+                                                <DataGridTextColumn Header="id" Width="150" Binding="{Binding id}"/>
+                                                <DataGridTextColumn Header="Название" Width="300" Binding="{Binding name}"/>
                                             </DataGrid.Columns>
                                         </DataGrid>
                                     </StackPanel>
                                 </StackPanel>
                                 <StackPanel>
                                     <TextBlock Text="Права ролей" FontSize="15pt" HorizontalAlignment="Center"/>
-                                    <DataGrid FontSize ="13pt" MaxHeight="350" Name="rol_rulls_grid" AutoGenerateColumns="False" Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
+                                    <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="rol_rulls_grid" AutoGenerateColumns="False" Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="id" Width="150" Binding="{Binding Path = id}"/>
-                                            <DataGridTextColumn Header="Название" Width="300" Binding="{Binding Path = name}"/>
+                                            <DataGridTextColumn Header="id" Width="150" Binding="{Binding id}"/>
+                                            <DataGridTextColumn Header="Название" Width="300" Binding="{Binding name}"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </StackPanel>
@@ -264,34 +263,34 @@
                         </StackPanel>
                     </Canvas>
                 </TabItem>
-                <TabItem Name="analityc" Header="Аналитика" Height="40" Style="{DynamicResource Tabit}">
+                <TabItem x:Name="analityc" Header="Аналитика" Height="40" Style="{DynamicResource Tabit}">
                     <TabControl>
                         <TabItem Style="{DynamicResource Tabit}" Header="Эффективность сотрудника">
                             <StackPanel HorizontalAlignment="Left">
-                                <ComboBox Name="emploers"  HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="emploers_SelectionChanged" Style="{DynamicResource ComboBoxFlatStyle}" DisplayMemberPath="name" SelectedValuePath="value" ItemsSource="{Binding comboitems}" Width="150"/>
-                                <lvc:CartesianChart Name="graph" LegendLocation="Right" Height="350" Width="800">
+                                <ComboBox x:Name="emploers"  HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="emploers_SelectionChanged" Style="{DynamicResource ComboBoxFlatStyle}" DisplayMemberPath="name" SelectedValuePath="value" ItemsSource="{Binding comboitems}" Width="150"/>
+                                <lvc:CartesianChart x:Name="graph" LegendLocation="Right" Height="350" Width="800">
                                     <lvc:CartesianChart.Series>
-                                        <lvc:ColumnSeries Name="legendTitle" Title="Работник" Values="{Binding analitycs}"/>
+                                        <lvc:ColumnSeries x:Name="legendTitle" Title="Работник" Values="{Binding analitycs}"/>
                                     </lvc:CartesianChart.Series>
                                     <lvc:CartesianChart.AxisX >
                                         <lvc:Axis Labels="{Binding Labels}" LabelsRotation="-15">
                                             <lvc:Axis.Separator>
-                                                <lvc:Separator Step="1"></lvc:Separator>
+                                                <lvc:Separator Step="1"/>
                                             </lvc:Axis.Separator>
                                         </lvc:Axis>
                                     </lvc:CartesianChart.AxisX>
                                     <lvc:CartesianChart.ChartLegend>
-                                        <lvc:DefaultLegend></lvc:DefaultLegend>
+                                        <lvc:DefaultLegend/>
                                     </lvc:CartesianChart.ChartLegend>
                                 </lvc:CartesianChart>
                             </StackPanel>
                         </TabItem>
                         <TabItem Style="{DynamicResource Tabit}" Header="Эфектиность общения с организацией">
                             <StackPanel>
-                                <ComboBox Name="org" Style="{DynamicResource ComboBoxFlatStyle}" Width="150" HorizontalAlignment="Left" SelectionChanged="org_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
+                                <ComboBox x:Name="org" Style="{DynamicResource ComboBoxFlatStyle}" Width="150" HorizontalAlignment="Left" SelectionChanged="org_SelectionChanged" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value"/>
                                 <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal" Margin="0,80,0,0">
                                     <StackPanel Margin="0,0,30,0">
-                                        <lvc:AngularGauge  Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" Name="callbacks"
+                                        <lvc:AngularGauge  Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" x:Name="callbacks"
                                       LabelsStep="10" TicksStep="25" Wedge="300"
                                       TicksForeground="White" Foreground="White" 
                                       FontWeight="Bold" FontSize="16"
@@ -304,7 +303,7 @@
                                         <TextBlock Text="Коифицент ответов" FontSize="14pt" HorizontalAlignment="Center"/>
                                     </StackPanel>
                                     <StackPanel Margin="0,0,30,0">
-                                        <lvc:AngularGauge Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" Name="clouse_calls"
+                                        <lvc:AngularGauge Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" x:Name="clouse_calls"
                                       LabelsStep="10" TicksStep="25" Wedge="300"
                                       TicksForeground="White" Foreground="White" 
                                       FontWeight="Bold" FontSize="16"
@@ -317,7 +316,7 @@
                                         <TextBlock Text="Отменено звонов" FontSize="14pt" HorizontalAlignment="Center"/>
                                     </StackPanel>
                                     <StackPanel>
-                                        <lvc:AngularGauge Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" Name="sucsesful_calls"
+                                        <lvc:AngularGauge Grid.Row="1" Value="0" FromValue="0" ToValue="100" Height="300" Width="300" x:Name="sucsesful_calls"
                                       LabelsStep="10" TicksStep="25" Wedge="300"
                                       TicksForeground="White" Foreground="White" 
                                       FontWeight="Bold" FontSize="16"
@@ -334,23 +333,23 @@
                         </TabItem>
                     </TabControl>
                 </TabItem>
-                <TabItem  Name="settings" Header="Найстройки" Height="40" Style="{DynamicResource Tabit}">
+                <TabItem  x:Name="settings" Header="Найстройки" Height="40" Style="{DynamicResource Tabit}">
                     <StackPanel  HorizontalAlignment="Center">
                         <StackPanel Orientation="Horizontal">
                             <TextBlock Text="Путь сохранения файлов: " FontSize="12pt" VerticalAlignment="Center"/>
-                            <TextBlock Name="dir_path" FontSize="12pt" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                            <Button Name="edit_path" Style="{DynamicResource DefaultBtn}" Content="Изменить путь" FontSize="12pt" Click="edit_path_Click" Margin="20,0,10,0"/>
+                            <TextBlock x:Name="dir_path" FontSize="12pt" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                            <Button x:Name="edit_path" Style="{DynamicResource DefaultBtn}" Content="Изменить путь" FontSize="12pt" Click="edit_path_Click" Margin="20,0,10,0"/>
                         </StackPanel>
                         <StackPanel>
                             <TextBlock Text="Настройки фильтров" FontSize="12pt" HorizontalAlignment="Center"/>
                             <StackPanel Width="370">
-                                <CheckBox Content="Фильтр Организаций " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" Name="orgs_fiter" Checked="orgs_fiter_Checked" Unchecked="orgs_fiter_Unchecked"/>
-                                <CheckBox Content="Фильтр Звонков         " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" Name="calls_fiter" Checked="calls_fiter_Checked" Unchecked="calls_fiter_Unchecked"/>
-                                <CheckBox Content="Фильтр Сотрудников " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" Name="emps_fiter" Checked="emps_fiter_Checked" Unchecked="emps_fiter_Unchecked"/>
+                                <CheckBox Content="Фильтр Организаций " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" x:Name="orgs_fiter" Checked="orgs_fiter_Checked" Unchecked="orgs_fiter_Unchecked"/>
+                                <CheckBox Content="Фильтр Звонков         " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" x:Name="calls_fiter" Checked="calls_fiter_Checked" Unchecked="calls_fiter_Unchecked"/>
+                                <CheckBox Content="Фильтр Сотрудников " FontSize="12pt" Style="{DynamicResource CheckBoxStyle1}" x:Name="emps_fiter" Checked="emps_fiter_Checked" Unchecked="emps_fiter_Unchecked"/>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel HorizontalAlignment="Center" Margin="0,20,0,0">
-                            <Button Name="save" Style="{DynamicResource DefaultBtn}" Content="Сохранить" FontSize="12pt" Width="160" Click="save_Click"/>
+                            <Button x:Name="save" Style="{DynamicResource DefaultBtn}" Content="Сохранить" FontSize="12pt" Width="160" Click="save_Click"/>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>

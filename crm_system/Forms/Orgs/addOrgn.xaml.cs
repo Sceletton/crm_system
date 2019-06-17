@@ -33,107 +33,114 @@ namespace crm_system
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            prioriry.Items.Add("Низский");
-            prioriry.Items.Add("Средний");
-            prioriry.Items.Add("Высокий");
-            connection = new MySqlConnection(MainWindow.constr);
-            connection.Open();
-            List<comboItems> comboItem = new List<comboItems>();
-            List<comboItems> comboItem_kur = new List<comboItems>();
-            MySqlCommand citys = new MySqlCommand("select name,id from cities", connection);
-            MySqlDataReader read_citys = citys.ExecuteReader();
-            while (read_citys.Read())
+            if (MainWindow.CheckForInternetConnection())
             {
-                comboItem.Add(new comboItems(read_citys["id"].ToString(), read_citys["name"].ToString()));
-            }
-            city.ItemsSource = comboItem;
-            read_citys.Close();
-
-            MySqlCommand kurator = new MySqlCommand("select id, name, surname, second_name from users", connection);
-            MySqlDataReader kurator_read = kurator.ExecuteReader();
-            while (kurator_read.Read())
-            {
-                comboItem_kur.Add(new comboItems(kurator_read["id"].ToString(), kurator_read["surname"].ToString() + " " + kurator_read["Name"].ToString() + " " + kurator_read["second_name"].ToString()));
-            }
-            kyrator.ItemsSource = comboItem_kur;
-            kurator_read.Close();
-            if (id != null)
-            {
-                try
+                prioriry.Items.Add("Низский");
+                prioriry.Items.Add("Средний");
+                prioriry.Items.Add("Высокий");
+                connection = new MySqlConnection(MainWindow.constr);
+                connection.Open();
+                List<comboItems> comboItem = new List<comboItems>();
+                List<comboItems> comboItem_kur = new List<comboItems>();
+                MySqlCommand citys = new MySqlCommand("select name,id from cities", connection);
+                MySqlDataReader read_citys = citys.ExecuteReader();
+                while (read_citys.Read())
                 {
-                    MySqlCommand select_org = new MySqlCommand("select name, city, phone, kurator, code, priority, status from org where id = @id", connection);
-                    select_org.Parameters.AddWithValue("id", id);
-                    MySqlDataReader read_org = select_org.ExecuteReader();
-                    if (read_org.Read())
-                    {
-                        name.Text = read_org["name"].ToString();
+                    comboItem.Add(new comboItems(read_citys["id"].ToString(), read_citys["name"].ToString()));
+                }
+                city.ItemsSource = comboItem;
+                read_citys.Close();
 
-                        phone.Text = read_org["phone"].ToString();
-                        kyrator.SelectedValue = int.Parse(read_org["kurator"].ToString());
-                        code.Text = read_org["code"].ToString();
-                        prioriry.SelectedIndex = int.Parse(read_org["priority"].ToString());
-                        //status.selectedindex = int.parse(read_org["status"].tostring());
-                        city.SelectedValue = int.Parse(read_org["city"].ToString());
+                MySqlCommand kurator = new MySqlCommand("select id, name, surname, second_name from users", connection);
+                MySqlDataReader kurator_read = kurator.ExecuteReader();
+                while (kurator_read.Read())
+                {
+                    comboItem_kur.Add(new comboItems(kurator_read["id"].ToString(), kurator_read["surname"].ToString() + " " + kurator_read["Name"].ToString() + " " + kurator_read["second_name"].ToString()));
+                }
+                kyrator.ItemsSource = comboItem_kur;
+                kurator_read.Close();
+                if (id != null)
+                {
+                    try
+                    {
+                        MySqlCommand select_org = new MySqlCommand("select name, city, phone, kurator, code, priority, status from org where id = @id", connection);
+                        select_org.Parameters.AddWithValue("id", id);
+                        MySqlDataReader read_org = select_org.ExecuteReader();
+                        if (read_org.Read())
+                        {
+                            name.Text = read_org["name"].ToString();
+
+                            phone.Text = read_org["phone"].ToString();
+                            kyrator.SelectedValue = int.Parse(read_org["kurator"].ToString());
+                            code.Text = read_org["code"].ToString();
+                            prioriry.SelectedIndex = int.Parse(read_org["priority"].ToString());
+                            //status.selectedindex = int.parse(read_org["status"].tostring());
+                            city.SelectedValue = int.Parse(read_org["city"].ToString());
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        connection.Close();
+                        MessageBox.Show(ex.Message);
                     }
                 }
-                catch(Exception ex)
-                {
-                    connection.Close();
-                    MessageBox.Show(ex.Message);
-                }
+                connection.Close();
             }
-            connection.Close();
+            else
+            {
+                MessageBox.Show("Отсутствует или ограниченно физическое подключение к сети\nПроверьте настройки вашего сетевого подключения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void add_or_upd_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (MainWindow.CheckForInternetConnection())
             {
-                check.CheckNullFields(new[] { name,code,phone });
-                if (name.Text != "" && city.Text != "" && phone.Text != "" && kyrator.Text != "" && code.Text != "" && prioriry.Text != "")
+                try
                 {
-                    if (id == null)
+                    check.CheckNullFields(new[] { name, code, phone });
+                    if (name.Text != "" && city.Text != "" && phone.Text != "" && kyrator.Text != "" && code.Text != "" && prioriry.Text != "")
                     {
-                        connection.Open();
-                        MySqlCommand add_org = new MySqlCommand("insert into org (name,city,phone,status,kurator,code,priority) values (@name,@city,@phone,0,@kurator,@code,@priority)", connection);
-                        add_org.Parameters.AddWithValue("name", name.Text);
-                        add_org.Parameters.AddWithValue("city", city.SelectedValue);
-                        add_org.Parameters.AddWithValue("phone", phone.Text);
-                        add_org.Parameters.AddWithValue("kurator", kyrator.SelectedValue);
-                        add_org.Parameters.AddWithValue("code", code.Text);
-                        add_org.Parameters.AddWithValue("priority", prioriry.SelectedIndex);
-                        add_org.ExecuteNonQuery();
-                        connection.Close();
-                    }
-                    else
-                    {
-                        connection.Open();
-                        MySqlCommand upd_org = new MySqlCommand("update org set name = @name, city = @city, phone = @phone, kurator = @kurator, code = @code, priority = @priority where id = @id", connection);
-                        upd_org.Parameters.AddWithValue("id", id);
-                        upd_org.Parameters.AddWithValue("name", name.Text);
-                        upd_org.Parameters.AddWithValue("city", city.SelectedValue);
-                        upd_org.Parameters.AddWithValue("phone", phone.Text);
-                        upd_org.Parameters.AddWithValue("kurator", kyrator.SelectedValue);
-                        upd_org.Parameters.AddWithValue("code", code.Text);
-                        upd_org.Parameters.AddWithValue("priority", prioriry.SelectedIndex);
-                        upd_org.ExecuteNonQuery();
-                        connection.Close();
-                    }
-                    //try
-                    //{
+                        if (id == null)
+                        {
+                            connection.Open();
+                            MySqlCommand add_org = new MySqlCommand("insert into org (name,city,phone,status,kurator,code,priority) values (@name,@city,@phone,0,@kurator,@code,@priority)", connection);
+                            add_org.Parameters.AddWithValue("name", name.Text);
+                            add_org.Parameters.AddWithValue("city", city.SelectedValue);
+                            add_org.Parameters.AddWithValue("phone", phone.Text);
+                            add_org.Parameters.AddWithValue("kurator", kyrator.SelectedValue);
+                            add_org.Parameters.AddWithValue("code", code.Text);
+                            add_org.Parameters.AddWithValue("priority", prioriry.SelectedIndex);
+                            add_org.ExecuteNonQuery();
+                            connection.Close();
+                        }
+                        else
+                        {
+                            connection.Open();
+                            MySqlCommand upd_org = new MySqlCommand("update org set name = @name, city = @city, phone = @phone, kurator = @kurator, code = @code, priority = @priority where id = @id", connection);
+                            upd_org.Parameters.AddWithValue("id", id);
+                            upd_org.Parameters.AddWithValue("name", name.Text);
+                            upd_org.Parameters.AddWithValue("city", city.SelectedValue);
+                            upd_org.Parameters.AddWithValue("phone", phone.Text);
+                            upd_org.Parameters.AddWithValue("kurator", kyrator.SelectedValue);
+                            upd_org.Parameters.AddWithValue("code", code.Text);
+                            upd_org.Parameters.AddWithValue("priority", prioriry.SelectedIndex);
+                            upd_org.ExecuteNonQuery();
+                            connection.Close();
+                        }
                         ((MainWindow)this.Owner).refresh();
-                    //}
-                    //catch
-                    //{
-
-                    //}
-                    Close();
+                        Close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    connection.Close();
+                    MessageBox.Show(ex.Message.ToString());
                 }
             }
-            catch (Exception ex)
+            else
             {
-                connection.Close();
-                MessageBox.Show(ex.Message.ToString());
+                MessageBox.Show("Отсутствует или ограниченно физическое подключение к сети\nПроверьте настройки вашего сетевого подключения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

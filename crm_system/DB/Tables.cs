@@ -38,7 +38,8 @@ namespace crm_system.DB
         public string call_target { get; set; }
         public string status_call { get; set; }
         public string oper { get; set; }
-        public calls(string Id, string Date_call, string Org, string Call_target, string Status_call, string id_org, string Oper)
+        public int status { get; set; }
+        public calls(string Id, string Date_call, string Org, string Call_target, string Status_call, string id_org, string Oper, int Status)
         {
             id = int.Parse(Id);
             date_cal = Date_call;
@@ -46,6 +47,7 @@ namespace crm_system.DB
             call_target = Call_target;
             status_call = Status_call;
             oper = Oper;
+            status = Status;
         }
     }
     public class user

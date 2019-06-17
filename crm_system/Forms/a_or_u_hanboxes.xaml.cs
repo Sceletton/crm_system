@@ -51,28 +51,35 @@ namespace crm_system
 
         private void save_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (MainWindow.CheckForInternetConnection())
             {
-                string query = "";
-                if (hanbox_id == -1)
+                try
                 {
-                    query = "insert into " + type + " (name) values ('" + value.Text + "')";
+                    string query = "";
+                    if (hanbox_id == -1)
+                    {
+                        query = "insert into " + type + " (name) values ('" + value.Text + "')";
+                    }
+                    else
+                    {
+                        query = "update " + type + " set name = '" + value.Text + "' where id = " + hanbox_id;
+                    }
+                    connection.Open();
+                    MySqlCommand command = new MySqlCommand(query, connection);
+                    command.ExecuteNonQuery();
+                    connection.Close();
+                    ((MainWindow)this.Owner).refresh("handbooks");
+                    Close();
                 }
-                else
+                catch (Exception ex)
                 {
-                    query = "update " + type + " set name = '" + value.Text + "' where id = " + hanbox_id;
+                    connection.Close();
+                    MessageBox.Show(ex.Message);
                 }
-                connection.Open();
-                MySqlCommand command = new MySqlCommand(query, connection);
-                command.ExecuteNonQuery();
-                connection.Close();
-                ((MainWindow)this.Owner).refresh("handbooks");
-                Close();
             }
-            catch(Exception ex)
+            else
             {
-                connection.Close();
-                MessageBox.Show(ex.Message);
+                MessageBox.Show("Отсутствует или ограниченно физическое подключение к сети\nПроверьте настройки вашего сетевого подключения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

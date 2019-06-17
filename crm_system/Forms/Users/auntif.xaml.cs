@@ -28,44 +28,50 @@ namespace crm_system
 
         public void auntification()
         {
-            
-            MySqlConnection connection = new MySqlConnection(MainWindow.constr);
-            try
+            if (MainWindow.CheckForInternetConnection())
             {
-                string pass = null;
-                connection.Open();
-                MySqlCommand get_pass = new MySqlCommand("select t.id as user_id, t.password, t.rol, tt.name as rol_name from users t join rols tt on tt.id = t.rol where t.login = @login", connection);
-                get_pass.Parameters.AddWithValue("login", Login.Text);
-                MySqlDataReader reader_pass = get_pass.ExecuteReader();
-                if (reader_pass.Read())
-                {
-                    MainWindow.user_id = int.Parse(reader_pass["user_id"].ToString());
-                    pass = reader_pass["password"].ToString();
-                    MainWindow.rol_id = reader_pass["rol"].ToString();
-                }
-                if (Pass.Password == pass)
-                {
-                    MainWindow.auntif = true;
+                MySqlConnection connection = new MySqlConnection(MainWindow.constr);
+                //try
+                //{
+                    string pass = null;
+                    connection.Open();
+                    MySqlCommand get_pass = new MySqlCommand("select t.id as user_id, t.password, t.rol, tt.name as rol_name from users t join rols tt on tt.id = t.rol where t.login = @login", connection);
+                    get_pass.Parameters.AddWithValue("login", Login.Text);
+                    MySqlDataReader reader_pass = get_pass.ExecuteReader();
+                    if (reader_pass.Read())
+                    {
+                        MainWindow.user_id = int.Parse(reader_pass["user_id"].ToString());
+                        pass = reader_pass["password"].ToString();
+                        MainWindow.rol_id = reader_pass["rol"].ToString();
+                    }
+                    if (Pass.Password == pass)
+                    {
+                        MainWindow.auntif = true;
 
-                    ((MainWindow)this.Owner).aunt_result();
-                    ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
-                    ((MainWindow)this.Owner).exit.Height = 39;
-                    ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
-                    ((MainWindow)this.Owner).re_aunt.Height = 39;
-                    ((MainWindow)this.Owner).aunt.Height = 0;
-                    ((MainWindow)this.Owner).refresh();
-                    Close();
-                }
-                else
-                {
-                    MessageBox.Show("не верынй логин или пароль");
-                }
-                connection.Close();
+                        ((MainWindow)this.Owner).aunt_result();
+                        ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
+                        ((MainWindow)this.Owner).exit.Height = 39;
+                        ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
+                        ((MainWindow)this.Owner).re_aunt.Height = 39;
+                        ((MainWindow)this.Owner).aunt.Height = 0;
+                        ((MainWindow)this.Owner).refresh();
+                        Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("не верынй логин или пароль");
+                    }
+                    connection.Close();
+                //}
+                //catch (Exception ex)
+                //{
+                //    connection.Close();
+                //    MessageBox.Show(ex.Message.ToString());
+                //}
             }
-            catch (Exception ex)
+            else
             {
-                connection.Close();
-                MessageBox.Show(ex.Message.ToString());
+                MessageBox.Show("Отсутствует или ограниченно физическое подключение к сети\nПроверьте настройки вашего сетевого подключения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

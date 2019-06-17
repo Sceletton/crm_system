@@ -21,7 +21,7 @@
                 </StackPanel>
             </StackPanel>
             <StackPanel Name="call_buttons" Canvas.Top="280" Margin="20" Orientation="Horizontal">
-                <Button Name="add_cal" Content="Добавить" FontSize="16pt" Margin="0,0,10,0" Width="175" Click="add_cal_Click" Style="{DynamicResource DefaultBtn}"/>
+                <Button Name="add_cal" Content="Сохранить" FontSize="16pt" Margin="0,0,10,0" Width="175" Click="add_cal_Click" Style="{DynamicResource DefaultBtn}"/>
                 <Button Name="cancel" Content="Отмена" FontSize="16pt" Width="175" Style="{DynamicResource DefaultBtn}" Click="cancel_Click"/>
             </StackPanel>
         </Canvas>

@@ -26,7 +26,7 @@
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <Button Name="add_or_upd" Width="120" Content="Добавить" Margin="10,0,20,0" FontSize="14pt"  Click="add_or_upd_Click" Style="{DynamicResource DefaultBtn}"/>
+                    <Button Name="add_or_upd" Width="120" Content="Сохранить" Margin="10,0,20,0" FontSize="14pt"  Click="add_or_upd_Click" Style="{DynamicResource DefaultBtn}"/>
                     <Button Name="cancel" Width="120" Content="Отмена" FontSize="14pt" Style="{DynamicResource DefaultBtn}" Click="cancel_Click" />
                 </StackPanel>
             </StackPanel>
