@@ -5,21 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:crm_system"
         mc:Ignorable="d"
-        Title="" Height="500" Width="340" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        Title="" Height="500" Width="390" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Canvas>
             <StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="50,10,0,0">
-                <StackPanel>
-                    <TextBlock Text="Имя роли" FontSize="13pt"/>
+                    <StackPanel>
+                        <TextBlock Text="Имя роли:" FontSize="13pt"/>
+                        <TextBox Name="roll_name" Width="300" FontSize="13pt" Style="{DynamicResource TextBoxStyle}" TextChanged="roll_name_TextChanged" MaxLength="20"/>
+                    </StackPanel>
                 </StackPanel>
-                <StackPanel Margin="10,0,0,0">
-                    <TextBox Name="roll_name" Width="100" FontSize="13pt" Style="{DynamicResource TextBoxStyle}" TextChanged="roll_name_TextChanged"/>
-                </StackPanel>
-            </StackPanel>
                 <TextBlock Name="except" Text="У роли обязательно должны быить права!" HorizontalAlignment="Center" FontSize="12pt" Foreground="Red" Margin="0,0,0,0" Height="0"/>
                 <StackPanel>
-                <DataGrid FontSize ="12pt"  MaxHeight="330" Name="permis_grid" AutoGenerateColumns="False" Width="310" Margin="10,10,0,0" Style="{DynamicResource DataGridStyle}" >
+                <DataGrid FontSize ="12pt"  MaxHeight="330" Name="permis_grid" AutoGenerateColumns="False" Width="360" Margin="10,10,0,0" Style="{DynamicResource DataGridStyle}" >
                     <DataGrid.Columns>
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.Header>

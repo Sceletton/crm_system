@@ -53,9 +53,9 @@ namespace crm_system
                     check.CheckNullFields(new[] { name, surname, lastname });
                     if (name.Text != "" && surname.Text != "" && lastname.Text != "" && orgs.Text != "" && job_title.Text != "")
                     {
+                        connection.Open();
                         if (id_sotr == null)
                         {
-                            connection.Open();
                             MySqlCommand command = new MySqlCommand("insert into workers (name, surname, second_name, id_org, id_post) values (@name, @surname, @second_name, @id_org, @id_post)", connection);
                             command.Parameters.AddWithValue("name", name.Text);
                             command.Parameters.AddWithValue("surname", surname.Text);
@@ -66,7 +66,6 @@ namespace crm_system
                         }
                         else
                         {
-                            connection.Open();
                             MySqlCommand command = new MySqlCommand("update workers set name = @name, surname = @surname, second_name = @second_name, id_org = @id_org, id_post = @id_post where id = @id_emp", connection);
                             command.Parameters.AddWithValue("id_emp", id_sotr);
                             command.Parameters.AddWithValue("name", name.Text);
@@ -77,8 +76,8 @@ namespace crm_system
                             command.ExecuteNonQuery();
                         }
                         connection.Close();
-                        ((MainWindow)this.Owner).refresh("emps");
                         Close();
+                        ((MainWindow)this.Owner).refresh("emps");
                     }
                 }
                 catch (Exception ex)

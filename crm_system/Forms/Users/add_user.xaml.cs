@@ -53,7 +53,7 @@ namespace crm_system
                     if (Name.Text != "" && Surname.Text != "" && second_name.Text != "" && Login.Text != "" && Pass.Password != "" && rols.Text != "" && exception.Height == 0)
                     {
                         connection.Open();
-                        MySqlCommand command = new MySqlCommand("select t.id from users t where t.login = @login and (@id_user is null or t.id != @id_user)", connection);
+                        MySqlCommand command = new MySqlCommand("select t.id from users t where binary t.login = @login and (@id_user is null or t.id != @id_user)", connection);
                         command.Parameters.AddWithValue("login", Login.Text);
                         command.Parameters.AddWithValue("id_user", id_user);
                         MySqlDataReader rd = command.ExecuteReader();
@@ -111,15 +111,15 @@ namespace crm_system
                                 {
                                     MainWindow.rol_id = rols.SelectedValue.ToString();
                                 }
-                                Close();
-                                ((MainWindow)this.Owner).refresh();
                                 ((MainWindow)this.Owner).aunt_result();
-                                ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
-                                ((MainWindow)this.Owner).exit.Height = 39;
-                                ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
-                                ((MainWindow)this.Owner).re_aunt.Height = 39;
                             }
                         }
+                        Close();
+                        ((MainWindow)this.Owner).refresh();
+                        ((MainWindow)this.Owner).exit.Visibility = Visibility.Visible;
+                        ((MainWindow)this.Owner).exit.Height = 39;
+                        ((MainWindow)this.Owner).re_aunt.Visibility = Visibility.Visible;
+                        ((MainWindow)this.Owner).re_aunt.Height = 39;
                         connection.Close();
                     }
                 }

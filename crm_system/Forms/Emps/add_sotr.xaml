@@ -19,9 +19,9 @@
                     </StackPanel>
                     <StackPanel>
                         <ComboBox Width="150" Name="orgs" FontSize="14pt" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
-                        <TextBox Width="150" Name="name" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}" TextChanged="name_TextChanged"/>
-                        <TextBox Width="150" Name="surname" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}" TextChanged="surname_TextChanged"/>
-                        <TextBox Width="150" Name="lastname" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}" TextChanged="lastname_TextChanged"/>
+                        <TextBox Width="150" Name="name" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}" TextChanged="name_TextChanged" MaxLength="20"/>
+                        <TextBox Width="150" Name="surname" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}" TextChanged="surname_TextChanged" MaxLength="20"/>
+                        <TextBox Width="150" Name="lastname" FontSize="14pt" Margin="0,0,0,10" Style="{DynamicResource TextBoxStyle}" TextChanged="lastname_TextChanged" MaxLength="20"/>
                         <ComboBox Width="150" Name="job_title" FontSize="14pt" Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
                     </StackPanel>
                 </StackPanel>

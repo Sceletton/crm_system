@@ -31,11 +31,11 @@ namespace crm_system
             if (MainWindow.CheckForInternetConnection())
             {
                 MySqlConnection connection = new MySqlConnection(MainWindow.constr);
-                //try
-                //{
+                try
+                {
                     string pass = null;
                     connection.Open();
-                    MySqlCommand get_pass = new MySqlCommand("select t.id as user_id, t.password, t.rol, tt.name as rol_name from users t join rols tt on tt.id = t.rol where t.login = @login", connection);
+                    MySqlCommand get_pass = new MySqlCommand("select t.id as user_id, t.password, t.rol, tt.name as rol_name from users t join rols tt on tt.id = t.rol where binary t.login = @login", connection);
                     get_pass.Parameters.AddWithValue("login", Login.Text);
                     MySqlDataReader reader_pass = get_pass.ExecuteReader();
                     if (reader_pass.Read())
@@ -62,12 +62,12 @@ namespace crm_system
                         MessageBox.Show("не верынй логин или пароль");
                     }
                     connection.Close();
-                //}
-                //catch (Exception ex)
-                //{
-                //    connection.Close();
-                //    MessageBox.Show(ex.Message.ToString());
-                //}
+                }
+                catch (Exception ex)
+                {
+                    connection.Close();
+                    MessageBox.Show(ex.Message.ToString());
+                }
             }
             else
             {

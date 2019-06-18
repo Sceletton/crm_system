@@ -56,12 +56,18 @@ namespace crm_system.DB
         public string login { get; set; }
         public string pass { get; set; }
         public string roll { get; set; }
-        public user(string Id, string Login, string Pass, string Roll)
+        public string name { get; set; }
+        public string surname { get; set; }
+        public string second_name { get; set; }
+        public user(string Id, string Login, string Pass, string Roll, string Name, string Surname, string Second_name)
         {
             id = int.Parse(Id);
             login = Login;
             pass = Pass;
             roll = Roll;
+            name = Name;
+            surname = Surname;
+            second_name = Second_name;
         }
     }
     public class roll

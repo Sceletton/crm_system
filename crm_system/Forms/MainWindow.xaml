@@ -13,7 +13,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <TextBlock Name="roll_name" FontSize="13pt" VerticalAlignment="Center" Margin="0,0,10,0"/>
             </StackPanel>
-            <TabControl TabStripPlacement="Left" Margin="-1,0,1,0" Height="460">
+            <TabControl TabStripPlacement="Left" Margin="-1,0,1,0" Height="460" Name="tabcntr">
                 <TabItem Header="Организации" Height="40" Style="{DynamicResource Tabit}">
                     <Canvas>
                         <StackPanel>
@@ -137,7 +137,7 @@
                                 </StackPanel>
                                 <StackPanel Width="160" Margin="10,0,0,0">
                                     <TextBlock Text="Должность:" FontSize="12pt"/>
-                                    <ComboBox x:Name="job_filt" FontSize="12pt" SelectionChanged="job_filt_SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="value" Style="{DynamicResource ComboBoxFlatStyle}"/>
+                                    <ComboBox x:Name="job_filt" FontSize="12pt" SelectionChanged="job_filt_SelectionChanged"  Margin="0,0,0,10" Height="30" ItemsSource="{Binding comboitems}" DisplayMemberPath="name" SelectedValuePath="id" Style="{DynamicResource ComboBoxFlatStyle}"/>
                                 </StackPanel>
                             </StackPanel>
                             <DataGrid FontSize ="12pt" MaxHeight="350" x:Name="sotr_grid" AutoGenerateColumns="False" Style="{DynamicResource DataGridStyle}" Width="1130" HorizontalAlignment="Left">
@@ -175,9 +175,9 @@
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Фамилия" Width="200" Binding="{Binding login}"/>
-                                    <DataGridTextColumn Header="Имя" Width="200" Binding="{Binding login}"/>
-                                    <DataGridTextColumn Header="Отчество" Width="200" Binding="{Binding login}"/>
+                                    <DataGridTextColumn Header="Фамилия" Width="200" Binding="{Binding surname}"/>
+                                    <DataGridTextColumn Header="Имя" Width="200" Binding="{Binding name}"/>
+                                    <DataGridTextColumn Header="Отчество" Width="200" Binding="{Binding second_name}"/>
                                     <DataGridTextColumn Header="Логин" Width="170" Binding="{Binding login}"/>
                                     <DataGridTextColumn Header="Пароль" Width="170" Binding="{Binding pass}"/>
                                     <DataGridTextColumn Header="Роль" Width="170" Binding="{Binding roll}"/>
@@ -223,7 +223,7 @@
                                 <StackPanel Margin="0,0,50,0" >
                                     <StackPanel Margin="0,0,50,0">
                                         <TextBlock Text="Должности" FontSize="15pt" HorizontalAlignment="Center"/>
-                                        <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="post_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}" >
+                                        <DataGrid FontSize ="13pt" MaxHeight="180" x:Name="post_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
                                             <DataGrid.ContextMenu>
                                                 <ContextMenu Width="300" Style="{DynamicResource MenuStyle}">
                                                     <MenuItem x:Name="refresh_posts" Header="Обновить" Click="refresh_posts_Click" Style="{DynamicResource MenuItemStyle}"/>
@@ -241,7 +241,7 @@
 
                                     <StackPanel Margin="0,0,50,0">
                                         <TextBlock Text="Города" FontSize="15pt" HorizontalAlignment="Center"/>
-                                        <DataGrid FontSize ="13pt" MaxHeight="350" x:Name="cities_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
+                                        <DataGrid FontSize ="13pt" MaxHeight="180" x:Name="cities_grid" AutoGenerateColumns="False"  Margin="0,10,0,0" Style="{DynamicResource DataGridStyle}">
                                             <DataGrid.ContextMenu>
                                                 <ContextMenu Width="300" Style="{DynamicResource MenuStyle}">
                                                     <MenuItem x:Name="refresh_handboxes" Header="Обновить" Click="refresh_Click" Style="{DynamicResource MenuItemStyle}"/>

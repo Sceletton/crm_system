@@ -111,7 +111,7 @@ namespace crm_system
         {
             MessageBox.Show("Есть записи в разделе ["+ unit + "] ссылающиеся на удаляемую запись", "Прудупреждение", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-            public void no_visible()
+        public void no_visible()
         {
             Thickness no_margin = new Thickness(0, 0, 0, 0);
 
@@ -175,13 +175,13 @@ namespace crm_system
             to_excel_workers.Visibility = Visibility.Hidden;
             to_excel_workers.Height = 0;
         }
-
         public void aunt_result()
         {
             if (CheckForInternetConnection())
             {
                 string[] ruls = null;
                 no_visible();
+                tabcntr.SelectedIndex = 0;
                 if (auntif)
                 {
                     org_grid_popup.Visibility = Visibility.Visible;
@@ -235,19 +235,19 @@ namespace crm_system
                                     sotrs.Height = 40;
                                     break;
                                 case "8":
+                                    //Справочники
+                                    handbooks.Visibility = Visibility.Visible;
+                                    handbooks.Height = 40;
+                                    break;
+                                case "9":
                                     //Пользователи
                                     users.Visibility = Visibility.Visible;
                                     users.Height = 40;
                                     break;
-                                case "9":
+                                case "10":
                                     //Роли
                                     rols.Visibility = Visibility.Visible;
                                     rols.Height = 40;
-                                    break;
-                                case "10":
-                                    //Справочники
-                                    handbooks.Visibility = Visibility.Visible;
-                                    handbooks.Height = 40;
                                     break;
                                 case "11":
                                     //Аналитика
@@ -308,7 +308,7 @@ namespace crm_system
                         {
                             //orgs
                             List<org> orgs = new List<org>();
-                            MySqlCommand command = new MySqlCommand("select id, code, name, (select name from cities where id = city) as city, phone, (case status when 0 then 'Добавлен'  when 1 then 'Назначен звонок' when 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org", connection);
+                            MySqlCommand command = new MySqlCommand("select t.id, t.code, t.name, (select name from cities where id = city) as city, t.phone, (case  when (status = 0 and (select count(1) from calls tt where tt.id_org = t.id ) = 0) then 'Добавлен'  when ((select count(1) from calls tt where tt.id_org = t.id ) > 0) then 'Назначен звонок' when status = 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org t", connection);
                             MySqlDataReader reader = command.ExecuteReader();
                             while (reader.Read())
                             {
@@ -353,11 +353,13 @@ namespace crm_system
                         {
                             //users
                             List<user> users = new List<user>();
-                            MySqlCommand sel_users = new MySqlCommand("select t.id, t.login, t.password, (select tt.name from rols tt where tt.id = t.rol) as roll from users t", connection);
+                            MySqlCommand sel_users = new MySqlCommand("select t.id, t.login, t.password,t.name,t.surname,t.second_name, tt.name as roll " +
+                                                                        "from users t " +
+                                                                              "join rols tt on tt.id = t.rol", connection);
                             MySqlDataReader read_users = sel_users.ExecuteReader();
                             while (read_users.Read())
                             {
-                                users.Add(new user(read_users["id"].ToString(), read_users["login"].ToString(), read_users["password"].ToString(), read_users["roll"].ToString()));
+                                users.Add(new user(read_users["id"].ToString(), read_users["login"].ToString(), read_users["password"].ToString(), read_users["roll"].ToString(), read_users["name"].ToString(), read_users["surname"].ToString(), read_users["second_name"].ToString()));
                             }
                             read_users.Close();
                             user_grid.ItemsSource = users;
@@ -499,6 +501,7 @@ namespace crm_system
                         stat_filt.Items.Clear();
                         stat_filt.Items.Add("Назначен");
                         stat_filt.Items.Add("Закончен");
+                        stat_filt.Items.Add("Отменён");
 
                         prioryty_org_filt.Items.Clear();
                         prioryty_org_filt.Items.Add("Низский");
@@ -596,9 +599,9 @@ namespace crm_system
                     MessageBox.Show("Отсутствует или ограниченно физическое подключение к сети\nПроверьте настройки вашего сетевого подключения", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            catch
+            catch(Exception ex)
             {
-
+                MessageBox.Show(ex.Message);
             }
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -628,7 +631,6 @@ namespace crm_system
                                 emps_count = int.Parse(reader["emps_cnt"].ToString());
                             }
                             reader.Close();
-                            MessageBox.Show(calls_count + " " + emps_count);
                             if (emps_count != 0 || calls_count != 0)
                             {
                                 int resu = (int)MessageBox.Show("Есть записи в разделах [Звонки] и [Сотрудники] ссылающиеся на удаляемую запись, они будут удалены. Продолжить?", "Предупреждение", MessageBoxButton.YesNo, MessageBoxImage.Information, MessageBoxResult.Yes);
@@ -636,7 +638,7 @@ namespace crm_system
                                 {
                                     case (int)MessageBoxResult.Yes:
 
-                                        MySqlCommand command = new MySqlCommand("delete from calls_analytics t where t.id_org = @id;" +
+                                        MySqlCommand command = new MySqlCommand("delete from calls_analytics where id_org = @id;" +
                                                                                 "delete from calls where id_org = @id;" +
                                                                                 "delete from workers where id_org = @id;" +
                                                                                 "delete from org where id=@id;", connection);
@@ -658,9 +660,10 @@ namespace crm_system
                             break;
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
-
+                    connection.Close();
+                    MessageBox.Show(ex.Message.ToString());
                 }
             }
             else
@@ -673,6 +676,7 @@ namespace crm_system
         {
             if (!addOrgn.IsLoaded)
             {
+                addOrgn.id = null;
                 addOrgn = new addOrgn();
                 addOrgn.Title = "Добавление организации";
                 addOrgn.Owner = this;
@@ -716,7 +720,9 @@ namespace crm_system
                 {
                     org table = org_grid.SelectedItem as org;
                     add_sotr.id_org = table.Id.ToString();
+                    add_sotr.id_sotr = null;
                     add_Sotr = new add_sotr();
+                    add_Sotr.Owner = this;
                     add_Sotr.Title = "Добавление сорудника";
                     add_Sotr.Show();
                 }
@@ -791,7 +797,8 @@ namespace crm_system
                     {
                         case (int)MessageBoxResult.Yes:
                             connection.Open();
-                            MySqlCommand command = new MySqlCommand("update calls set status_call = 2 where id = @id", connection);
+                            MySqlCommand command = new MySqlCommand("update calls set status_call = 2, id_oper = @user_id where id = @id", connection);
+                            command.Parameters.AddWithValue("user_id", user_id);
                             command.Parameters.AddWithValue("id", table.id);
                             command.ExecuteNonQuery();
                             MySqlCommand analytic = new MySqlCommand("insert into calls_analytics  (id_org,call_status, id_oper, id_call) values ((select t.id_org from calls t where t.id = @id_call), 2, @user_id, @id_call)", connection);
@@ -886,12 +893,12 @@ namespace crm_system
                             }
                             else
                             {
-                                MySqlCommand del_roll = new MySqlCommand("delete from users where id = @rol_id", connection);
-                                del_roll.Parameters.AddWithValue("rol_id", table.id);
+                                MySqlCommand del_roll = new MySqlCommand("delete from settings where id_user = @id;" +
+                                                                         "delete from users where id = @id;", connection);
+                                del_roll.Parameters.AddWithValue("id", table.id);
                                 del_roll.ExecuteNonQuery();
                                 connection.Close();
-                                refresh("rols");
-                                permis_grid.ItemsSource = "";
+                                refresh("users");
                             }
                             break;
                     }
@@ -974,6 +981,7 @@ namespace crm_system
                             {
                                 us_cnt = int.Parse(rd["us_cnt"].ToString());
                             }
+                            rd.Close();
                             if (rolls_count == 1 && rols_id[0] == table.id.ToString())
                             {
                                 MessageBox.Show("В системе должна быть хотя бы одна роль, с правами на разделы: [Пользователи] и [Роли]", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -1379,7 +1387,7 @@ namespace crm_system
                 try
                 {
                     List<org> orgs = new List<org>();
-                    query_orgs = "select id, code, name, (select name from cities where id = city) as city, phone, (case status when 0 then 'Добавлен'  when 1 then 'Назначен звонок' when 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org";
+                    query_orgs = "select t.id, t.code, t.name, (select name from cities where id = city) as city, t.phone, (case  when (status = 0 and (select count(1) from calls tt where tt.id_org = t.id ) = 0) then 'Добавлен'  when ((select count(1) from calls tt where tt.id_org = t.id ) > 0) then 'Назначен звонок' when status = 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org t";
                     string filt = "";
                     if (org_name_filt.Text != null)
                     {
@@ -2046,7 +2054,7 @@ namespace crm_system
                     phone_org_filt.Text = "";
                     connection.Open();
                     List<org> orgs = new List<org>();
-                    MySqlCommand command = new MySqlCommand("select id, code, name, (select name from cities where id = city) as city, phone, (case status when 0 then 'Добавлен'  when 1 then 'Назначен звонок' when 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org", connection);
+                    MySqlCommand command = new MySqlCommand("select t.id, t.code, t.name, (select name from cities where id = city) as city, t.phone, (case  when status = 0 then 'Добавлен'  when (select count(1) from calls t where t.id_org = t.id ) > 0 then 'Назначен звонок' when status = 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org t", connection);
                     MySqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
