@@ -39,9 +39,9 @@ namespace crm_system
                 {
                     if (org.Text != "" && call_traget.Text != "" && call_date.Text != "")
                     {
-                        if (Convert.ToDateTime(call_date.Text) >= DateTime.Now)
+                        if (id_call == null)
                         {
-                            if (id_call == null)
+                            if (Convert.ToDateTime(call_date.Text) >= DateTime.Now)
                             {
                                 connection.Open();
                                 MySqlCommand command = new MySqlCommand("insert into calls (date_cal, id_org, call_target,status_call, id_oper) values (@date_cal, @id_org, @call_target, 0, @user_id)", connection);
@@ -61,22 +61,22 @@ namespace crm_system
                             }
                             else
                             {
-                                connection.Open();
-                                MySqlCommand command = new MySqlCommand("update calls set date_cal = @date_cal, id_org = @id_org, call_target = @call_target where id = @id", connection);
-                                command.Parameters.AddWithValue("date_cal", Convert.ToDateTime(call_date.SelectedDate.ToString()).ToShortDateString());
-                                command.Parameters.AddWithValue("id_org", org.SelectedValue);
-                                command.Parameters.AddWithValue("call_target", call_traget.Text);
-                                command.Parameters.AddWithValue("id", id_call);
-                                command.ExecuteNonQuery();
-                                connection.Close();
-                                Close();
+                                MessageBox.Show("Дата звонка должна быть больше или равна текушей дате.", "Предупреждение", MessageBoxButton.OK, MessageBoxImage.Information);
                             }
                         }
                         else
                         {
-                            MessageBox.Show("Дата звонка должна быть больше или равна текушей дате.","Предупреждение",MessageBoxButton.OK,MessageBoxImage.Information);
+                            connection.Open();
+                            MySqlCommand command = new MySqlCommand("update calls set date_cal = @date_cal, id_org = @id_org, call_target = @call_target where id = @id", connection);
+                            command.Parameters.AddWithValue("date_cal", Convert.ToDateTime(call_date.SelectedDate.ToString()).ToShortDateString());
+                            command.Parameters.AddWithValue("id_org", org.SelectedValue);
+                            command.Parameters.AddWithValue("call_target", call_traget.Text);
+                            command.Parameters.AddWithValue("id", id_call);
+                            command.ExecuteNonQuery();
+                            connection.Close();
+                            Close();
                         }
-                      ((MainWindow)this.Owner).refresh("calls");
+                        ((MainWindow)this.Owner).refresh("calls");
                     }
 
                 }

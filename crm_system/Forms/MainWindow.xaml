@@ -7,7 +7,7 @@
         xmlns:lc ="http://oxyplot.org/wpf"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="Главная" Height="520" Width="1250" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" d:DataContext="{d:DesignInstance local:MainWindow}">
+        Title="Главная" Height="520" Width="1250" Loaded="Window_Loaded" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Closing="Window_Closing" d:DataContext="{d:DesignInstance local:MainWindow}">
     <Grid>
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -97,7 +97,7 @@
                                     <ContextMenu Style="{DynamicResource MenuStyle}">
                                         <MenuItem x:Name="refr_calls" Header="Обновить" Click="refr_calls_Click" Height="20" Style="{DynamicResource MenuItemStyle}"/>
                                         <MenuItem x:Name="add_call_" Header="Добавить звонок" Click="add_call__Click" Style="{DynamicResource MenuItemStyle}"/>
-                                        <MenuItem x:Name="upd_call_" Header="Изменить звонок" Click="upd_call__Click" Style="{DynamicResource MenuItemStyle}"/>
+                                        <MenuItem x:Name="upd_call_" Header="Редактировать звонок" Click="upd_call__Click" Style="{DynamicResource MenuItemStyle}"/>
                                         <MenuItem x:Name="delete_call" Header="Удалить звонок" Click="delete_call_Click" Style="{DynamicResource MenuItemStyle}"/>
                                         <MenuItem x:Name="del_call_" Header="Отменить звонок" Click="del_call__Click" Style="{DynamicResource MenuItemStyle}"/>
                                         <MenuItem x:Name="clouse_call" Header="Закрыть звонок" Click="clouse_call_Click" Style="{DynamicResource MenuItemStyle}"/>

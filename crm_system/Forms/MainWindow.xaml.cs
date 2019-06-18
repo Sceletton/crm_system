@@ -828,7 +828,7 @@ namespace crm_system
                 add_Call = new add_call();
                 add_call.id_call = null;
                 add_call.id_org = null;
-                add_Call.Title = "Добавление Звонка";
+                add_Call.Title = "Добавление звонка";
                 add_Call.Owner = this;
                 add_Call.Show();
             }
@@ -846,7 +846,7 @@ namespace crm_system
                 {
                     calls table = calls_grid.SelectedItem as calls;
                     add_Call = new add_call();
-                    add_Call.Title = "Редактирование Звонка";
+                    add_Call.Title = "Редактирование звонка";
                     add_call.id_call = table.id.ToString();
                     add_Call.Owner = this;
                     add_Call.Show();
@@ -1317,7 +1317,7 @@ namespace crm_system
             {
                 try
                 {
-                    query_calls = "select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status  from calls t " +
+                    query_calls = "select t.id, t.date_cal, t.id_org, tt.name as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t" +
                         "join users tt on tt.id = t.id_oper";
                     string filt = "";
                     if (org_filt.SelectedValue != null)
