@@ -39,35 +39,42 @@ namespace crm_system
                 {
                     if (org.Text != "" && call_traget.Text != "" && call_date.Text != "")
                     {
-                        if (id_call == null)
+                        if (Convert.ToDateTime(call_date.Text) >= DateTime.Now)
                         {
-                            connection.Open();
-                            MySqlCommand command = new MySqlCommand("insert into calls (date_cal, id_org, call_target,status_call, id_oper) values (@date_cal, @id_org, @call_target, 0, @user_id)", connection);
-                            command.Parameters.AddWithValue("date_cal", Convert.ToDateTime(call_date.SelectedDate.ToString()).ToShortDateString());
-                            command.Parameters.AddWithValue("id_org", org.SelectedValue);
-                            command.Parameters.AddWithValue("call_target", call_traget.Text);
-                            command.Parameters.AddWithValue("user_id", MainWindow.user_id);
-                            command.ExecuteNonQuery();
+                            if (id_call == null)
+                            {
+                                connection.Open();
+                                MySqlCommand command = new MySqlCommand("insert into calls (date_cal, id_org, call_target,status_call, id_oper) values (@date_cal, @id_org, @call_target, 0, @user_id)", connection);
+                                command.Parameters.AddWithValue("date_cal", Convert.ToDateTime(call_date.SelectedDate.ToString()).ToShortDateString());
+                                command.Parameters.AddWithValue("id_org", org.SelectedValue);
+                                command.Parameters.AddWithValue("call_target", call_traget.Text);
+                                command.Parameters.AddWithValue("user_id", MainWindow.user_id);
+                                command.ExecuteNonQuery();
 
-                            MySqlCommand analytic = new MySqlCommand("insert into calls_analytics  (id_org,call_status, id_oper, id_call) values (@id_org, 0, @user_id, @id_call)", connection);
-                            analytic.Parameters.AddWithValue("id_call", command.LastInsertedId);
-                            analytic.Parameters.AddWithValue("id_org", org.SelectedValue);
-                            analytic.Parameters.AddWithValue("user_id", MainWindow.user_id);
-                            analytic.ExecuteNonQuery();
-                            connection.Close();
-                            Close();
+                                MySqlCommand analytic = new MySqlCommand("insert into calls_analytics  (id_org,call_status, id_oper, id_call) values (@id_org, 0, @user_id, @id_call)", connection);
+                                analytic.Parameters.AddWithValue("id_call", command.LastInsertedId);
+                                analytic.Parameters.AddWithValue("id_org", org.SelectedValue);
+                                analytic.Parameters.AddWithValue("user_id", MainWindow.user_id);
+                                analytic.ExecuteNonQuery();
+                                connection.Close();
+                                Close();
+                            }
+                            else
+                            {
+                                connection.Open();
+                                MySqlCommand command = new MySqlCommand("update calls set date_cal = @date_cal, id_org = @id_org, call_target = @call_target where id = @id", connection);
+                                command.Parameters.AddWithValue("date_cal", Convert.ToDateTime(call_date.SelectedDate.ToString()).ToShortDateString());
+                                command.Parameters.AddWithValue("id_org", org.SelectedValue);
+                                command.Parameters.AddWithValue("call_target", call_traget.Text);
+                                command.Parameters.AddWithValue("id", id_call);
+                                command.ExecuteNonQuery();
+                                connection.Close();
+                                Close();
+                            }
                         }
                         else
                         {
-                            connection.Open();
-                            MySqlCommand command = new MySqlCommand("update calls set date_cal = @date_cal, id_org = @id_org, call_target = @call_target where id = @id", connection);
-                            command.Parameters.AddWithValue("date_cal", Convert.ToDateTime(call_date.SelectedDate.ToString()).ToShortDateString());
-                            command.Parameters.AddWithValue("id_org", org.SelectedValue);
-                            command.Parameters.AddWithValue("call_target", call_traget.Text);
-                            command.Parameters.AddWithValue("id", id_call);
-                            command.ExecuteNonQuery();
-                            connection.Close();
-                            Close();
+                            MessageBox.Show("Дата звонка должна быть больше или равна текушей дате.","Предупреждение",MessageBoxButton.OK,MessageBoxImage.Information);
                         }
                       ((MainWindow)this.Owner).refresh("calls");
                     }
@@ -96,6 +103,7 @@ namespace crm_system
             {
                 try
                 {
+                    call_date.Text = DateTime.Now.ToShortDateString();
                     List<comboItems> Orgs = new List<comboItems>();
                     connection = new MySqlConnection(MainWindow.constr);
                     connection.Open();

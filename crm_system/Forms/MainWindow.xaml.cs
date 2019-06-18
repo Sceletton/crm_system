@@ -191,7 +191,7 @@ namespace crm_system
                     MySqlDataReader read_rights = sel_rights.ExecuteReader();
                     if (read_rights.Read())
                     {
-                        roll_name.Text = "Вы вошли под  ролью " + read_rights["name"];
+                        roll_name.Text = "Вы вошли под  ролью: " + read_rights["name"];
                         org_grid_popup.Visibility = Visibility.Visible;
                         ruls = read_rights["rights"].ToString().Split(';');
                         for (int i = 0; i < ruls.Length; i++)
