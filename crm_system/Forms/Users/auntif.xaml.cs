@@ -78,6 +78,7 @@ namespace crm_system
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             auntification();
+            ((MainWindow)this.Owner).Focus();
         }
 
         private void Pass_KeyDown(object sender, KeyEventArgs e)

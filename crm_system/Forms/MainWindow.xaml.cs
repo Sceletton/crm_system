@@ -2134,7 +2134,7 @@ namespace crm_system
                     List<calls> callses = new List<calls>();
                     if (org_id != null)
                     {
-                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status  from calls t" +
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, tt.name as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t" +
                             "join users tt on tt.id = t.id_oper " +
                             "where t.id_org = @org_id", connection);
                         sel_calls.Parameters.AddWithValue("org_id", org_id);

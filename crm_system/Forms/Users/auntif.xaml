@@ -13,7 +13,7 @@
                 <TextBox Name="Login"  FontSize="16pt" Style="{DynamicResource TextBoxStyle}" KeyDown="Pass_KeyDown"/>
                 <TextBlock Text="Пароль" FontSize="16pt" Margin="30,10,0,0"/>
                 <PasswordBox Name="Pass"  FontSize="16pt" Margin="0,0,0,10" Style="{DynamicResource PasswordBoxStyle}" KeyDown="Pass_KeyDown"/>
-                <Button Content="Войти" FontSize="16pt" Click="Button_Click"  Margin="0,0,-0.4,0" Style="{DynamicResource DefaultBtn}"/>
+                <Button Content="Вход" FontSize="16pt" Click="Button_Click"  Margin="0,0,-0.4,0" Style="{DynamicResource DefaultBtn}"/>
             </StackPanel>
         </Canvas>
     </Grid>
