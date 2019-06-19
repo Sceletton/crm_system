@@ -323,7 +323,7 @@ namespace crm_system
                             List<calls> callses = new List<calls>();
                             if (org_id != null)
                             {
-                                MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, tt.name as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t" +
+                                MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, tt.name as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t " +
                                     "join org tt on tt.id = t.id_org" +
                                     "join users tt on tt.id = t.id_oper " +
                                     "where t.id_org = @org_id", connection);
@@ -638,8 +638,7 @@ namespace crm_system
                                 {
                                     case (int)MessageBoxResult.Yes:
 
-                                        MySqlCommand command = new MySqlCommand("delete from calls_analytics where id_org = @id;" +
-                                                                                "delete from calls where id_org = @id;" +
+                                        MySqlCommand command = new MySqlCommand("delete from calls where id_org = @id;" +
                                                                                 "delete from workers where id_org = @id;" +
                                                                                 "delete from org where id=@id;", connection);
                                         command.Parameters.AddWithValue("id", table.Id);
@@ -2054,7 +2053,7 @@ namespace crm_system
                     phone_org_filt.Text = "";
                     connection.Open();
                     List<org> orgs = new List<org>();
-                    MySqlCommand command = new MySqlCommand("select t.id, t.code, t.name, (select name from cities where id = city) as city, t.phone, (case  when status = 0 then 'Добавлен'  when (select count(1) from calls t where t.id_org = t.id ) > 0 then 'Назначен звонок' when status = 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org t", connection);
+                    MySqlCommand command = new MySqlCommand("select t.id, t.code, t.name, (select name from cities where id = city) as city, t.phone, (case  when (status = 0 and (select count(1) from calls tt where tt.id_org = t.id ) = 0) then 'Добавлен'  when ((select count(1) from calls tt where tt.id_org = t.id ) > 0) then 'Назначен звонок' when status = 2 then 'Перезвон' end) as status, (select CONCAT(surname,' ',name) from users where id = kurator) as kurator, (case priority when 0 then 'Низкий' when 1 then 'Средний' when 2 then 'Высокий' end) as priority from org t", connection);
                     MySqlDataReader reader = command.ExecuteReader();
                     while (reader.Read())
                     {
@@ -2134,9 +2133,10 @@ namespace crm_system
                     List<calls> callses = new List<calls>();
                     if (org_id != null)
                     {
-                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, tt.name as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t" +
-                            "join users tt on tt.id = t.id_oper " +
-                            "where t.id_org = @org_id", connection);
+                        MySqlCommand sel_calls = new MySqlCommand("sselect t.id, t.date_cal, t.id_org, tt.name as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t " +
+                                    "join org tt on tt.id = t.id_org" +
+                                    "join users tt on tt.id = t.id_oper " +
+                                    "where t.id_org = @org_id", connection);
                         sel_calls.Parameters.AddWithValue("org_id", org_id);
                         MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                         while (reader_calls.Read())
@@ -2147,8 +2147,8 @@ namespace crm_system
                     }
                     else
                     {
-                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t " +
-                            "join users tt on tt.id = t.id_oper", connection);
+                        MySqlCommand sel_calls = new MySqlCommand("select t.id, t.date_cal, t.id_org, (select tt.name from org tt where tt.id = t.id_org) as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t " +
+                                    "join users tt on tt.id = t.id_oper", connection);
                         MySqlDataReader reader_calls = sel_calls.ExecuteReader();
                         while (reader_calls.Read())
                         {
@@ -2212,8 +2212,7 @@ namespace crm_system
                 {
                     connection.Open();
                     calls calls = calls_grid.SelectedValue as calls;
-                    MySqlCommand command = new MySqlCommand("delete from calls_analytics t where t.id_org = @id;" +
-                                                            "delete from calls where id = @id;", connection);
+                    MySqlCommand command = new MySqlCommand("delete from calls where id = @id;", connection);
                     command.Parameters.AddWithValue("id", calls.id);
                     command.ExecuteNonQuery();
                     refresh("calls");
