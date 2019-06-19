@@ -59,7 +59,7 @@ namespace crm_system
                     }
                     else
                     {
-                        MessageBox.Show("не верынй логин или пароль");
+                        MessageBox.Show("Неверынй логин или пароль", "Предпреждение", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     connection.Close();
                 }

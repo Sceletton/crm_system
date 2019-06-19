@@ -743,6 +743,7 @@ namespace crm_system
                 add_Sotr = new add_sotr();
                 add_Sotr.Title = "Добавление сотрудника";
                 add_sotr.id_sotr = null;
+                add_sotr.id_org = null;
                 add_Sotr.Owner = this;
                 add_Sotr.Show();
             }
@@ -1316,7 +1317,8 @@ namespace crm_system
             {
                 try
                 {
-                    query_calls = "select t.id, t.date_cal, t.id_org, tt.name as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t" +
+                    query_calls = "select t.id, t.date_cal, t.id_org, ttt.name as org, t.call_target,case t.status_call when 0 then 'Назначен' when 1 then 'Закончен' when 2 then 'Отменён' when 3 then 'Перезвон' end as status_call, tt.name, tt.surname, tt.second_name, t.status_call as status from calls t " +
+                        "join org ttt on ttt.id = t.id_org " +
                         "join users tt on tt.id = t.id_oper";
                     string filt = "";
                     if (org_filt.SelectedValue != null)
@@ -1348,8 +1350,9 @@ namespace crm_system
                     calls_grid.ItemsSource = callses;
                     connection.Close();
                 }
-                catch
+                catch(Exception ex)
                 {
+                    MessageBox.Show(ex.Message.ToString());
                     connection.Close();
                 }
             }
